@@ -209,11 +209,7 @@ class EolDiscussionXBlock(XBlock, StudioEditableXBlockMixin, XmlParserMixin):
                     url='{}?{}'.format(reverse('register_user'), qs),
                 ),
             )
-        try:
-            from eol_forum_notifications.utils import get_user_data
-            notification_data = get_user_data(self.discussion_id, self.django_user)
-        except ImportError:
-            notification_data = '{}'
+
         context = {
             'discussion_id': self.discussion_id,
             'display_name': self.display_name if self.display_name else _("Discussion"),
@@ -229,7 +225,14 @@ class EolDiscussionXBlock(XBlock, StudioEditableXBlockMixin, XmlParserMixin):
             'can_create_subcomment': self.has_permission("create_sub_comment"),
             'login_msg': login_msg,
         }
-
+        try:
+            from eol_forum_notifications.utils import get_user_data
+            notification_data = get_user_data(self.discussion_id, self.django_user)
+            context['url_eol_notification_save'] = reverse('eol_discussion_notification:save')
+            context['notification_data'] = notification_data
+        except ImportError:
+            context['url_eol_notification_save'] = ''
+            context['notification_data'] = '{}'
         fragment.add_content(self.runtime.render_template('eoldiscussion/_discussion_inline.html', context))
         fragment.initialize_js('EolDiscussionInlineBlock')
 
