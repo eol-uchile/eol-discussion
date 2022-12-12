@@ -214,8 +214,6 @@ class EolDiscussionXBlock(XBlock, StudioEditableXBlockMixin, XmlParserMixin):
             'discussion_id': self.discussion_id,
             'display_name': self.display_name if self.display_name else _("Discussion"),
             'limit_character': self.limit_character,
-            'url_eol_notification_save': reverse('eol_discussion_notification:save'),
-            'notification_data': notification_data,
             'user': self.django_user,
             'course_id': self.course_key,
             'discussion_category': self.discussion_category,
