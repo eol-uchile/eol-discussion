@@ -45,7 +45,7 @@ class EolDiscussionXBlock(XBlock, StudioEditableXBlockMixin, XmlParserMixin):
     discussion_id = String(scope=Scope.settings, default=UNIQUE_ID)
     display_name = String(
         display_name=_("Display Name"),
-        help=_("The display name for this component."),
+        help=_("Nombre para mostrar en este componente."),
         default="Eol Discussion",
         scope=Scope.settings
     )
@@ -53,23 +53,20 @@ class EolDiscussionXBlock(XBlock, StudioEditableXBlockMixin, XmlParserMixin):
         display_name=_("Category"),
         default=_("Week 1"),
         help=_(
-            "A category name for the discussion. "
-            "This name appears in the left pane of the discussion forum for the course."
+            "Nombre de categoría para la discusión. "
+            "Este aparece en el panel izquierdo de la discusión del curso."
         ),
         scope=Scope.settings
     )
     discussion_target = String(
         display_name=_("Subcategory"),
         default="Topic-Level Student-Visible Label",
-        help=_(
-            "A subcategory name for the discussion. "
-            "This name appears in the left pane of the discussion forum for the course."
-        ),
+        help=_("Nombre de subcategoría para la discusión. Este aparece en el panel izquierdo de la pantalla de foros de discusión del curso."),
         scope=Scope.settings
     )
     limit_character = Integer(
-        display_name='Limite de caracteres',
-        help='Entero que representa el limite de caracteres entre 1 y 2000',
+        display_name='Límite de caracteres',
+        help='Entero que representa el límite de caracteres entre 1 y 2.000.',
         default=1000,
         values={'min': 1, 'max':2000},
         scope=Scope.settings,
@@ -209,17 +206,11 @@ class EolDiscussionXBlock(XBlock, StudioEditableXBlockMixin, XmlParserMixin):
                     url='{}?{}'.format(reverse('register_user'), qs),
                 ),
             )
-        try:
-            from eol_forum_notifications.utils import get_user_data
-            notification_data = get_user_data(self.discussion_id, self.django_user)
-        except ImportError:
-            notification_data = '{}'
+
         context = {
             'discussion_id': self.discussion_id,
             'display_name': self.display_name if self.display_name else _("Discussion"),
             'limit_character': self.limit_character,
-            'url_eol_notification_save': reverse('eol_discussion_notification:save'),
-            'notification_data': notification_data,
             'user': self.django_user,
             'course_id': self.course_key,
             'discussion_category': self.discussion_category,
@@ -229,7 +220,14 @@ class EolDiscussionXBlock(XBlock, StudioEditableXBlockMixin, XmlParserMixin):
             'can_create_subcomment': self.has_permission("create_sub_comment"),
             'login_msg': login_msg,
         }
-
+        try:
+            from eol_forum_notifications.utils import get_user_data
+            notification_data = get_user_data(self.discussion_id, self.django_user)
+            context['url_eol_notification_save'] = reverse('eol_discussion_notification:save')
+            context['notification_data'] = notification_data
+        except ImportError:
+            context['url_eol_notification_save'] = ''
+            context['notification_data'] = '{}'
         fragment.add_content(self.runtime.render_template('eoldiscussion/_discussion_inline.html', context))
         fragment.initialize_js('EolDiscussionInlineBlock')
 
