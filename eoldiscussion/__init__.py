@@ -44,13 +44,13 @@ class EolDiscussionXBlock(XBlock, StudioEditableXBlockMixin, XmlParserMixin):
 
     discussion_id = String(scope=Scope.settings, default=UNIQUE_ID)
     display_name = String(
-        display_name=_("Display Name"),
-        help=_("The display name for this component."),
+        display_name=_("Nombre para mostrar en este componente"),
+        help=_("Este aparece en el panel izquierdo de la discusión del curso."),
         default="Eol Discussion",
         scope=Scope.settings
     )
     discussion_category = String(
-        display_name=_("Category"),
+        display_name=_("Nombre de categoría para la discusión"),
         default=_("Week 1"),
         help=_(
             "A category name for the discussion. "
@@ -59,17 +59,14 @@ class EolDiscussionXBlock(XBlock, StudioEditableXBlockMixin, XmlParserMixin):
         scope=Scope.settings
     )
     discussion_target = String(
-        display_name=_("Subcategory"),
+        display_name=_("Nombre de subcategoría para la discusión"),
         default="Topic-Level Student-Visible Label",
-        help=_(
-            "A subcategory name for the discussion. "
-            "This name appears in the left pane of the discussion forum for the course."
-        ),
+        help=_("Este aparece en el panel izquierdo de la pantalla de foros de discusión del curso."),
         scope=Scope.settings
     )
     limit_character = Integer(
-        display_name='Limite de caracteres',
-        help='Entero que representa el limite de caracteres entre 1 y 2000',
+        display_name='Límite de caracteres',
+        help='Entero que representa el límite de caracteres entre 1 y 2.000.',
         default=1000,
         values={'min': 1, 'max':2000},
         scope=Scope.settings,

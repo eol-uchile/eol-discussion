@@ -162,7 +162,7 @@ var limitCharacter = 2000;
                 $wmdPanel = $("<div>")
                     .addClass("wmd-panel")
                     .append($("<div>").addClass("wmd-button-bar" + _append))
-                    .append($("<label>").addClass("sr").attr("for", wmdInputId).text(gettext("Your question or idea (required)")))
+                    .append($("<label>").addClass("sr").attr("for", wmdInputId).text(gettext("Tu pregunta o idea (requerido)")))
                     .append($("<textarea>").addClass("wmd-input").addClass("eol-text-limit").attr("id", wmdInputId).attr("maxlength", limitCharacter).html(initialText))
                     .append($wmdPreviewContainer);
                 $elem.append($wmdPanel);
