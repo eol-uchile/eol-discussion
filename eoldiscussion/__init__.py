@@ -44,24 +44,24 @@ class EolDiscussionXBlock(XBlock, StudioEditableXBlockMixin, XmlParserMixin):
 
     discussion_id = String(scope=Scope.settings, default=UNIQUE_ID)
     display_name = String(
-        display_name=_("Nombre para mostrar en este componente"),
-        help=_("Este aparece en el panel izquierdo de la discusión del curso."),
+        display_name=_("Display Name"),
+        help=_("Nombre para mostrar en este componente."),
         default="Eol Discussion",
         scope=Scope.settings
     )
     discussion_category = String(
-        display_name=_("Nombre de categoría para la discusión"),
+        display_name=_("Category"),
         default=_("Week 1"),
         help=_(
-            "A category name for the discussion. "
-            "This name appears in the left pane of the discussion forum for the course."
+            "Nombre de categoría para la discusión. "
+            "Este aparece en el panel izquierdo de la discusión del curso."
         ),
         scope=Scope.settings
     )
     discussion_target = String(
-        display_name=_("Nombre de subcategoría para la discusión"),
+        display_name=_("Subcategory"),
         default="Topic-Level Student-Visible Label",
-        help=_("Este aparece en el panel izquierdo de la pantalla de foros de discusión del curso."),
+        help=_("Nombre de subcategoría para la discusión. Este aparece en el panel izquierdo de la pantalla de foros de discusión del curso."),
         scope=Scope.settings
     )
     limit_character = Integer(
