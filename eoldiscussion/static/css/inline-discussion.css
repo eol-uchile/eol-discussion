@@ -3113,3 +3113,9 @@ input:checked + .slider:before {
   background-color: #ffcdcd;
   border-color: #ffbaba;
 }
+.discussion-post .eol-post-body{
+  background: #d9e7f2;
+  border-radius: 8px;
+  padding: 10px 10px !important;
+  max-width: calc(100% - 40px) !important;
+}
