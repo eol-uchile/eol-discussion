@@ -46,7 +46,7 @@ class EolDiscussionXBlock(XBlock, StudioEditableXBlockMixin, XmlParserMixin):
     display_name = String(
         display_name=_("Display Name"),
         help=_("Nombre para mostrar en este componente."),
-        default="Eol Discussion",
+        default="Nuevo foro de discusión",
         scope=Scope.settings
     )
     discussion_category = String(
@@ -148,12 +148,6 @@ class EolDiscussionXBlock(XBlock, StudioEditableXBlockMixin, XmlParserMixin):
         for vendor_js_file in self.vendor_js_dependencies():
             fragment.add_resource_url(staticfiles_storage.url(vendor_js_file), "application/javascript", "head")
 
-        #for css_file in self.css_dependencies():
-        #    fragment.add_css_url(staticfiles_storage.url(css_file))
-
-        # Body dependencies
-        #for js_file in self.js_dependencies():
-        #    fragment.add_javascript_url(staticfiles_storage.url(js_file))
 
     def has_permission(self, permission):
         """
@@ -182,10 +176,8 @@ class EolDiscussionXBlock(XBlock, StudioEditableXBlockMixin, XmlParserMixin):
         # Head dependencies
         for vendor_js_file in self.vendor_js_dependencies():
             fragment.add_resource_url(staticfiles_storage.url(vendor_js_file), "application/javascript", "head")
-        #fragment.add_javascript(self.resource_string("static/js/discussion_vendor.js"))
         fragment.add_css(self.resource_string("static/css/inline-discussion.css"))
         fragment.add_javascript(self.resource_string("static/js/discussion.js"))
-        #self.add_resource_urls(fragment)
 
         login_msg = ''
 
@@ -243,6 +235,29 @@ class EolDiscussionXBlock(XBlock, StudioEditableXBlockMixin, XmlParserMixin):
             {'discussion_id': self.discussion_id}
         ))
         return fragment
+
+    def studio_view(self, context):
+        """
+        Render a form for editing this XBlock
+        """
+        fragment = Fragment()
+        context = {'fields': []}
+        # Build a list of all the fields that can be edited:
+        for field_name in self.editable_fields:
+            field = self.fields[field_name]
+            assert field.scope in (Scope.content, Scope.settings), (
+                "Only Scope.content or Scope.settings fields can be used with "
+                "StudioEditableXBlockMixin. Other scopes are for user-specific data and are "
+                "not generally created/configured by content authors in Studio."
+            )
+            field_info = self._make_field_info(field_name, field)
+            if field_info is not None:
+                context["fields"].append(field_info)
+        fragment.content = loader.render_django_template('static/html/studio_edit.html', context)
+        fragment.add_javascript(loader.load_unicode('static/js/studio_edit.js'))
+        fragment.initialize_js('StudioEditableXBlockMixin')
+        return fragment
+
 
     def student_view_data(self):
         """

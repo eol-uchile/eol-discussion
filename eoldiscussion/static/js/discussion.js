@@ -2099,6 +2099,7 @@ if (typeof MathJax === "undefined") {
                 var text = this.$el.find('.eol-text-limit')[0].textContent;
                 var span_limit = this.$el.find('#eol-limit-character')[0];
                 span_limit.textContent = limitCharacter - text.length;
+                span_limit.textContent = span_limit.textContent.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
                 return this;
             },
             addField: function ($fieldView) {
@@ -3491,6 +3492,7 @@ if (typeof MathJax === "undefined") {
                 var text = this.$el.find('.eol-text-limit')[0].textContent;
                 var span_limit = this.$el.find('#eol-limit-character')[0];
                 span_limit.textContent = limitCharacter - text.length;
+                span_limit.textContent = span_limit.textContent.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
                 return this;
             };
             ResponseCommentEditView.prototype.update = function (event) {
@@ -3744,6 +3746,7 @@ if (typeof MathJax === "undefined") {
                 var text = this.$el.find('.eol-text-limit')[0].textContent;
                 var span_limit = this.$el.find('#eol-limit-character')[0];
                 span_limit.textContent = limitCharacter - text.length;
+                span_limit.textContent = span_limit.textContent.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
                 return this;
             };
             ThreadResponseEditView.prototype.update = function (event) {
