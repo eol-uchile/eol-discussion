@@ -2811,6 +2811,9 @@ li[class*=forum-nav-thread-label-]::before, li[class*=forum-nav-thread-label-]::
   padding: 9px 16px !important;
   margin-bottom: 5px !important;
 }
+.eoldiscussion-module .forum-nav-thread.eol-read {
+  box-shadow: -2px 4px 11px 6px rgb(0 0 0 / 10%) !important;
+}
 .eoldiscussion-module .forum-nav-thread-list{
   display: contents !important;
 }
@@ -2932,20 +2935,20 @@ li[class*=forum-nav-thread-label-]::before, li[class*=forum-nav-thread-label-]::
   min-width: 90px !important;
 }
 .eoldiscussion-module .eol-read .forum-nav-thread-title, .eoldiscussion-module .eol-read .forum-nav-thread-username {
-  color: #a3c8e2 !important;
+  color: #ccdfee !important;
 }
 .eoldiscussion-module .forum-nav-thread-list .eol-read .thread-preview-body, .eoldiscussion-module .eol-read .eol-thread-created-at{
-  color: #a8a8a8 !important;
+  color: #cdcdcd !important;
 }
 .eoldiscussion-module .eol-read .eol-box-text-forum{
-  color: #a8a8a8 !important;
-  border: 1px solid #a3c8e2 !important;
+  color: #cdcdcd !important;
+  border: 1px solid #ccdfee !important;
 }
 .eoldiscussion-module .eol-read .eol-date-item.updated-at, .eoldiscussion-module .eol-read .forum-nav-thread-comments-count{
-  background-color: #a3c8e2 !important;
+  background-color: #ccdfee !important;
 }
 .eoldiscussion-module .eol-read .forum-nav-thread-comments-count::after{
-  border-color: transparent #a3c8e2 !important;
+  border-color: transparent #ccdfee !important;
 }
 .eoldiscussion-module .post-label-following .fa-star{
   font-size: 16px !important;
