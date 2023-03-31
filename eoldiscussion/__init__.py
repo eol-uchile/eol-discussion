@@ -214,7 +214,7 @@ class EolDiscussionXBlock(XBlock, StudioEditableXBlockMixin, XmlParserMixin):
         }
         try:
             from eol_forum_notifications.utils import get_user_data
-            notification_data = get_user_data(self.discussion_id, self.django_user)
+            notification_data = get_user_data(self.discussion_id, self.django_user, self.course_key, self.location)
             context['url_eol_notification_save'] = reverse('eol_discussion_notification:save')
             context['notification_data'] = notification_data
         except ImportError:
