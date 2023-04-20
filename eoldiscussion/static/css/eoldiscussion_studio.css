@@ -1,0 +1,9 @@
+.eoldiscussion_xblock #start_date, .eoldiscussion_xblock #end_date{
+    width: auto;
+    height: auto;
+}
+.eoldiscussion_xblock .list-input.settings-list select,
+.eoldiscussion_xblock .list-input.settings-list select:active, 
+.eoldiscussion_xblock .list-input.settings-list select:focus  {
+    background-color: #fff;
+}

@@ -2968,6 +2968,7 @@ li[class*=forum-nav-thread-label-]::before, li[class*=forum-nav-thread-label-]::
   font-size: 14px;
   text-align: center;
   border-radius: 11px !important;
+  margin-left: auto !important;
 }
 .eol-save-btn {
   float: right;
@@ -3152,4 +3153,33 @@ input:checked + .slider:before {
   border-radius: 8px;
   padding: 10px 10px !important;
   max-width: calc(100% - 40px) !important;
+}
+.discussion-module .discussion-module-header {
+  float: none;
+  width: 100%;
+  margin-bottom: 0px;
+}
+
+.discussion-module .discussion-module-date, .discussion-module .discussion-module-date-finished {
+  float: left;
+  width: 57.62712%;
+  padding-top: 9px;
+}
+.discussion-module .discussion-module-date .date-text, .discussion-module .discussion-module-date-finished .date-text{
+  color: #5d5d5d;
+  font-size: 1.35em;
+}
+.discussion-module .discussion-module-date img, .discussion-module .discussion-module-date-finished img{
+  width: 30px;
+  margin-top: -8px;
+}
+.discussion-module .sub-header{
+  margin-top: 15px;
+  margin-bottom: 10px;
+}
+.discussion-module .discussion-module-date-finished{
+  display: none;
+}
+.discussion-module .eolforum-format-date{
+  display: inline;
 }

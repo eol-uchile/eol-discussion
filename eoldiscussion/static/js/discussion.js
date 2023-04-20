@@ -1,4 +1,18 @@
 var limitCharacter = 2000;
+var startForum = '';
+var finishForum = '';
+var is_staff = false;
+var is_dated = false;
+function check_dates(){
+    if(is_dated){
+        var s = new Date(startForum);
+        var f = new Date(finishForum);
+        var now = new Date();
+        if (now >= s && now <= f) return true;
+        else return false;
+    }
+    else return true;
+}
 (function () {
     var MathJaxProcessor;
     MathJaxProcessor = (function () {
@@ -1715,20 +1729,27 @@ if (typeof MathJax === "undefined") {
             DiscussionContentShowView.prototype.toggleSecondaryActions = function (event) {
                 event.preventDefault();
                 event.stopPropagation();
-                this.secondaryActionsExpanded = !this.secondaryActionsExpanded;
-                this.$(".action-more").toggleClass("is-expanded", this.secondaryActionsExpanded);
-                this.$(".actions-dropdown").toggleClass("is-expanded", this.secondaryActionsExpanded).attr("aria-expanded", this.secondaryActionsExpanded);
-                if (this.secondaryActionsExpanded) {
-                    if (event.type === "keydown") {
-                        this.$(".action-list-item:first").focus();
+                if (is_staff || check_dates()){
+                    this.secondaryActionsExpanded = !this.secondaryActionsExpanded;
+                    this.$(".action-more").toggleClass("is-expanded", this.secondaryActionsExpanded);
+                    this.$(".actions-dropdown").toggleClass("is-expanded", this.secondaryActionsExpanded).attr("aria-expanded", this.secondaryActionsExpanded);
+                    if (this.secondaryActionsExpanded) {
+                        if (event.type === "keydown") {
+                            this.$(".action-list-item:first").focus();
+                        }
+                        $("body").on("click", this.toggleSecondaryActions);
+                        $("body").on("keydown", this.handleSecondaryActionEscape);
+                        return this.$(".action-list-item").on("blur", this.handleSecondaryActionBlur);
+                    } else {
+                        $("body").off("click", this.toggleSecondaryActions);
+                        $("body").off("keydown", this.handleSecondaryActionEscape);
+                        return this.$(".action-list-item").off("blur", this.handleSecondaryActionBlur);
                     }
-                    $("body").on("click", this.toggleSecondaryActions);
-                    $("body").on("keydown", this.handleSecondaryActionEscape);
-                    return this.$(".action-list-item").on("blur", this.handleSecondaryActionBlur);
-                } else {
-                    $("body").off("click", this.toggleSecondaryActions);
-                    $("body").off("keydown", this.handleSecondaryActionEscape);
-                    return this.$(".action-list-item").off("blur", this.handleSecondaryActionBlur);
+                }
+                else {
+                    alert('El Foro ha finalizado.');
+                    document.getElementsByClassName('discussion-module-date')[0].style.display = 'none';
+                    document.getElementsByClassName('discussion-module-date-finished')[0].style.display = 'block';
                 }
             };
             DiscussionContentShowView.prototype.handleSecondaryActionEscape = function (event) {
@@ -1889,6 +1910,10 @@ if (typeof MathJax === "undefined") {
             var match;
             this.$el = options.el;
             limitCharacter = options.limitCharacter;
+            startForum = options.start;
+            finishForum = options.finish;
+            is_dated = options.isDated;
+            is_staff = options.isStaff;
             this.readOnly = options.readOnly;
             this.toggleDiscussionBtn = this.$(".discussion-show");
             this.listenTo(this.model, "change", this.render);
@@ -2029,20 +2054,27 @@ if (typeof MathJax === "undefined") {
         },
         toggleNewPost: function (event) {
             event.preventDefault();
-            if (!this.newPostForm) {
-                this.toggleDiscussion();
-                this.isWaitingOnNewPost = true;
-                return;
+            if (is_staff || check_dates()){
+                if (!this.newPostForm) {
+                    this.toggleDiscussion();
+                    this.isWaitingOnNewPost = true;
+                    return;
+                }
+                if (this.showed) {
+                    this.$("section.discussion").find(".inline-discussion-thread-container").addClass("is-hidden");
+                    this.$("section.discussion").find(".add_post_btn_container").addClass("is-hidden");
+                    this.newPostForm.removeClass("is-hidden");
+                }
+                this.newPostView.$el.removeClass("is-hidden");
+                this.toggleDiscussionBtn.addClass("shown");
+                this.toggleDiscussionBtn.find(".button-text").text(gettext("Hide Discussion"));
+                this.showed = true;
             }
-            if (this.showed) {
-                this.$("section.discussion").find(".inline-discussion-thread-container").addClass("is-hidden");
-                this.$("section.discussion").find(".add_post_btn_container").addClass("is-hidden");
-                this.newPostForm.removeClass("is-hidden");
+            else {
+                alert('El Foro ha finalizado.');
+                document.getElementsByClassName('discussion-module-date')[0].style.display = 'none';
+                document.getElementsByClassName('discussion-module-date-finished')[0].style.display = 'block';
             }
-            this.newPostView.$el.removeClass("is-hidden");
-            this.toggleDiscussionBtn.addClass("shown");
-            this.toggleDiscussionBtn.find(".button-text").text(gettext("Hide Discussion"));
-            this.showed = true;
         },
         onNewPostCreated: function () {
             this.navigateToAllPosts();
@@ -2144,9 +2176,16 @@ if (typeof MathJax === "undefined") {
             },
             updateHandler: function (event) {
                 event.preventDefault();
-                this.trigger("thread:update", event);
-                this.save();
-                return this;
+                if (is_staff || check_dates()){
+                    this.trigger("thread:update", event);
+                    this.save();
+                    return this;
+                }
+                else {
+                    alert('El Foro ha finalizado.');
+                    document.getElementsByClassName('discussion-module-date')[0].style.display = 'none';
+                    document.getElementsByClassName('discussion-module-date-finished')[0].style.display = 'block';
+                }
             },
             cancelHandler: function (event) {
                 event.preventDefault();
@@ -2760,7 +2799,14 @@ if (typeof MathJax === "undefined") {
                 return this.trigger("thread:edit", event);
             };
             DiscussionThreadShowView.prototype._delete = function (event) {
-                return this.trigger("thread:_delete", event);
+                if (is_staff || check_dates()){
+                    return this.trigger("thread:_delete", event);
+                }
+                else {
+                    alert('El Foro ha finalizado.');
+                    document.getElementsByClassName('discussion-module-date')[0].style.display = 'none';
+                    document.getElementsByClassName('discussion-module-date-finished')[0].style.display = 'block';
+                }
             };
             return DiscussionThreadShowView;
         })(DiscussionContentShowView);
@@ -3022,13 +3068,20 @@ if (typeof MathJax === "undefined") {
             DiscussionThreadView.prototype.scrollToAddResponse = function (event) {
                 var form;
                 event.preventDefault();
-                form = $(event.target).parents("article.discussion-article").find("form.discussion-reply-new");
-                form.find(".wmd-panel textarea").focus()
-                if(form[0].style.display == 'none'){
-                    form.show();
+                if (is_staff || check_dates()){
+                    form = $(event.target).parents("article.discussion-article").find("form.discussion-reply-new");
+                    form.find(".wmd-panel textarea").focus()
+                    if(form[0].style.display == 'none'){
+                        form.show();
+                    }
+                    else{
+                        form.hide();
+                    }
                 }
-                else{
-                    form.hide();
+                else {
+                    alert('El Foro ha finalizado.');
+                    document.getElementsByClassName('discussion-module-date')[0].style.display = 'none';
+                    document.getElementsByClassName('discussion-module-date-finished')[0].style.display = 'block';
                 }
                 //$("html, body").scrollTop(form.offset().top);
                 return ;
@@ -3042,29 +3095,36 @@ if (typeof MathJax === "undefined") {
             DiscussionThreadView.prototype.submitComment = function (event) {
                 var body, comment, url, view;
                 event.preventDefault();
-                url = this.model.urlFor("reply");
-                body = this.getWmdContent("reply-body");
-                if (!body.trim().length) {
-                    return;
+                if (is_staff || check_dates()){
+                    url = this.model.urlFor("reply");
+                    body = this.getWmdContent("reply-body");
+                    if (!body.trim().length) {
+                        return;
+                    }
+                    this.setWmdContent("reply-body", "");
+                    comment = new Comment({ body: body, created_at: new Date().toISOString(), username: window.user.get("username"), votes: { up_count: 0 }, abuse_flaggers: [], endorsed: false, user_id: window.user.get("id") });
+                    comment.set("thread", this.model.get("thread"));
+                    view = this.renderResponseToList(comment, ".js-response-list", { focusAddedResponse: true });
+                    this.model.addComment();
+                    this.renderAddResponseButton();
+                    return DiscussionUtil.safeAjax({
+                        $elem: $(event.target),
+                        url: url,
+                        type: "POST",
+                        dataType: "json",
+                        data: { body: body },
+                        success: function (data) {
+                            comment.updateInfo(data.annotated_content_info);
+                            comment.set(data.content);
+                            DiscussionUtil.typesetMathJax(view.$el.find(".response-body"));
+                        },
+                    });
                 }
-                this.setWmdContent("reply-body", "");
-                comment = new Comment({ body: body, created_at: new Date().toISOString(), username: window.user.get("username"), votes: { up_count: 0 }, abuse_flaggers: [], endorsed: false, user_id: window.user.get("id") });
-                comment.set("thread", this.model.get("thread"));
-                view = this.renderResponseToList(comment, ".js-response-list", { focusAddedResponse: true });
-                this.model.addComment();
-                this.renderAddResponseButton();
-                return DiscussionUtil.safeAjax({
-                    $elem: $(event.target),
-                    url: url,
-                    type: "POST",
-                    dataType: "json",
-                    data: { body: body },
-                    success: function (data) {
-                        comment.updateInfo(data.annotated_content_info);
-                        comment.set(data.content);
-                        DiscussionUtil.typesetMathJax(view.$el.find(".response-body"));
-                    },
-                });
+                else {
+                    alert('El Foro ha finalizado.');
+                    document.getElementsByClassName('discussion-module-date')[0].style.display = 'none';
+                    document.getElementsByClassName('discussion-module-date-finished')[0].style.display = 'block';
+                }
             };
             DiscussionThreadView.prototype.focusToTheAddedResponse = function (list) {
                 return $(list).attr("tabindex", "-1").focus();
@@ -3114,19 +3174,26 @@ if (typeof MathJax === "undefined") {
             };
             DiscussionThreadView.prototype._delete = function (event) {
                 var $elem, url;
-                url = this.model.urlFor("_delete");
-                if (!this.model.can("can_delete")) {
-                    return;
+                if (is_staff || check_dates()){
+                    url = this.model.urlFor("_delete");
+                    if (!this.model.can("can_delete")) {
+                        return;
+                    }
+                    if (!confirm(gettext("Are you sure you want to delete this post?"))) {
+                        return;
+                    }
+                    this.model.remove();
+                    this.showView.undelegateEvents();
+                    this.undelegateEvents();
+                    this.$el.empty();
+                    $elem = $(event.target);
+                    return DiscussionUtil.safeAjax({ $elem: $elem, url: url, type: "POST" });
                 }
-                if (!confirm(gettext("Are you sure you want to delete this post?"))) {
-                    return;
+                else {
+                    alert('El Foro ha finalizado.');
+                    document.getElementsByClassName('discussion-module-date')[0].style.display = 'none';
+                    document.getElementsByClassName('discussion-module-date-finished')[0].style.display = 'block';
                 }
-                this.model.remove();
-                this.showView.undelegateEvents();
-                this.undelegateEvents();
-                this.$el.empty();
-                $elem = $(event.target);
-                return DiscussionUtil.safeAjax({ $elem: $elem, url: url, type: "POST" });
             };
             return DiscussionThreadView;
         })(DiscussionContentView);
@@ -3376,39 +3443,46 @@ if (typeof MathJax === "undefined") {
                     url,
                     self = this;
                 event.preventDefault();
-                threadType = this.$(".input-radio:checked").val();
-                title = this.$(".js-post-title").val();
-                body = this.$(".js-post-body").find(".wmd-input").val();
-                group = this.$(".js-group-select option:selected").attr("value");
-                anonymous = false || this.$("input[name=anonymous]").is(":checked");
-                anonymousToPeers = false || this.$("input[name=anonymous_to_peers]").is(":checked");
-                follow = false || this.$("input[name=follow]").is(":checked");
-                topicId = this.isTabMode() ? this.topicView.getCurrentTopicId() : this.topicId;
-                url = DiscussionUtil.urlFor("create_thread", topicId);
-                return DiscussionUtil.safeAjax({
-                    $elem: $(event.target),
-                    $loading: event ? $(event.target) : void 0,
-                    url: url,
-                    type: "POST",
-                    dataType: "json",
-                    data: { thread_type: threadType, title: title, body: body, anonymous: anonymous, anonymous_to_peers: anonymousToPeers, auto_subscribe: follow, group_id: group },
-                    error: DiscussionUtil.formErrorHandler(this.$(".post-errors")),
-                    success: function (response) {
-                        var thread, discussionBreadcrumbsModel;
-                        thread = new Thread(response.content);
-                        if (self.discussionBoardView) {
-                            discussionBreadcrumbsModel = self.discussionBoardView.breadcrumbs.model;
-                            if (discussionBreadcrumbsModel.get("contents").length) {
-                                discussionBreadcrumbsModel.set("contents", self.topicView.topicText.split("/"));
+                if (is_staff || check_dates()){
+                    threadType = this.$(".input-radio:checked").val();
+                    title = this.$(".js-post-title").val();
+                    body = this.$(".js-post-body").find(".wmd-input").val();
+                    group = this.$(".js-group-select option:selected").attr("value");
+                    anonymous = false || this.$("input[name=anonymous]").is(":checked");
+                    anonymousToPeers = false || this.$("input[name=anonymous_to_peers]").is(":checked");
+                    follow = false || this.$("input[name=follow]").is(":checked");
+                    topicId = this.isTabMode() ? this.topicView.getCurrentTopicId() : this.topicId;
+                    url = DiscussionUtil.urlFor("create_thread", topicId);
+                    return DiscussionUtil.safeAjax({
+                        $elem: $(event.target),
+                        $loading: event ? $(event.target) : void 0,
+                        url: url,
+                        type: "POST",
+                        dataType: "json",
+                        data: { thread_type: threadType, title: title, body: body, anonymous: anonymous, anonymous_to_peers: anonymousToPeers, auto_subscribe: follow, group_id: group },
+                        error: DiscussionUtil.formErrorHandler(this.$(".post-errors")),
+                        success: function (response) {
+                            var thread, discussionBreadcrumbsModel;
+                            thread = new Thread(response.content);
+                            if (self.discussionBoardView) {
+                                discussionBreadcrumbsModel = self.discussionBoardView.breadcrumbs.model;
+                                if (discussionBreadcrumbsModel.get("contents").length) {
+                                    discussionBreadcrumbsModel.set("contents", self.topicView.topicText.split("/"));
+                                }
+                                self.discussionBoardView.discussionThreadListView.discussionIds = self.topicView.currentTopicId;
                             }
-                            self.discussionBoardView.discussionThreadListView.discussionIds = self.topicView.currentTopicId;
-                        }
-                        self.$el.addClass("is-hidden");
-                        self.resetForm();
-                        self.trigger("newPost:createPost");
-                        return self.collection.add(thread);
-                    },
-                });
+                            self.$el.addClass("is-hidden");
+                            self.resetForm();
+                            self.trigger("newPost:createPost");
+                            return self.collection.add(thread);
+                        },
+                    });
+                }
+                else {
+                    alert('El Foro ha finalizado.');
+                    document.getElementsByClassName('discussion-module-date')[0].style.display = 'none';
+                    document.getElementsByClassName('discussion-module-date-finished')[0].style.display = 'block';
+                }
             };
             NewPostView.prototype.formModified = function () {
                 var postBodyHasContent = this.$(".js-post-body").find(".wmd-input").val() !== "",
@@ -3496,7 +3570,14 @@ if (typeof MathJax === "undefined") {
                 return this;
             };
             ResponseCommentEditView.prototype.update = function (event) {
-                return this.trigger("comment:update", event);
+                if (is_staff || check_dates()){
+                    return this.trigger("comment:update", event);
+                }
+                else {
+                    alert('El Foro ha finalizado.');
+                    document.getElementsByClassName('discussion-module-date')[0].style.display = 'none';
+                    document.getElementsByClassName('discussion-module-date-finished')[0].style.display = 'block';
+                }
             };
             ResponseCommentEditView.prototype.cancel_edit = function (event) {
                 return this.trigger("comment:cancel_edit", event);
@@ -3560,7 +3641,14 @@ if (typeof MathJax === "undefined") {
                 DiscussionUtil.typesetMathJax(this.$el.find(".response-body"));
             };
             ResponseCommentShowView.prototype._delete = function (event) {
-                return this.trigger("comment:_delete", event);
+                if (is_staff || check_dates()){
+                    return this.trigger("comment:_delete", event);
+                }
+                else {
+                    alert('El Foro ha finalizado.');
+                    document.getElementsByClassName('discussion-module-date')[0].style.display = 'none';
+                    document.getElementsByClassName('discussion-module-date-finished')[0].style.display = 'block';
+                }
             };
             ResponseCommentShowView.prototype.edit = function (event) {
                 return this.trigger("comment:edit", event);
@@ -3653,26 +3741,33 @@ if (typeof MathJax === "undefined") {
                     url,
                     self = this;
                 event.preventDefault();
-                if (!this.model.can("can_delete")) {
-                    return;
+                if (is_staff || check_dates()){
+                    if (!this.model.can("can_delete")) {
+                        return;
+                    }
+                    if (!confirm(gettext("Are you sure you want to delete this comment?"))) {
+                        return;
+                    }
+                    url = this.model.urlFor("_delete");
+                    $elem = $(event.target);
+                    return DiscussionUtil.safeAjax({
+                        $elem: $elem,
+                        url: url,
+                        type: "POST",
+                        success: function () {
+                            self.model.remove();
+                            return self.$el.remove();
+                        },
+                        error: function () {
+                            return DiscussionUtil.discussionAlert(gettext("Error"), gettext("This comment could not be deleted. Refresh the page and try again."));
+                        },
+                    });
                 }
-                if (!confirm(gettext("Are you sure you want to delete this comment?"))) {
-                    return;
+                else {
+                    alert('El Foro ha finalizado.');
+                    document.getElementsByClassName('discussion-module-date')[0].style.display = 'none';
+                    document.getElementsByClassName('discussion-module-date-finished')[0].style.display = 'block';
                 }
-                url = this.model.urlFor("_delete");
-                $elem = $(event.target);
-                return DiscussionUtil.safeAjax({
-                    $elem: $elem,
-                    url: url,
-                    type: "POST",
-                    success: function () {
-                        self.model.remove();
-                        return self.$el.remove();
-                    },
-                    error: function () {
-                        return DiscussionUtil.discussionAlert(gettext("Error"), gettext("This comment could not be deleted. Refresh the page and try again."));
-                    },
-                });
             };
             ResponseCommentView.prototype.cancelEdit = function (event) {
                 this.trigger("comment:cancel_edit", event);
@@ -3750,7 +3845,14 @@ if (typeof MathJax === "undefined") {
                 return this;
             };
             ThreadResponseEditView.prototype.update = function (event) {
-                return this.trigger("response:update", event);
+                if (is_staff || check_dates()){
+                    return this.trigger("response:update", event);
+                }
+                else {
+                    alert('El Foro ha finalizado.');
+                    document.getElementsByClassName('discussion-module-date')[0].style.display = 'none';
+                    document.getElementsByClassName('discussion-module-date-finished')[0].style.display = 'block';
+                }
             };
             ThreadResponseEditView.prototype.cancel_edit = function (event) {
                 return this.trigger("response:cancel_edit", event);
@@ -3806,7 +3908,14 @@ if (typeof MathJax === "undefined") {
                 return this.trigger("response:edit", event);
             };
             ThreadResponseShowView.prototype._delete = function (event) {
-                return this.trigger("response:_delete", event);
+                if (is_staff || check_dates()){
+                    return this.trigger("response:_delete", event);
+                }
+                else {
+                    alert('El Foro ha finalizado.');
+                    document.getElementsByClassName('discussion-module-date')[0].style.display = 'none';
+                    document.getElementsByClassName('discussion-module-date-finished')[0].style.display = 'block';
+                }
             };
             return ThreadResponseShowView;
         })(DiscussionContentShowView);
@@ -3965,28 +4074,35 @@ if (typeof MathJax === "undefined") {
             ThreadResponseView.prototype.submitComment = function (event) {
                 var body, comment, url, view;
                 event.preventDefault();
-                url = this.model.urlFor("reply");
-                body = this.getWmdContent("comment-body");
-                if (!body.trim().length) {
-                    return;
+                if (is_staff || check_dates()){
+                    url = this.model.urlFor("reply");
+                    body = this.getWmdContent("comment-body");
+                    if (!body.trim().length) {
+                        return;
+                    }
+                    this.setWmdContent("comment-body", "");
+                    comment = new Comment({ body: body, created_at: new Date().toISOString(), username: window.user.get("username"), abuse_flaggers: [], user_id: window.user.get("id"), id: "unsaved" });
+                    view = this.renderComment(comment);
+                    this.hideEditorChrome();
+                    this.trigger("comment:add", comment);
+                    return DiscussionUtil.safeAjax({
+                        $elem: $(event.target),
+                        url: url,
+                        type: "POST",
+                        dataType: "json",
+                        data: { body: body },
+                        success: function (response) {
+                            comment.set(response.content);
+                            comment.updateInfo(response.annotated_content_info);
+                            return view.render();
+                        },
+                    });
                 }
-                this.setWmdContent("comment-body", "");
-                comment = new Comment({ body: body, created_at: new Date().toISOString(), username: window.user.get("username"), abuse_flaggers: [], user_id: window.user.get("id"), id: "unsaved" });
-                view = this.renderComment(comment);
-                this.hideEditorChrome();
-                this.trigger("comment:add", comment);
-                return DiscussionUtil.safeAjax({
-                    $elem: $(event.target),
-                    url: url,
-                    type: "POST",
-                    dataType: "json",
-                    data: { body: body },
-                    success: function (response) {
-                        comment.set(response.content);
-                        comment.updateInfo(response.annotated_content_info);
-                        return view.render();
-                    },
-                });
+                else {
+                    alert('El Foro ha finalizado.');
+                    document.getElementsByClassName('discussion-module-date')[0].style.display = 'none';
+                    document.getElementsByClassName('discussion-module-date-finished')[0].style.display = 'block';
+                }
             };
             ThreadResponseView.prototype.focusToTheCommentResponse = function (list) {
                 return $(list).attr("tabindex", "-1").focus();
@@ -3994,17 +4110,24 @@ if (typeof MathJax === "undefined") {
             ThreadResponseView.prototype._delete = function (event) {
                 var $elem, url;
                 event.preventDefault();
-                if (!this.model.can("can_delete")) {
-                    return;
+                if (is_staff || check_dates()){
+                    if (!this.model.can("can_delete")) {
+                        return;
+                    }
+                    if (!confirm(gettext("Are you sure you want to delete this response?"))) {
+                        return;
+                    }
+                    url = this.model.urlFor("_delete");
+                    this.model.remove();
+                    this.$el.remove();
+                    $elem = $(event.target);
+                    return DiscussionUtil.safeAjax({ $elem: $elem, url: url, type: "POST" });
                 }
-                if (!confirm(gettext("Are you sure you want to delete this response?"))) {
-                    return;
+                else {
+                    alert('El Foro ha finalizado.');
+                    document.getElementsByClassName('discussion-module-date')[0].style.display = 'none';
+                    document.getElementsByClassName('discussion-module-date-finished')[0].style.display = 'block';
                 }
-                url = this.model.urlFor("_delete");
-                this.model.remove();
-                this.$el.remove();
-                $elem = $(event.target);
-                return DiscussionUtil.safeAjax({ $elem: $elem, url: url, type: "POST" });
             };
             ThreadResponseView.prototype.createEditView = function () {
                 if (this.showView) {

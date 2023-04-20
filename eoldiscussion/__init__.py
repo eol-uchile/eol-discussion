@@ -5,6 +5,7 @@ Discussion XBlock
 import pkg_resources
 import logging
 import six
+from django.conf import settings as dsettings
 from six.moves import urllib
 from six.moves.urllib.parse import urlparse  # pylint: disable=import-error
 from django.contrib.staticfiles.storage import staticfiles_storage
@@ -12,16 +13,16 @@ from django.urls import reverse
 from django.utils.translation import get_language_bidi
 from xblock.completable import XBlockCompletionMode
 from xblock.core import XBlock
-from xblock.fields import Scope, String, UNIQUE_ID, Integer
+from xblock.fields import Scope, String, UNIQUE_ID, Integer, Boolean
 from web_fragments.fragment import Fragment
 from xblockutils.resources import ResourceLoader
 from xblockutils.studio_editable import StudioEditableXBlockMixin
-
+from xblock.exceptions import JsonHandlerError
 from openedx.core.djangolib.markup import HTML, Text
 from openedx.core.lib.xblock_builtin import get_css_dependencies, get_js_dependencies
 from xmodule.raw_module import RawDescriptor
 from xmodule.xml_module import XmlParserMixin
-
+from datetime import datetime as dt
 
 log = logging.getLogger(__name__)
 loader = ResourceLoader(__name__)  # pylint: disable=invalid-name
@@ -71,9 +72,27 @@ class EolDiscussionXBlock(XBlock, StudioEditableXBlockMixin, XmlParserMixin):
         values={'min': 1, 'max':2000},
         scope=Scope.settings,
     )
+    is_dated = Boolean(
+        display_name=_("Programar foro"),
+        default=False,
+        scope=Scope.settings,
+        help=_("El foro será visible solamente durante las fechas configuradas.")
+    )
+    start_date = String(
+        display_name=_("Fecha de inicio"),
+        scope=Scope.settings,
+        help=_("Indica la fecha de inicio del foro (horario chileno)")
+    )
+
+    end_date = String(
+        display_name=_("Fecha de cierre"),
+        scope=Scope.settings,
+        help=_("Indica la fecha de cierre del foro (horario chileno)")
+    )
+
     sort_key = String(scope=Scope.settings)
 
-    editable_fields = ["display_name", "discussion_category", "discussion_target", "limit_character"]
+    editable_fields = ["display_name", "discussion_category", "discussion_target", "limit_character", "is_dated", "start_date", "end_date"]
 
     has_author_view = True  # Tells Studio to use author_view
 
@@ -168,6 +187,41 @@ class EolDiscussionXBlock(XBlock, StudioEditableXBlockMixin, XmlParserMixin):
         data = pkg_resources.resource_string(__name__, path)
         return data.decode("utf8")
 
+    def is_course_staff(self):
+        # pylint: disable=no-member
+        """
+         Check if user is course staff.
+        """
+        return getattr(self.xmodule_runtime, 'user_is_staff', False)
+
+    def is_instructor(self):
+        # pylint: disable=no-member
+        """
+        Check if user role is instructor.
+        """
+        return self.xmodule_runtime.get_user_role() == 'instructor'
+
+    def has_dicussion_permission(self):
+        """
+            Verify if user has forum permission
+        """
+        from openedx.core.djangoapps.django_comment_common.models import Role
+        from django.contrib.auth.models import User
+        user = User.objects.get(id=self.scope_ids.user_id)
+        roles = Role.objects.filter(users=user, course_id=self.course_key).values('name')
+        roles = [x['name'] for x in roles]
+        for x in roles:
+            if x in ['Moderator', 'Administrator']:
+                return True
+        return False
+
+    def show_staff_grading_interface(self):
+        """
+        Return if current user is staff and not in studio.
+        """
+        in_studio_preview = self.scope_ids.user_id is None
+        return (self.is_course_staff() or self.is_instructor() or self.has_dicussion_permission()) and not in_studio_preview
+
     def student_view(self, context=None):
         """
         Renders student view for LMS.
@@ -211,7 +265,35 @@ class EolDiscussionXBlock(XBlock, StudioEditableXBlockMixin, XmlParserMixin):
             'can_create_comment': self.has_permission("create_comment"),
             'can_create_subcomment': self.has_permission("create_sub_comment"),
             'login_msg': login_msg,
+            'is_staff': self.show_staff_grading_interface(),
+            'is_dated': self.is_dated,
+            'start': '',
+            'finish': '',
+            'icon1_url': self.runtime.local_resource_url(self,"static/images/icono-01.png"),
+            'icon2_url': self.runtime.local_resource_url(self,"static/images/icono-02.png"),
+            'icon3_url': self.runtime.local_resource_url(self,"static/images/icono-03.png"),
+            'started': '',
+            'finished': ''
         }
+        if self.is_dated:
+            from django.utils import timezone
+            #edit the code below according to your time zone
+            zone = '-04:00'
+            if dsettings.USER_API_DEFAULT_PREFERENCES.get('time_zone', 'America/Santiago') == 'America/Santiago':
+                zone = '-03:00'
+            dt1 = dt.fromisoformat('{}{}'.format(self.start_date, zone))
+            dt2 = dt.fromisoformat('{}{}'.format(self.end_date, zone))
+            context['start'] = '{}{}'.format(self.start_date, zone)
+            context['finish'] = '{}{}'.format(self.end_date, zone)
+            now = timezone.now()
+            if dt1 > now:
+                context['started'] = False
+            else:
+                context['started'] = True
+            if dt2 < now:
+                context['finished'] = True
+            else:
+                context['finished'] = False
         try:
             from eol_forum_notifications.utils import get_user_data
             notification_data = get_user_data(self.discussion_id, self.django_user, self.course_key, self.location)
@@ -241,7 +323,10 @@ class EolDiscussionXBlock(XBlock, StudioEditableXBlockMixin, XmlParserMixin):
         Render a form for editing this XBlock
         """
         fragment = Fragment()
-        context = {'fields': []}
+        context = {
+            'fields': {},
+            'xblock': self
+        }
         # Build a list of all the fields that can be edited:
         for field_name in self.editable_fields:
             field = self.fields[field_name]
@@ -252,12 +337,60 @@ class EolDiscussionXBlock(XBlock, StudioEditableXBlockMixin, XmlParserMixin):
             )
             field_info = self._make_field_info(field_name, field)
             if field_info is not None:
-                context["fields"].append(field_info)
+                context["fields"][field_name] = field_info
         fragment.content = loader.render_django_template('static/html/studio_edit.html', context)
+        fragment.add_css(self.resource_string("static/css/eoldiscussion_studio.css"))
         fragment.add_javascript(loader.load_unicode('static/js/studio_edit.js'))
-        fragment.initialize_js('StudioEditableXBlockMixin')
+        settings = {
+            'is_dated': self.is_dated
+        }
+        fragment.initialize_js('StudioEditableXBlockMixin', json_args=settings)
         return fragment
 
+
+    @XBlock.json_handler
+    def submit_studio_edits(self, data, suffix=''):  # pylint: disable=unused-argument
+        """
+        AJAX handler for studio_view() Save button
+        """
+        response = self.validate_data(data)
+        if response is True:
+            self.display_name = data.get('display_name')
+            self.discussion_category = data.get('discussion_category')
+            self.discussion_target = data.get('discussion_target')
+            self.limit_character = data.get('limit_character')
+            self.is_dated = data.get('is_dated')
+            if data.get('is_dated'):
+                self.start_date = data.get('start_date')
+                self.end_date = data.get('end_date')
+            return {'result': 'success'}
+        else:
+            raise JsonHandlerError(400, response)
+
+    def validate_data(self, data):
+        if is_empty(data.get('display_name', '')) or is_empty(data.get('discussion_category', '')) or is_empty(data.get('discussion_target', '')) or is_empty(data.get('limit_character', '')) or is_empty(data.get('is_dated', '')):
+            log.error('EolDiscussion - Error in params {}'.format(data))
+            return 'Error con los parámetros.'
+        try:
+            aux = int(data.get('limit_character'))
+        except ValueError:
+            log.error('EolDiscussion - Error, limit character must be integer, params: {}'.format(data))
+            return 'El limite de caracteres debe ser un entero.'
+        if data.get('is_dated', False) is True:
+            if is_empty(data.get('start_date', '')) or is_empty(data.get('end_date', '')):
+                log.error('EolDiscussion - Error, dates must be definied, params: {}'.format(data))
+                return 'Falta definir las fechas del foro.'
+            else:
+                try:
+                    dt1 = dt.strptime(data.get('start_date', ''), "%Y-%m-%dT%H:%M")
+                    dt2 = dt.strptime(data.get('end_date', ''), "%Y-%m-%dT%H:%M")
+                    if dt2 < dt1:
+                        log.error('EolDiscussion - Error, end_date must be greatest than start_date, params: {}'.format(data))
+                        return 'La fecha de cierre debe ser mayor a la fecha de inicio del foro.'
+                except Exception as e:
+                    log.error('EolDiscussion - Error in date format, params: {}'.format(data))
+                    return 'Error con los formatos en las fechas del foro.'
+        return True
 
     def student_view_data(self):
         """
@@ -318,3 +451,9 @@ class EolDiscussionXBlock(XBlock, StudioEditableXBlockMixin, XmlParserMixin):
         for field_name, value in six.iteritems(metadata):
             if field_name in block.fields:
                 setattr(block, field_name, value)
+
+def is_empty(attr):
+    """
+        check if attribute is empty or None
+    """
+    return attr == "" or attr is None
