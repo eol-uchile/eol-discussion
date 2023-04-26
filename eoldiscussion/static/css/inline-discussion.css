@@ -3155,9 +3155,9 @@ input:checked + .slider:before {
   max-width: calc(100% - 40px) !important;
 }
 .discussion-module .discussion-module-header {
-  float: none;
-  width: 100%;
-  margin-bottom: 0px;
+  float: none !important;
+  width: 100% !important;
+  margin-bottom: 0px !important;
 }
 
 .discussion-module .discussion-module-date, .discussion-module .discussion-module-date-finished {
