@@ -41,7 +41,7 @@ class EolDiscussionXBlock(XBlock, StudioEditableXBlockMixin, XmlParserMixin):
     """
     Provides a discussion forum that is inline with other content in the courseware.
     """
-    completion_mode = XBlockCompletionMode.EXCLUDED
+    #completion_mode = XBlockCompletionMode.EXCLUDED
 
     discussion_id = String(scope=Scope.settings, default=UNIQUE_ID)
     display_name = String(
