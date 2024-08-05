@@ -5,12 +5,14 @@ Discussion XBlock
 # Python Standard Libraries
 from datetime import datetime as dt
 import logging
+import os, re
 
 # Installed packages (via pip)
 from django.conf import settings as dsettings
 from django.contrib.staticfiles.storage import staticfiles_storage
 from django.urls import reverse
 from eol_forum_notifications.utils import get_user_data
+from mako.lookup import TemplateLookup
 from six.moves import urllib
 import pkg_resources
 import six
@@ -166,7 +168,18 @@ class EolDiscussionXBlock(XBlock, StudioEditableXBlockMixin, XmlParserMixin):
         """Handy helper for getting resources from our kit."""
         data = pkg_resources.resource_string(__name__, path)
         return data.decode("utf8")
-
+    
+    def render_mako_template(self, path, context):
+        pkg_dir = os.path.dirname(__file__)
+        lookup = TemplateLookup(directories=[pkg_dir], input_encoding="utf-8", output_encoding="utf-8")
+        tmpl = lookup.get_template(path)
+        return tmpl.render(**context).decode("utf-8")
+    
+    def include_mako_static(self, path, context):
+        raw = self.resource_string(path)
+        replace = lambda match: str(context.get(match.group(1), match.group(0)))
+        return re.sub(r"\$\{([^}]+)\}", replace, raw)
+    
     def is_course_staff(self):
         # pylint: disable=no-member
         """
@@ -252,8 +265,10 @@ class EolDiscussionXBlock(XBlock, StudioEditableXBlockMixin, XmlParserMixin):
             'icon1_url': self.runtime.local_resource_url(self,"static/images/icono-01.png"),
             'icon2_url': self.runtime.local_resource_url(self,"static/images/icono-02.png"),
             'icon3_url': self.runtime.local_resource_url(self,"static/images/icono-03.png"),
+            'pencil_icon_black_url': self.runtime.local_resource_url(self,"static/images/pencil_icon_black.png"),
             'started': '',
-            'finished': ''
+            'finished': '',
+            'include_mako_static': lambda path: self.include_mako_static(path, context)
         }
         if self.is_dated:
             from django.utils import timezone
@@ -282,7 +297,7 @@ class EolDiscussionXBlock(XBlock, StudioEditableXBlockMixin, XmlParserMixin):
         except ImportError:
             context['url_eol_notification_save'] = ''
             context['notification_data'] = '{}'
-        fragment.add_content(self.runtime.render_template('eoldiscussion/_discussion_inline.html', context))
+        fragment.add_content(self.render_mako_template('static/html/_discussion_inline.html', context))
         fragment.initialize_js('EolDiscussionInlineBlock')
 
         return fragment
