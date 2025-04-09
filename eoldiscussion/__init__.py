@@ -412,7 +412,7 @@ class EolDiscussionXBlock(XBlock, StudioEditableXBlockMixin, XmlParserMixin):
         XBlock.parse_xml. Otherwise this method parses file in "discussion" folder (known as definition_xml), applies
         policy.json and updates fields accordingly.
         """
-        block = super(DiscussionXBlock, cls).parse_xml(node, runtime, keys, id_generator)
+        block = super(EolDiscussionXBlock, cls).parse_xml(node, runtime, keys, id_generator)
 
         cls._apply_translations_to_node_attributes(block, node)
         cls._apply_metadata_and_policy(block, node, runtime)
