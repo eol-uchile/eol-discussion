@@ -1,9 +1,9 @@
-"""Setup for eolzoom XBlock."""
-
+#!/usr/bin/env python
+""" Setup to allow pip installs of eol discussion xblock """
 
 import os
 
-from setuptools import setup
+from setuptools import setup, find_packages
 
 
 def package_data(pkg, roots):
@@ -24,17 +24,18 @@ def package_data(pkg, roots):
 
 setup(
     name='eoldiscussion-xblock',
-    version='0.1',
-    description='',
+    version='1.0.0',
+    description='EOL Discussion Xblock',
+    author="Oficina EOL UChile",
+    author_email="eol-ing@uchile.cl",
     license='AGPL v3',
-    packages=[
-        'eoldiscussion',
-    ],
+    packages=find_packages(),
+    include_package_data=True,
     install_requires=['XBlock'],
     entry_points={
         'xblock.v1': [
             'eoldiscussion = eoldiscussion:EolDiscussionXBlock',
         ],
     },
-    package_data=package_data("eoldiscussion", ["static", "public"]),
+    package_data={"eoldiscussion": ["*.html","*.underscore"]}
 )
