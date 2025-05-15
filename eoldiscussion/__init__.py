@@ -10,7 +10,6 @@ import logging
 from django.conf import settings as dsettings
 from django.contrib.staticfiles.storage import staticfiles_storage
 from django.urls import reverse
-from django.utils.translation import get_language_bidi
 from eol_forum_notifications.utils import get_user_data
 from six.moves import urllib
 import pkg_resources
@@ -18,7 +17,7 @@ import six
 
 # Edx dependencies
 from openedx.core.djangolib.markup import HTML, Text
-from openedx.core.lib.xblock_builtin import get_css_dependencies, get_js_dependencies
+from openedx.core.lib.xblock_builtin import get_js_dependencies
 from web_fragments.fragment import Fragment
 from xblock.core import XBlock
 from xblock.exceptions import JsonHandlerError
@@ -148,29 +147,6 @@ class EolDiscussionXBlock(XBlock, StudioEditableXBlockMixin, XmlParserMixin):
         the files are loaded individually, but in production just the single bundle is loaded.
         """
         return get_js_dependencies('discussion')
-
-    @staticmethod
-    def css_dependencies():
-        """
-        Returns list of CSS files that this XBlock depends on.
-
-        The helper function that it uses to obtain the list of CSS files
-        works in conjunction with the Django pipeline to ensure that in development mode
-        the files are loaded individually, but in production just the single bundle is loaded.
-        """
-        if get_language_bidi():
-            return get_css_dependencies('style-inline-discussion-rtl')
-        else:
-            return get_css_dependencies('style-inline-discussion')
-
-    def add_resource_urls(self, fragment):
-        """
-        Adds URLs for JS and CSS resources that this XBlock depends on to `fragment`.
-        """
-        # Head dependencies
-        for vendor_js_file in self.vendor_js_dependencies():
-            fragment.add_resource_url(staticfiles_storage.url(vendor_js_file), "application/javascript", "head")
-
 
     def has_permission(self, permission):
         """
