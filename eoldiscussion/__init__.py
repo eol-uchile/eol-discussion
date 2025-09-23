@@ -2,27 +2,31 @@
 """
 Discussion XBlock
 """
-import pkg_resources
+# Python Standard Libraries
+from datetime import datetime as dt
 import logging
-import six
+
+# Installed packages (via pip)
 from django.conf import settings as dsettings
-from six.moves import urllib
-from six.moves.urllib.parse import urlparse  # pylint: disable=import-error
 from django.contrib.staticfiles.storage import staticfiles_storage
 from django.urls import reverse
 from django.utils.translation import get_language_bidi
-from xblock.completable import XBlockCompletionMode
-from xblock.core import XBlock
-from xblock.fields import Scope, String, UNIQUE_ID, Integer, Boolean
-from web_fragments.fragment import Fragment
-from xblockutils.resources import ResourceLoader
-from xblockutils.studio_editable import StudioEditableXBlockMixin
-from xblock.exceptions import JsonHandlerError
+from eol_forum_notifications.utils import get_user_data
+from six.moves import urllib
+import pkg_resources
+import six
+
+# Edx dependencies
 from openedx.core.djangolib.markup import HTML, Text
 from openedx.core.lib.xblock_builtin import get_css_dependencies, get_js_dependencies
+from web_fragments.fragment import Fragment
+from xblock.core import XBlock
+from xblock.exceptions import JsonHandlerError
+from xblock.fields import Scope, String, UNIQUE_ID, Integer, Boolean
+from xblockutils.resources import ResourceLoader
+from xblockutils.studio_editable import StudioEditableXBlockMixin
 from xmodule.raw_module import RawDescriptor
 from xmodule.xml_module import XmlParserMixin
-from datetime import datetime as dt
 
 log = logging.getLogger(__name__)
 loader = ResourceLoader(__name__)  # pylint: disable=invalid-name
@@ -295,7 +299,7 @@ class EolDiscussionXBlock(XBlock, StudioEditableXBlockMixin, XmlParserMixin):
             else:
                 context['finished'] = False
         try:
-            from eol_forum_notifications.utils import get_user_data
+
             notification_data = get_user_data(self.discussion_id, self.django_user, self.course_key, self.location)
             context['url_eol_notification_save'] = reverse('eol_discussion_notification:save')
             context['notification_data'] = notification_data
