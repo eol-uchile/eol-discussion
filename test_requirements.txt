@@ -1,0 +1,1 @@
+-e git+https://github.com/eol-uchile/eol_forum_notifications@1.0.0#egg=eol_forum_notifications
