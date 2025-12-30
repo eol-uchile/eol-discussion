@@ -428,7 +428,7 @@ class EolDiscussionXBlockImportExportTests(UrlResetMixin, ModuleStoreTestCase):
         self.xblock.end_date = '2024-12-01T17:00:00'
         student_view = self.xblock.student_view()
         student_view_html = student_view.content
-        self.assertIn('Contenido Studio', student_view_html)
+        self.assertIn('discussion-module eoldiscussion-module', student_view_html)
 
     def test_has_dicussion_permission(self):
         """
