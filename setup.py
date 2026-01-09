@@ -37,5 +37,5 @@ setup(
             'eoldiscussion = eoldiscussion:EolDiscussionXBlock',
         ],
     },
-    package_data={"eoldiscussion": ["*.html","*.underscore"]}
+    package_data = {"eoldiscussion": ["static/**/*"]}
 )
