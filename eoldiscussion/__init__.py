@@ -6,28 +6,26 @@ Discussion XBlock
 from datetime import datetime as dt
 import logging
 import os, re
+import pkg_resources
 
 # Installed packages (via pip)
 from django.conf import settings as dsettings
+from django.contrib.auth.models import User
 from django.contrib.staticfiles.storage import staticfiles_storage
 from django.urls import reverse
 from eol_forum_notifications.utils import get_user_data
 from mako.lookup import TemplateLookup
 from six.moves import urllib
-import pkg_resources
-import six
 
 # Edx dependencies
 from openedx.core.djangolib.markup import HTML, Text
-from openedx.core.lib.xblock_builtin import get_js_dependencies
 from web_fragments.fragment import Fragment
+from xblock_discussion import DiscussionXBlock
 from xblock.core import XBlock
 from xblock.exceptions import JsonHandlerError
-from xblock.fields import Scope, String, UNIQUE_ID, Integer, Boolean
+from xblock.fields import Scope, String, Integer, Boolean
 from xblockutils.resources import ResourceLoader
-from xblockutils.studio_editable import StudioEditableXBlockMixin
-from xmodule.raw_module import RawDescriptor
-from xmodule.xml_module import XmlParserMixin
+from openedx.core.djangoapps.django_comment_common.models import Role
 
 log = logging.getLogger(__name__)
 loader = ResourceLoader(__name__)  # pylint: disable=invalid-name
@@ -42,34 +40,10 @@ def _(text):
 
 @XBlock.needs('user')  # pylint: disable=abstract-method
 @XBlock.needs('i18n')
-class EolDiscussionXBlock(XBlock, StudioEditableXBlockMixin, XmlParserMixin):
+class EolDiscussionXBlock(DiscussionXBlock):
     """
-    Provides a discussion forum that is inline with other content in the courseware.
+    Provides an extension of DiscussionXBlock adding new functionalities.
     """
-    #completion_mode = XBlockCompletionMode.EXCLUDED
-
-    discussion_id = String(scope=Scope.settings, default=UNIQUE_ID)
-    display_name = String(
-        display_name=_("Display Name"),
-        help=_("Nombre para mostrar en este componente."),
-        default="Nuevo foro de discusión",
-        scope=Scope.settings
-    )
-    discussion_category = String(
-        display_name=_("Category"),
-        default=_("Week 1"),
-        help=_(
-            "Nombre de categoría para la discusión. "
-            "Este aparece en el panel izquierdo de la discusión del curso."
-        ),
-        scope=Scope.settings
-    )
-    discussion_target = String(
-        display_name=_("Subcategory"),
-        default="Topic-Level Student-Visible Label",
-        help=_("Nombre de subcategoría para la discusión. Este aparece en el panel izquierdo de la pantalla de foros de discusión del curso."),
-        scope=Scope.settings
-    )
     limit_character = Integer(
         display_name='Límite de caracteres',
         help='Entero que representa el límite de caracteres entre 1 y 2.000.',
@@ -95,74 +69,7 @@ class EolDiscussionXBlock(XBlock, StudioEditableXBlockMixin, XmlParserMixin):
         help=_("Indica la fecha de cierre del foro (horario chileno)")
     )
 
-    sort_key = String(scope=Scope.settings)
-
     editable_fields = ["display_name", "discussion_category", "discussion_target", "limit_character", "is_dated", "start_date", "end_date"]
-
-    has_author_view = True  # Tells Studio to use author_view
-
-    # support for legacy OLX format - consumed by XmlParserMixin.load_metadata
-    metadata_translations = dict(RawDescriptor.metadata_translations)
-    metadata_translations['id'] = 'discussion_id'
-    metadata_translations['for'] = 'discussion_target'
-
-    @property
-    def course_key(self):
-        """
-        :return: int course id
-
-        NB: The goal is to move this XBlock out of edx-platform, and so we use
-        scope_ids.usage_id instead of runtime.course_id so that the code will
-        continue to work with workbench-based testing.
-        """
-        return getattr(self.scope_ids.usage_id, 'course_key', None)
-
-    @property
-    def django_user(self):
-        """
-        Returns django user associated with user currently interacting
-        with the XBlock.
-        """
-        user_service = self.runtime.service(self, 'user')
-        if not user_service:
-            return None
-        return user_service._django_user  # pylint: disable=protected-access
-
-    @staticmethod
-    def vendor_js_dependencies():
-        """
-        Returns list of vendor JS files that this XBlock depends on.
-
-        The helper function that it uses to obtain the list of vendor JS files
-        works in conjunction with the Django pipeline to ensure that in development mode
-        the files are loaded individually, but in production just the single bundle is loaded.
-        """
-        return get_js_dependencies('discussion_vendor')
-
-    @staticmethod
-    def js_dependencies():
-        """
-        Returns list of JS files that this XBlock depends on.
-
-        The helper function that it uses to obtain the list of JS files
-        works in conjunction with the Django pipeline to ensure that in development mode
-        the files are loaded individually, but in production just the single bundle is loaded.
-        """
-        return get_js_dependencies('discussion')
-
-    def has_permission(self, permission):
-        """
-        Encapsulates lms specific functionality, as `has_permission` is not
-        importable outside of lms context, namely in tests.
-
-        :param user:
-        :param str permission: Permission
-        :rtype: bool
-        """
-        # normal import causes the xmodule_assets command to fail due to circular import - hence importing locally
-        from lms.djangoapps.discussion.django_comment_client.permissions import has_permission
-
-        return has_permission(self.django_user, permission, self.course_key)
 
     def resource_string(self, path):
         """Handy helper for getting resources from our kit."""
@@ -198,8 +105,6 @@ class EolDiscussionXBlock(XBlock, StudioEditableXBlockMixin, XmlParserMixin):
         """
             Verify if user has forum permission
         """
-        from openedx.core.djangoapps.django_comment_common.models import Role
-        from django.contrib.auth.models import User
         user = User.objects.get(id=self.scope_ids.user_id)
         roles = Role.objects.filter(users=user, course_id=self.course_key).values('name')
         roles = [x['name'] for x in roles]
@@ -290,7 +195,6 @@ class EolDiscussionXBlock(XBlock, StudioEditableXBlockMixin, XmlParserMixin):
             else:
                 context['finished'] = False
         try:
-
             notification_data = get_user_data(self.discussion_id, self.django_user, self.course_key, self.location)
             context['url_eol_notification_save'] = reverse('eol_discussion_notification:save')
             context['notification_data'] = notification_data
@@ -300,17 +204,6 @@ class EolDiscussionXBlock(XBlock, StudioEditableXBlockMixin, XmlParserMixin):
         fragment.add_content(self.render_mako_template('static/html/_discussion_inline.html', context))
         fragment.initialize_js('EolDiscussionInlineBlock')
 
-        return fragment
-
-    def author_view(self, context=None):  # pylint: disable=unused-argument
-        """
-        Renders author view for Studio.
-        """
-        fragment = Fragment()
-        fragment.add_content(self.runtime.render_template(
-            'discussion/_discussion_inline_studio.html',
-            {'discussion_id': self.discussion_id}
-        ))
         return fragment
 
     def studio_view(self, context):
@@ -386,66 +279,6 @@ class EolDiscussionXBlock(XBlock, StudioEditableXBlockMixin, XmlParserMixin):
                     log.error('EolDiscussion - Error in date format, params: {}'.format(data))
                     return 'Error con los formatos en las fechas del foro.'
         return True
-
-    def student_view_data(self):
-        """
-        Returns a JSON representation of the student_view of this XBlock.
-        """
-        return {'topic_id': self.discussion_id}
-
-    @classmethod
-    def parse_xml(cls, node, runtime, keys, id_generator):
-        """
-        Parses OLX into XBlock.
-
-        This method is overridden here to allow parsing legacy OLX, coming from discussion XModule.
-        XBlock stores all the associated data, fields and children in a XML element inlined into vertical XML file
-        XModule stored only minimal data on the element included into vertical XML and used a dedicated "discussion"
-        folder in OLX to store fields and children. Also, some info was put into "policy.json" file.
-
-        If no external data sources are found (file in "discussion" folder), it is exactly equivalent to base method
-        XBlock.parse_xml. Otherwise this method parses file in "discussion" folder (known as definition_xml), applies
-        policy.json and updates fields accordingly.
-        """
-        block = super(EolDiscussionXBlock, cls).parse_xml(node, runtime, keys, id_generator)
-
-        cls._apply_translations_to_node_attributes(block, node)
-        cls._apply_metadata_and_policy(block, node, runtime)
-
-        return block
-
-    @classmethod
-    def _apply_translations_to_node_attributes(cls, block, node):
-        """
-        Applies metadata translations for attributes stored on an inlined XML element.
-        """
-        for old_attr, target_attr in six.iteritems(cls.metadata_translations):
-            if old_attr in node.attrib and hasattr(block, target_attr):
-                setattr(block, target_attr, node.attrib[old_attr])
-
-    @classmethod
-    def _apply_metadata_and_policy(cls, block, node, runtime):
-        """
-        Attempt to load definition XML from "discussion" folder in OLX, than parse it and update block fields
-        """
-        if node.get('url_name') is None:
-            return  # Newer/XBlock XML format - no need to load an additional file.
-        try:
-            definition_xml, _ = cls.load_definition_xml(node, runtime, block.scope_ids.def_id)
-        except Exception as err:  # pylint: disable=broad-except
-            log.info(
-                u"Exception %s when trying to load definition xml for block %s - assuming XBlock export format",
-                err,
-                block
-            )
-            return
-
-        metadata = cls.load_metadata(definition_xml)
-        cls.apply_policy(metadata, runtime.get_policy(block.scope_ids.usage_id))
-
-        for field_name, value in six.iteritems(metadata):
-            if field_name in block.fields:
-                setattr(block, field_name, value)
 
 def is_empty(attr):
     """
