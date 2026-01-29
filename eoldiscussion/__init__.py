@@ -13,6 +13,7 @@ from django.conf import settings as dsettings
 from django.contrib.auth.models import User
 from django.contrib.staticfiles.storage import staticfiles_storage
 from django.urls import reverse
+from django.utils import timezone
 from eol_forum_notifications.utils import get_user_data
 from mako.lookup import TemplateLookup
 from six.moves import urllib
@@ -60,13 +61,13 @@ class EolDiscussionXBlock(DiscussionXBlock):
     start_date = String(
         display_name=_("Fecha de inicio"),
         scope=Scope.settings,
-        help=_("Indica la fecha de inicio del foro (horario chileno)")
+        help=_("Indica la fecha de inicio del foro")
     )
 
     end_date = String(
         display_name=_("Fecha de cierre"),
         scope=Scope.settings,
-        help=_("Indica la fecha de cierre del foro (horario chileno)")
+        help=_("Indica la fecha de cierre del foro")
     )
 
     editable_fields = ["display_name", "discussion_category", "discussion_target", "limit_character", "is_dated", "start_date", "end_date"]
@@ -176,24 +177,13 @@ class EolDiscussionXBlock(DiscussionXBlock):
             'include_mako_static': lambda path: self.include_mako_static(path, context)
         }
         if self.is_dated:
-            from django.utils import timezone
-            #edit the code below according to your time zone
-            zone = '-04:00'
-            if dsettings.USER_API_DEFAULT_PREFERENCES.get('time_zone', 'America/Santiago') == 'America/Santiago':
-                zone = '-03:00'
-            dt1 = dt.fromisoformat('{}{}'.format(self.start_date, zone))
-            dt2 = dt.fromisoformat('{}{}'.format(self.end_date, zone))
-            context['start'] = '{}{}'.format(self.start_date, zone)
-            context['finish'] = '{}{}'.format(self.end_date, zone)
+            dt1 = dt.fromisoformat(self.start_date.replace("Z", "+00:00"))
+            dt2 = dt.fromisoformat(self.end_date.replace("Z", "+00:00"))
+            context['start'] = self.start_date
+            context['finish'] = self.end_date
             now = timezone.now()
-            if dt1 > now:
-                context['started'] = False
-            else:
-                context['started'] = True
-            if dt2 < now:
-                context['finished'] = True
-            else:
-                context['finished'] = False
+            context['started'] = dt1 <= now
+            context['finished'] =  dt2 < now
         try:
             notification_data = get_user_data(self.discussion_id, self.django_user, self.course_key, self.location)
             context['url_eol_notification_save'] = reverse('eol_discussion_notification:save')
@@ -270,8 +260,8 @@ class EolDiscussionXBlock(DiscussionXBlock):
                 return 'Falta definir las fechas del foro.'
             else:
                 try:
-                    dt1 = dt.strptime(data.get('start_date', ''), "%Y-%m-%dT%H:%M")
-                    dt2 = dt.strptime(data.get('end_date', ''), "%Y-%m-%dT%H:%M")
+                    dt1 = dt.strptime(data.get('start_date', ''), "%Y-%m-%dT%H:%M:%S.%fZ")
+                    dt2 = dt.strptime(data.get('end_date', ''), "%Y-%m-%dT%H:%M:%S.%fZ")
                     if dt2 < dt1:
                         log.error('EolDiscussion - Error, end_date must be greatest than start_date, params: {}'.format(data))
                         return 'La fecha de cierre debe ser mayor a la fecha de inicio del foro.'

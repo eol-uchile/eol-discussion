@@ -45,15 +45,15 @@
     </li>
     <li class="field comp-setting-entry is-set" id="li_start_date">
       <div class="wrapper-comp-setting">
-        <label class="label setting-label" for="start_date">{{fields.start_date.display_name}}</label>
-        <input class="input setting-input" name="start_date" id="start_date" value="{{xblock.start_date}}" type="datetime-local" />
+        <label class="label setting-label" for="start_date">{{fields.start_date.display_name}}<span class="user-timezone"></span></label>
+        <input class="input setting-input" name="start_date" id="start_date" value="{{xblock.start_date}}" type="datetime-local" data-start-date="{{xblock.start_date}}"/>
       </div>
       <span class="tip setting-help">{{fields.start_date.help|safe}}</span>
     </li>
     <li class="field comp-setting-entry is-set" id="li_end_date">
       <div class="wrapper-comp-setting">
-        <label class="label setting-label" for="end_date">{{fields.end_date.display_name}}</label>
-        <input class="input setting-input" name="end_date" id="end_date" value="{{xblock.end_date}}" type="datetime-local" />
+        <label class="label setting-label" for="end_date">{{fields.end_date.display_name}}<span class="user-timezone"></span></label>
+        <input class="input setting-input" name="end_date" id="end_date" value="{{xblock.end_date}}" type="datetime-local" data-end-date="{{xblock.end_date}}"/>
       </div>
       <span class="tip setting-help">{{fields.end_date.help|safe}}</span>
     </li>
