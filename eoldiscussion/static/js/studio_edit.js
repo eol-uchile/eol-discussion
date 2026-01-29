@@ -1,7 +1,9 @@
 /* Javascript for StudioEditableXBlockMixin. */
 function StudioEditableXBlockMixin(runtime, element, settings) {
     "use strict";
+    const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
     $(function($) {
+        $(element).find(".user-timezone").text(` (${userTimeZone})`);
         if(settings.is_dated){
             $(element).find('#li_start_date').show();
             $(element).find('#li_end_date').show();
@@ -10,6 +12,16 @@ function StudioEditableXBlockMixin(runtime, element, settings) {
             $(element).find('#li_start_date').hide();
             $(element).find('#li_end_date').hide();
         }
+        require(['moment-timezone'], function (moment) {
+            var el_start_date = $(element).find('#start_date');
+            if (el_start_date.data('start-date') != "None") {
+                el_start_date.val(moment.utc( el_start_date.data('start-date')).tz(userTimeZone).format('YYYY-MM-DD HH:mm'));
+            }
+            var el_end_date = $(element).find('#end_date');
+            if (el_end_date.data('end-date') != "None") {
+                el_end_date.val(moment.utc( el_end_date.data('end-date')).tz(userTimeZone).format('YYYY-MM-DD HH:mm'));
+            }
+        });
     });
     $(element).find('#is_dated').on('change', function() {
         //0: disabled
@@ -84,22 +96,24 @@ function StudioEditableXBlockMixin(runtime, element, settings) {
             if(end_date > start_date) check = true;
         }
         if(!check){
-            runtime.notify('error', {title: gettext("Unable to update settings"), message: 'Revise quelos parámetros enten correctos.'});
+            runtime.notify('error', {title: gettext("Unable to update settings"), message: 'Revise que los parámetros enten correctos.'});
         }
         else{
-            $(element).find('#limit_character')[0].value = limit.toString();
-            var offset = new Date().getTimezoneOffset();
-            var timezone = -(offset/60)
-            var form_data = {
-                'display_name': $(element).find('input[name=display_name]').val(),
-                'discussion_category': $(element).find('input[name=discussion_category]').val(),
-                'discussion_target': $(element).find('input[name=discussion_target]').val(),
-                'limit_character': $(element).find('input[name=limit_character]').val(),
-                'is_dated': is_dated,
-                'start_date': $(element).find('input[name=start_date]').val(),
-                'end_date': $(element).find('input[name=end_date]').val()
-            }
-            studio_submit(form_data);
+            require(['moment-timezone'], function (moment) {
+                $(element).find('#limit_character')[0].value = limit.toString();
+                var start_date = moment($(element).find('input[name=start_date]').val()).tz(userTimeZone).utc().toISOString()
+                var end_date = moment($(element).find('input[name=end_date]').val()).tz(userTimeZone).utc().toISOString()
+                var form_data = {
+                    'display_name': $(element).find('input[name=display_name]').val(),
+                    'discussion_category': $(element).find('input[name=discussion_category]').val(),
+                    'discussion_target': $(element).find('input[name=discussion_target]').val(),
+                    'limit_character': $(element).find('input[name=limit_character]').val(),
+                    'is_dated': is_dated,
+                    'start_date': start_date,
+                    'end_date': end_date
+                }
+                studio_submit(form_data);
+            })
         }
     });
 
