@@ -347,8 +347,8 @@ class EolDiscussionXBlockImportExportTests(UrlResetMixin, ModuleStoreTestCase):
             'discussion_target': 'test_target',
             'limit_character': 1200,
             'is_dated': True,
-            'start_date':'2025-04-28T14:30',
-            'end_date':'2025-03-28T14:30',
+            'start_date':'2025-04-28T14:30:00.000Z',
+            'end_date':'2025-03-28T14:30:00.000Z',
         })
 
         request.body = data.encode()
@@ -368,8 +368,8 @@ class EolDiscussionXBlockImportExportTests(UrlResetMixin, ModuleStoreTestCase):
             'discussion_target': 'test_target',
             'limit_character': 1200,
             'is_dated': True,
-            'start_date':'2025-03-28T14:30',
-            'end_date':'2025-04-28T14:30',
+            'start_date':'2025-03-28T14:30:00.000Z',
+            'end_date':'2025-04-28T14:30:00.000Z',
         })
         request.body = data.encode()
         response = self.xblock.submit_studio_edits(request)
@@ -424,8 +424,8 @@ class EolDiscussionXBlockImportExportTests(UrlResetMixin, ModuleStoreTestCase):
         self.xblock.scope_ids.usage_id = mock.Mock()
         self.xblock.scope_ids.usage_id.course_key = self.course.id
         self.xblock.is_dated = True
-        self.xblock.start_date = '2024-12-01T08:00:00'
-        self.xblock.end_date = '2024-12-01T17:00:00'
+        self.xblock.start_date = '2024-12-01T08:00:00.000Z'
+        self.xblock.end_date = '2024-12-01T17:00:00.000Z'
         student_view = self.xblock.student_view()
         student_view_html = student_view.content
         self.assertIn('discussion-module eoldiscussion-module', student_view_html)
