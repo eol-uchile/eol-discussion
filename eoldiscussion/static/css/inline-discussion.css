@@ -2718,13 +2718,13 @@ li[class*=forum-nav-thread-label-]::before, li[class*=forum-nav-thread-label-]::
 .eoldiscussion-module .eol-forum-nav-refine-bar {
   font-size: 12px !important;
   padding: 5px 10px !important;
-  color: #000 !important; 
+  color: #000 !important;
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
 }
-.eoldiscussion-module .eol-forum-nav-refine-bar:after {
-  content: "" !important;
-  display: table !important;
-  clear: both !important; 
-}
+
 .eoldiscussion-module .forum-nav-sort {
   float: none !important; 
 }
@@ -2747,9 +2747,8 @@ li[class*=forum-nav-thread-label-]::before, li[class*=forum-nav-thread-label-]::
   white-space: nowrap !important;
   background-color: #7eb0d5 !important;
   color: #fff !important;
-  width: 30% !important;
   line-height: 18px !important;
-  min-width: 247px !important;
+  min-width: 300px !important;
 }
 .eoldiscussion-module .btn-link-eol:hover, .eoldiscussion-module .btn-link-eol:active, .eoldiscussion-module .btn-link-eol:focus {
   background-image: none !important;
@@ -2786,9 +2785,6 @@ li[class*=forum-nav-thread-label-]::before, li[class*=forum-nav-thread-label-]::
   margin-bottom: 0 !important;
 }
 @media (min-width: 1000px) {
-  .eoldiscussion-module .btn-link-eol {
-    margin-top: 45px !important;
-  }
   .eoldiscussion-module .add-response-btn, .eoldiscussion-module .discussion-submit-post{
     margin-top: 0 !important;
   }
