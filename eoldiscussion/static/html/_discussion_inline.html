@@ -48,21 +48,21 @@ if not is_staff and is_dated:
             <div class="discussion-module-date">
                 % if started and not finished:
                     <img src="${icon2_url}">
-                    <span class="date-text">${_("El foro termina el")} <div class="eolforum-format-date" data-date="${finish}"></div>.</span>
+                    <span class="date-text">${_("The forum ends on")} <div class="eolforum-format-date" data-date="${finish}"></div>.</span>
                 % else:
                     %if not started:
                         <img src="${icon1_url}">
-                        <span class="date-text">${_("El foro inicia el")} <div class="eolforum-format-date" data-date="${start}"></div>.</span>
+                        <span class="date-text">${_("The forum begins on")} <div class="eolforum-format-date" data-date="${start}"></div>.</span>
                     %endif
                     %if finished:
                         <img src="${icon3_url}">
-                        <span class="date-text">${_("El foro ha finalizado.")}</span>
+                        <span class="date-text">${_("The forum has ended.")}</span>
                     %endif
                 %endif
             </div>
             <div class="discussion-module-date-finished">
                 <img src="${icon3_url}">
-                <span class="date-text">${_("El foro ha finalizado.")}</span>
+                <span class="date-text">${_("The forum has ended.")}</span>
             </div>
         %endif
         <button class="eol-notification-btn btn" id="eol-notification-btn-${discussion_id}"
@@ -82,24 +82,24 @@ if not is_staff and is_dated:
             <hr>
             <div class="eol-body-notification" id="eol-body-notification-${discussion_id}">
                 <div class="eol-notification-period">
-                    <h3>Cada cuanto recibir mensaje:</h3>
+                    <h3>${_("How often to receive messages")}</h3>
                     <ul class="eol-notification-list">
                         <li>
-                            <span>Diario</span>
+                            <span>${_("Daily")}</span>
                             <label class="switch" style="float: right;">
                                 <input type="checkbox" class="eol-checkbox-period-${discussion_id}" value="daily">
                                 <span class="slider round"></span>
                             </label>
                         </li>
                         <li>
-                            <span>Semanal</span>
+                            <span>${_("Weekly")}</span>
                             <label class="switch" style="float: right;">
                                 <input type="checkbox" class="eol-checkbox-period-${discussion_id}" value="weekly">
                                 <span class="slider round"></span>
                             </label>
                         </li>
                         <li>
-                            <span>Nunca</span>
+                            <span>${_("Never")}</span>
                             <label class="switch" style="float: right;">
                                 <input type="checkbox" class="eol-checkbox-period-${discussion_id}" value="never" checked>
                                 <span class="slider round"></span>
@@ -108,10 +108,10 @@ if not is_staff and is_dated:
                     </ul>
                 </div>
                 <div class="alert alert-info" id="eol-alert-info-${discussion_id | n, js_escaped_string}">
-                    Guardado Correctamente
+                    ${_("Saved correctly")}
                 </div>
                 <div class="alert alert-error" id="eol-alert-error-${discussion_id | n, js_escaped_string}">
-                    Un error inesperado ha ocurrido, actualice la página he intente nuevamente. Si el error persiste contacte te con mesa de ayuda.
+                    ${_("An unexpected error has occurred. Please refresh the page and try again. If the error persists, contact support.")}
                 </div>
                 <div class="eol-notification-save">
                     <button class="eol-save-btn btn" id="eol-save-btn-${discussion_id | n, js_escaped_string}"
