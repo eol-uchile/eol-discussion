@@ -253,7 +253,7 @@ class EolDiscussionXBlockImportExportTests(UrlResetMixin, ModuleStoreTestCase):
         request.body = data.encode()
         response = self.xblock.submit_studio_edits(request)
         data = json.loads(response._app_iter[0].decode())
-        self.assertEqual(data['error'], 'Error con los parámetros.')
+        self.assertEqual(data['error'], 'Error with parameters.')
 
     def test_submit_studio_edits_limit_character_is_not_a_number(self):
         """
@@ -272,7 +272,7 @@ class EolDiscussionXBlockImportExportTests(UrlResetMixin, ModuleStoreTestCase):
         request.body = data.encode()
         response = self.xblock.submit_studio_edits(request)
         data = json.loads(response._app_iter[0].decode())
-        self.assertEqual(data['error'], 'El limite de caracteres debe ser un entero.')
+        self.assertEqual(data['error'], 'The character limit must be an integer.')
 
     def test_submit_studio_edits_handles_is_dated_false(self):
         """
@@ -311,7 +311,7 @@ class EolDiscussionXBlockImportExportTests(UrlResetMixin, ModuleStoreTestCase):
         request.body = data.encode()
         response = self.xblock.submit_studio_edits(request)
         data = json.loads(response._app_iter[0].decode())
-        self.assertEqual(data['error'], 'Falta definir las fechas del foro.')
+        self.assertEqual(data['error'], 'The dates for the forum have yet to be set.')
 
     def test_submit_studio_edits_invalid_date_format(self):
         """
@@ -332,7 +332,7 @@ class EolDiscussionXBlockImportExportTests(UrlResetMixin, ModuleStoreTestCase):
         request.body = data.encode()
         response = self.xblock.submit_studio_edits(request)
         data = json.loads(response._app_iter[0].decode())
-        self.assertEqual(data['error'], 'Error con los formatos en las fechas del foro.')
+        self.assertEqual(data['error'], 'Error with date formats in the forum.')
 
     def test_submit_studio_edits_end_date_must_be_greater_than_start_date(self):
         """
@@ -354,7 +354,7 @@ class EolDiscussionXBlockImportExportTests(UrlResetMixin, ModuleStoreTestCase):
         request.body = data.encode()
         response = self.xblock.submit_studio_edits(request)
         data = json.loads(response._app_iter[0].decode())
-        self.assertEqual(data['error'], 'La fecha de cierre debe ser mayor a la fecha de inicio del foro.')
+        self.assertEqual(data['error'], 'The closing date must be later than the forum start date.')
 
     def test_submit_studio_edits(self):
         """

@@ -12,7 +12,7 @@
                 <% if (!readOnly) { %>
                 <div class="add-response">
                     <button class="btn-link-eol add-response-btn">
-                        <span class="button-text" style="float:left;"><%- gettext("Responder") %></span>
+                        <span class="button-text" style="float:left;"><%- gettext("Reply") %></span>
                         <i class="fa fa-plus" aria-hidden="true"  style="float:right;"></i>
                     </button>
                 </div>
@@ -23,7 +23,7 @@
 
                         <ul class="discussion-errors"></ul>
                         <div class="reply-body" data-id="<%- id %>"></div>
-                        <span class="eol-characters-span"><%- gettext("Caracteres restantes") %>: <span id='eol-limit-character'>
+                        <span class="eol-characters-span"><%- gettext("Remaining characters") %>: <span id='eol-limit-character'>
                             <% 
                                 var n = limitCharacter;
                                 var pattern = /(\d)(?=(\d{3})+(?!\d))/g;
@@ -158,7 +158,7 @@
 <div class="post-field">
     <p class="sr-only field-help" id="edit-post-editor-description"><%- gettext('Edit your post below.') %></p>
     <div class="edit-post-body" aria-describedby="edit-post-editor-description" name="body"><%- body %></div>
-    <span class="eol-characters-span"><%- gettext("Caracteres restantes") %>: <span id='eol-limit-character'>
+    <span class="eol-characters-span"><%- gettext("Remaining characters") %>: <span id='eol-limit-character'>
         <% 
             var n = limitCharacter;
             var pattern = /(\d)(?=(\d{3})+(?!\d))/g;
@@ -188,7 +188,7 @@
                 <label class="sr" for="add-new-comment-<%- wmdId %>"><%- gettext("Add a comment") %></label>
                 <div class="comment-body" id="add-new-comment-<%- wmdId %>" data-id="<%- wmdId %>"
                 data-placeholder="<%- gettext('Add a comment') %>"></div>
-                <span class="eol-characters-span" style="display: block;"><%- gettext("Caracteres restantes") %>: <span id='eol-limit-character'>
+                <span class="eol-characters-span" style="display: block;"><%- gettext("Remaining characters") %>: <span id='eol-limit-character'>
             <% 
                 var n = limitCharacter;
                 var pattern = /(\d)(?=(\d{3})+(?!\d))/g;
@@ -275,7 +275,7 @@
     <h<%- startHeader %>><%- gettext("Editing response") %></h<%- startHeader %>>
     <ul class="edit-post-form-errors"></ul>
       <div class="edit-post-body" name="body" data-id="<%- id %>"><%- body %></div>
-      <span class="eol-characters-span" style="display: block;"><%- gettext("Caracteres restantes") %>: <span id='eol-limit-character'>
+      <span class="eol-characters-span" style="display: block;"><%- gettext("Remaining characters") %>: <span id='eol-limit-character'>
             <% 
                 var n = limitCharacter;
                 var pattern = /(\d)(?=(\d{3})+(?!\d))/g;
@@ -331,7 +331,7 @@
     <h<%- startHeader %> ><%- gettext("Editing comment") %></h<%- startHeader%>>
     <ul class="edit-comment-form-errors"></ul>
     <div class="edit-comment-body" name="body" data-id="<%- id %>"><%- body %></div>
-    <span class="eol-characters-span" style="display: block;"><%- gettext("Caracteres restantes") %>: <span id='eol-limit-character'>
+    <span class="eol-characters-span" style="display: block;"><%- gettext("Remaining characters") %>: <span id='eol-limit-character'>
             <% 
                 var n = limitCharacter;
                 var pattern = /(\d)(?=(\d{3})+(?!\d))/g;
@@ -410,11 +410,11 @@
                 const updatedDate = new Date(last_activity_at);
             %>
             <ul class="eol-date-list">
-                <li class="eol-date-item" title='<%- gettext("Creación") %>'>
-                    <span class="eol-thread-created-at" ><%- gettext("Creación") %>: <%- creadtedDate.getDate()  %>-<%- creadtedDate.getMonth() + 1 %>-<%- creadtedDate.getFullYear()  %></span>
+                <li class="eol-date-item" title='<%- gettext("Creation") %>'>
+                    <span class="eol-thread-created-at" ><%- gettext("Creation") %>: <%- creadtedDate.getDate()  %>-<%- creadtedDate.getMonth() + 1 %>-<%- creadtedDate.getFullYear()  %></span>
                 </li>
-                <li class="eol-date-item updated-at" title='<%- gettext("Última actividad") %>'>
-                    <span class="eol-thread-updated-at" ><%- gettext("Última actividad") %>: <%- updatedDate.getDate()  %>-<%- updatedDate.getMonth() + 1 %>-<%- updatedDate.getFullYear()  %></span>
+                <li class="eol-date-item updated-at" title='<%- gettext("Last activity") %>'>
+                    <span class="eol-thread-updated-at" ><%- gettext("Last activity") %>: <%- updatedDate.getDate()  %>-<%- updatedDate.getMonth() + 1 %>-<%- updatedDate.getFullYear()  %></span>
                 </li>
             </ul>
         </div>
@@ -431,10 +431,10 @@
                     };
                     if (unread_comments_count > 0) {
                         // Translators: 'comments_count' and 'unread_comments_count' are numerical placeholders for a specific discussion thread; 'span_*' placeholders refer to HTML markup.  Please translate the word 'comments'.
-                        fmt = gettext('%(comments_count)s %(span_sr_open)scomments (%(unread_comments_count)s unread comments)%(span_close)s');
+                        fmt = gettext('%(comments_count)s %(span_sr_open)s comments (%(unread_comments_count)s unread comments)%(span_close)s');
                     } else {
                         // Translators: 'comments_count' is a numerical placeholder for a specific discussion thread; 'span_*' placeholders refer to HTML markup.  Please translate the word 'comments'.
-                        fmt = gettext('%(comments_count)s %(span_sr_open)scomments %(span_close)s');
+                        fmt = gettext('%(comments_count)s %(span_sr_open)s comments %(span_close)s');
                     }
                     print(interpolate(fmt, data, true));
                 %>
@@ -459,7 +459,7 @@
 </script>
 <script aria-hidden="true" type="text/template" id="new-post-template">
 <form class="forum-new-post-form">
-    <h<%- startHeader %> class="thread-title"><%- gettext("Crear publicación") %></h<%- startHeader %>>
+    <h<%- startHeader %> class="thread-title"><%- gettext("Create post") %></h<%- startHeader %>>
 
     <% if (mode === 'inline') { %>
         <button class="btn btn-outline-primary btn-default add-post-cancel">
@@ -504,9 +504,9 @@
     </div>
 
     <div>
-        <span class="field-label-text field-label-text-full" id="new-post-editor-description"><%- gettext('Tu pregunta o idea (requerido)') %></span>
+        <span class="field-label-text field-label-text-full" id="new-post-editor-description"><%- gettext('Your question or idea (required)') %></span>
         <div class="js-post-body editor" aria-describedby="new-post-editor-description" name="body"></div>
-        <span class="eol-characters-span"><%- gettext("Caracteres restantes") %>: <span id='eol-limit-character'>
+        <span class="eol-characters-span"><%- gettext("Remaining characters") %>: <span id='eol-limit-character'>
             <% 
                 var n = limitCharacter;
                 var pattern = /(\d)(?=(\d{3})+(?!\d))/g;
@@ -609,7 +609,7 @@
 <section class="discussion inline-discussion" data-discussion-id="<%- discussionId %>">
     <div class="add_post_btn_container <% if (read_only) { %> is-hidden <% } %>">
         <button class="btn-link-eol new-post-btn">
-            <span class="button-text" style="float:left;"><%- gettext("Crear publicación") %></span>
+            <span class="button-text" style="float:left;"><%- gettext("Create post") %></span>
             <i class="fa fa-plus" aria-hidden="true"  style="float:right;"></i>
             
         </button>

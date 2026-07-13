@@ -46,28 +46,28 @@ class EolDiscussionXBlock(DiscussionXBlock):
     Provides an extension of DiscussionXBlock adding new functionalities.
     """
     limit_character = Integer(
-        display_name='Límite de caracteres',
-        help='Entero que representa el límite de caracteres entre 1 y 2.000.',
+        display_name=_('Character limit'),
+        help=_('Integer representing the character limit between 1 and 2,000.'),
         default=1000,
         values={'min': 1, 'max':2000},
         scope=Scope.settings,
     )
     is_dated = Boolean(
-        display_name=_("Programar foro"),
+        display_name=_("Schedule forum"),
         default=False,
         scope=Scope.settings,
-        help=_("El foro será visible solamente durante las fechas configuradas.")
+        help=_("The forum will only be visible during the configured dates.")
     )
     start_date = String(
-        display_name=_("Fecha de inicio"),
+        display_name=_("Start date"),
         scope=Scope.settings,
-        help=_("Indica la fecha de inicio del foro")
+        help=_("Indicate the start date of the forum")
     )
 
     end_date = String(
-        display_name=_("Fecha de cierre"),
+        display_name=_("End date"),
         scope=Scope.settings,
-        help=_("Indica la fecha de cierre del foro")
+        help=_("Indicate the end date of the forum")
     )
 
     editable_fields = ["display_name", "discussion_category", "discussion_target", "limit_character", "is_dated", "start_date", "end_date"]
@@ -248,26 +248,26 @@ class EolDiscussionXBlock(DiscussionXBlock):
     def validate_data(self, data):
         if is_empty(data.get('display_name', '')) or is_empty(data.get('discussion_category', '')) or is_empty(data.get('discussion_target', '')) or is_empty(data.get('limit_character', '')) or is_empty(data.get('is_dated', '')):
             log.error('EolDiscussion - Error in params {}'.format(data))
-            return 'Error con los parámetros.'
+            return _('Error with parameters.')
         try:
             aux = int(data.get('limit_character'))
         except ValueError:
             log.error('EolDiscussion - Error, limit character must be integer, params: {}'.format(data))
-            return 'El limite de caracteres debe ser un entero.'
+            return _('The character limit must be an integer.')
         if data.get('is_dated', False) is True:
             if is_empty(data.get('start_date', '')) or is_empty(data.get('end_date', '')):
                 log.error('EolDiscussion - Error, dates must be definied, params: {}'.format(data))
-                return 'Falta definir las fechas del foro.'
+                return _('The dates for the forum have yet to be set.')
             else:
                 try:
                     dt1 = dt.strptime(data.get('start_date', ''), "%Y-%m-%dT%H:%M:%S.%fZ")
                     dt2 = dt.strptime(data.get('end_date', ''), "%Y-%m-%dT%H:%M:%S.%fZ")
                     if dt2 < dt1:
                         log.error('EolDiscussion - Error, end_date must be greatest than start_date, params: {}'.format(data))
-                        return 'La fecha de cierre debe ser mayor a la fecha de inicio del foro.'
+                        return _('The closing date must be later than the forum start date.')
                 except Exception as e:
                     log.error('EolDiscussion - Error in date format, params: {}'.format(data))
-                    return 'Error con los formatos en las fechas del foro.'
+                    return _('Error with date formats in the forum.')
         return True
 
 def is_empty(attr):
