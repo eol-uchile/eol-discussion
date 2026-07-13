@@ -34,10 +34,10 @@
         <label class="label setting-label" for="is_dated">{{fields.is_dated.display_name}}</label>
         <select class="input setting-input" id="is_dated" {% if xblock.is_dated %}style="background:white;"{% endif %}>
           <option value="0" {% if not xblock.is_dated %}selected{% endif %}>
-            Deshabilitado
+            {% trans "Disabled" %}
           </option>
           <option value="1" {% if xblock.is_dated %}selected{% endif %}>
-            Habilitado
+            {% trans "Enabled" %}
           </option>
         </select>
       </div>

@@ -176,7 +176,7 @@ function check_dates(){
                 $wmdPanel = $("<div>")
                     .addClass("wmd-panel")
                     .append($("<div>").addClass("wmd-button-bar" + _append))
-                    .append($("<label>").addClass("sr").attr("for", wmdInputId).text(gettext("Tu pregunta o idea (requerido)")))
+                    .append($("<label>").addClass("sr").attr("for", wmdInputId).text(gettext("Your question or idea (required)")))
                     .append($("<textarea>").addClass("wmd-input").addClass("eol-text-limit").attr("id", wmdInputId).attr("maxlength", limitCharacter).html(initialText))
                     .append($wmdPreviewContainer);
                 $elem.append($wmdPanel);
@@ -1747,7 +1747,7 @@ if (typeof MathJax === "undefined") {
                     }
                 }
                 else {
-                    alert('El Foro ha finalizado.');
+                    alert(gettext('The forum has ended.'));
                     document.getElementsByClassName('discussion-module-date')[0].style.display = 'none';
                     document.getElementsByClassName('discussion-module-date-finished')[0].style.display = 'block';
                 }
@@ -2071,7 +2071,7 @@ if (typeof MathJax === "undefined") {
                 this.showed = true;
             }
             else {
-                alert('El Foro ha finalizado.');
+                alert(gettext('The forum has ended.'));
                 document.getElementsByClassName('discussion-module-date')[0].style.display = 'none';
                 document.getElementsByClassName('discussion-module-date-finished')[0].style.display = 'block';
             }
@@ -2182,7 +2182,7 @@ if (typeof MathJax === "undefined") {
                     return this;
                 }
                 else {
-                    alert('El Foro ha finalizado.');
+                    alert(gettext('The forum has ended.'));
                     document.getElementsByClassName('discussion-module-date')[0].style.display = 'none';
                     document.getElementsByClassName('discussion-module-date-finished')[0].style.display = 'block';
                 }
@@ -2803,7 +2803,7 @@ if (typeof MathJax === "undefined") {
                     return this.trigger("thread:_delete", event);
                 }
                 else {
-                    alert('El Foro ha finalizado.');
+                    alert(gettext('The forum has ended.'));
                     document.getElementsByClassName('discussion-module-date')[0].style.display = 'none';
                     document.getElementsByClassName('discussion-module-date-finished')[0].style.display = 'block';
                 }
@@ -3079,7 +3079,7 @@ if (typeof MathJax === "undefined") {
                     }
                 }
                 else {
-                    alert('El Foro ha finalizado.');
+                    alert(gettext('The forum has ended.'));
                     document.getElementsByClassName('discussion-module-date')[0].style.display = 'none';
                     document.getElementsByClassName('discussion-module-date-finished')[0].style.display = 'block';
                 }
@@ -3121,7 +3121,7 @@ if (typeof MathJax === "undefined") {
                     });
                 }
                 else {
-                    alert('El Foro ha finalizado.');
+                    alert(gettext('The forum has ended.'));
                     document.getElementsByClassName('discussion-module-date')[0].style.display = 'none';
                     document.getElementsByClassName('discussion-module-date-finished')[0].style.display = 'block';
                 }
@@ -3190,7 +3190,7 @@ if (typeof MathJax === "undefined") {
                     return DiscussionUtil.safeAjax({ $elem: $elem, url: url, type: "POST" });
                 }
                 else {
-                    alert('El Foro ha finalizado.');
+                    alert(gettext('The forum has ended.'));
                     document.getElementsByClassName('discussion-module-date')[0].style.display = 'none';
                     document.getElementsByClassName('discussion-module-date-finished')[0].style.display = 'block';
                 }
@@ -3479,7 +3479,7 @@ if (typeof MathJax === "undefined") {
                     });
                 }
                 else {
-                    alert('El Foro ha finalizado.');
+                    alert(gettext('The forum has ended.'));
                     document.getElementsByClassName('discussion-module-date')[0].style.display = 'none';
                     document.getElementsByClassName('discussion-module-date-finished')[0].style.display = 'block';
                 }
@@ -3574,7 +3574,7 @@ if (typeof MathJax === "undefined") {
                     return this.trigger("comment:update", event);
                 }
                 else {
-                    alert('El Foro ha finalizado.');
+                    alert(gettext('The forum has ended.'));
                     document.getElementsByClassName('discussion-module-date')[0].style.display = 'none';
                     document.getElementsByClassName('discussion-module-date-finished')[0].style.display = 'block';
                 }
@@ -3645,7 +3645,7 @@ if (typeof MathJax === "undefined") {
                     return this.trigger("comment:_delete", event);
                 }
                 else {
-                    alert('El Foro ha finalizado.');
+                    alert(gettext('The forum has ended.'));
                     document.getElementsByClassName('discussion-module-date')[0].style.display = 'none';
                     document.getElementsByClassName('discussion-module-date-finished')[0].style.display = 'block';
                 }
@@ -3764,7 +3764,7 @@ if (typeof MathJax === "undefined") {
                     });
                 }
                 else {
-                    alert('El Foro ha finalizado.');
+                    alert(gettext('The forum has ended.'));
                     document.getElementsByClassName('discussion-module-date')[0].style.display = 'none';
                     document.getElementsByClassName('discussion-module-date-finished')[0].style.display = 'block';
                 }
@@ -3849,7 +3849,7 @@ if (typeof MathJax === "undefined") {
                     return this.trigger("response:update", event);
                 }
                 else {
-                    alert('El Foro ha finalizado.');
+                    alert(gettext('The forum has ended.'));
                     document.getElementsByClassName('discussion-module-date')[0].style.display = 'none';
                     document.getElementsByClassName('discussion-module-date-finished')[0].style.display = 'block';
                 }
@@ -3912,7 +3912,7 @@ if (typeof MathJax === "undefined") {
                     return this.trigger("response:_delete", event);
                 }
                 else {
-                    alert('El Foro ha finalizado.');
+                    alert(gettext('The forum has ended.'));
                     document.getElementsByClassName('discussion-module-date')[0].style.display = 'none';
                     document.getElementsByClassName('discussion-module-date-finished')[0].style.display = 'block';
                 }
@@ -4099,7 +4099,7 @@ if (typeof MathJax === "undefined") {
                     });
                 }
                 else {
-                    alert('El Foro ha finalizado.');
+                    alert(gettext('The forum has ended.'));
                     document.getElementsByClassName('discussion-module-date')[0].style.display = 'none';
                     document.getElementsByClassName('discussion-module-date-finished')[0].style.display = 'block';
                 }
@@ -4124,7 +4124,7 @@ if (typeof MathJax === "undefined") {
                     return DiscussionUtil.safeAjax({ $elem: $elem, url: url, type: "POST" });
                 }
                 else {
-                    alert('El Foro ha finalizado.');
+                    alert(gettext('The forum has ended.'));
                     document.getElementsByClassName('discussion-module-date')[0].style.display = 'none';
                     document.getElementsByClassName('discussion-module-date-finished')[0].style.display = 'block';
                 }
