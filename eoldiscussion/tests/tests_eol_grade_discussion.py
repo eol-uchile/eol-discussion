@@ -16,7 +16,7 @@ from xmodule.modulestore.tests.django_utils import ModuleStoreTestCase
 from xmodule.modulestore.tests.factories import CourseFactory
 
 # Internal project dependencies
-from .eolgradediscussion import EolGradeDiscussionXBlock
+from eoldiscussion.eolgradediscussion import EolGradeDiscussionXBlock
 
 logger = logging.getLogger(__name__)
 
@@ -30,6 +30,7 @@ class TestRequest(object):
     success = None
     params = None
     headers = None
+
 
 
 class TestGradeForum(UrlResetMixin, ModuleStoreTestCase):

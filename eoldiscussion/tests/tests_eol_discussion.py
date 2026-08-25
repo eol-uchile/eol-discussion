@@ -26,7 +26,7 @@ from xmodule.modulestore.tests.django_utils import ModuleStoreTestCase
 from xmodule.modulestore.tests.factories import CourseFactory
 
 # Internal project dependencies
-from eoldiscussion import EolDiscussionXBlock
+from eoldiscussion.eoldiscussion import EolDiscussionXBlock
 
 class TestRequest(object):
     # pylint: disable=too-few-public-methods
@@ -72,6 +72,7 @@ def _make_attribute_test_cases():
             AttributePair(category_attr, _random_string()),
             AttributePair(target_attr, _random_string())
         )
+
 
 
 @ddt.ddt
@@ -132,7 +133,7 @@ class EolDiscussionXBlockImportExportTests(UrlResetMixin, ModuleStoreTestCase):
         """
         return EolDiscussionXBlock(self.runtime_mock, scope_ids=keys, field_data=DictFieldData({}))
 
-    @patch("eoldiscussion.EolDiscussionXBlock.load_definition_xml")
+    @patch("eoldiscussion.eoldiscussion.EolDiscussionXBlock.load_definition_xml")
     @ddt.unpack
     @ddt.data(*list(_make_attribute_test_cases()))
     def test_xblock_export_format(self, id_pair, category_pair, target_pair, patched_load_definition_xml):
@@ -162,7 +163,7 @@ class EolDiscussionXBlockImportExportTests(UrlResetMixin, ModuleStoreTestCase):
         self.assertEqual(block.discussion_target, target_pair.value)
 
 
-    @patch("eoldiscussion.EolDiscussionXBlock.load_definition_xml")
+    @patch("eoldiscussion.eoldiscussion.EolDiscussionXBlock.load_definition_xml")
     @ddt.unpack
     @ddt.data(*(_make_attribute_test_cases()))
     def test_legacy_export_format(self, id_pair, category_pair, target_pair, patched_load_definition_xml):
@@ -383,7 +384,7 @@ class EolDiscussionXBlockImportExportTests(UrlResetMixin, ModuleStoreTestCase):
         response = self.xblock.student_view_data()
         self.assertEqual(response['topic_id'], self.xblock.discussion_id)
 
-    def test_studio_view_render(self,):
+    def test_studio_view_render_eol_discussion(self,):
         """
             Check if xblock studio template loaded correctly
         """
@@ -403,7 +404,7 @@ class EolDiscussionXBlockImportExportTests(UrlResetMixin, ModuleStoreTestCase):
         response = self.xblock.course_key
         self.assertEqual(response, self.course.id)
 
-    def test_author_view_render(self):
+    def test_author_view_render_eol_discussion(self):
         """
             Check if author view is rendering
         """
@@ -413,7 +414,7 @@ class EolDiscussionXBlockImportExportTests(UrlResetMixin, ModuleStoreTestCase):
 
     @override_settings(USER_API_DEFAULT_PREFERENCES={'time_zone':'America/Santiago'})
     @patch('lms.djangoapps.discussion.django_comment_client.permissions.has_permission', return_value=True)
-    def test_student_view_render(self,_):
+    def test_student_view_render_eol_discussion(self,_):
         """
             Check if student view is rendering
         """
@@ -442,4 +443,3 @@ class EolDiscussionXBlockImportExportTests(UrlResetMixin, ModuleStoreTestCase):
         self.xblock.scope_ids.user_id = self.user.id
         result = self.xblock.has_dicussion_permission()
         self.assertFalse(result)
-
