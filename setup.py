@@ -39,10 +39,12 @@ setup(
         "lms.djangoapp": [
             "eoldiscussion = eoldiscussion.apps:EolDiscussionConfig",
             "eolgradediscussion = eolgradediscussion.apps:EolGradeDiscussionConfig",
+            "eol_forum_notifications = eol_forum_notifications.apps:EolForumNotificationsConfig"
         ],
         "cms.djangoapp": [
             "eoldiscussion = eoldiscussion.apps:EolDiscussionConfig",
             "eolgradediscussion = eolgradediscussion.apps:EolGradeDiscussionConfig",
+            "eol_forum_notifications = eol_forum_notifications.apps:EolForumNotificationsConfig"
         ],
     }
 )

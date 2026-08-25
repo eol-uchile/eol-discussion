@@ -1,4 +1,7 @@
-# Eol Xblock Discussion
+# eol-discussion
+Eol discussion xblock to add new parameters in original edx discussion,  xblock to grade work in discussion and notifications
+This XBlock allow to grade the participation in the forum according to the student.
+
 
 ![Coverage Status](/coverage-badge.svg)
 
@@ -15,14 +18,20 @@ docker-compose exec cms pip install -e /openedx/requirements/eoldiscussion && do
 Edit *production.py* in *lms and cms settings* and set the limit_thread, this parameter configures the maximum number of publications that are obtained from a discussion.
 
     EOLGRADEFORUM_LIMIT_THREADS = 5000
+    EOL_FORUMS_NOTIFICATIONS_ENABLE = True
     CORS_ALLOW_CREDENTIALS = True
     CORS_ORIGIN_WHITELIST = ['studio.domain.com']
     CORS_ALLOW_HEADERS = corsheaders_default_headers + (
         'use-jwt-cookie',
     )
 
-## TESTS
+# Commands
 
+    > docker-compose exec lms python manage.py lms --settings=prod.production discussion_notification daily
+    > docker-compose exec lms python manage.py lms --settings=prod.production discussion_notification weekly
+
+
+## TESTS
 **Prepare tests:**
 
 - Install **act** following the instructions in [https://nektosact.com/installation/index.html](https://nektosact.com/installation/index.html)
@@ -30,5 +39,5 @@ Edit *production.py* in *lms and cms settings* and set the limit_thread, this pa
 **Run tests:**
 - In a terminal at the root of the project
     ```
-    act -W .github/workflows/pythonapp.yml
+    act -W .github/workflows/pythonapp.yml --bind --eventpath pull_request.json -s GITHUB_TOKEN=tu_token pull_request
     ```
