@@ -1,0 +1,101 @@
+<div class="eolgradediscussion_block">
+   {% if is_course_staff %}
+   <input hidden id='check_score' value="1">
+   <div class="wrap-instructor-info" style="display: block;">
+       <h2>{{xblock.display_name}}</h2></br>
+       {% if xblock.id_forum != ''%}
+           <label style="cursor: default;">Participaciones Calificadas: <spin id="calificado">{{calificado}}</spin> de {{ total_student }}</label></br>
+           <input name="forum-grade-button" type="button" style="width: 160px;margin-left: auto;" value="Ver Participaciones" aria-controls="grade-1-eolgradediscussion-{{ location }}">
+       {% else %}
+           <label style="cursor: default;">Componente no configurado.</label></br>
+       {% endif %}
+   </div>
+   <div id="ui-loading-forum-grade-load" class="ui-loading is-hidden" style="box-shadow: none;">
+       <p>
+       <span class="spin">
+           <span class="icon fa fa-refresh" aria-hidden="true"></span>
+       </span>
+       <span class="copy">Cargando</span>
+       </p>
+   </div>
+    <div class="wrapper wrapper-modal-window wrapper-modal-window-move-xblock is-hidden" id="grade-1-eolgradediscussion-{{ location }}" aria-labelledby="modal-window-title" role="dialog">
+        <div class="modal-window-overlay" id="forum-grade-overlay" ></div>
+        <div class="modal-window modal-type-generic" id="grade-1-forum-grade" tabindex="-1" aria-labelledby="modal-window-title">
+            <div class="forum-grade-modal">
+                <div class="eolgradediscussion_modal-header">
+                   <a class='modal_close' href="javascript:void(0);" onclick="$('#grade-1-eolgradediscussion-{{ location }}').hide();"> <i class='fa fa-times'></i> </a>
+                    <h2 id="modal-window-title" class="title modal-window-title">
+                        Participación Foro
+                    </h2>
+                </div>
+                <div class="eolgradediscussion_modal-content">
+                    <div class="breadcrumb-container fg-modal-action">
+                        <nav class="breadcrumbs" aria-label="Course Outline breadcrumb">
+                            <ol class="bc-container bc-0 last">
+                                <li class="bc-container-content">
+                                    <span id="forum-grade-title" class="parent-displayname">{{xblock.forum_display_name}} </span>
+                                </li>
+                                <li class="bc-container-content">
+                                    <span id="forum-grade-body" class="parent-content"></span>
+                                </li>
+                            </ol>
+                        </nav>
+                    </div>
+                    <div class="row row_gradeforum" style="text-align: center;font-weight: bold;">
+                       <div class="col-md-3 eolgradediscussion_username">
+                           <span>Usuario</span>
+                       </div>
+                       <div class="col-md-5 eolgradediscussion_comment">
+                           <span>Feedback</span>
+                       </div>
+                       <div class="col-md-2" style="padding-top: 12px;">
+                           <span>Puntaje</span>
+                       </div>
+                       <div class="col-md-2 eolgradediscussion_flecha">
+                           <span>Ver Mas</span>
+                       </div>
+                   </div>
+                    <div id='forum-grade-container' class="xblock-list-container"></div>
+                </div>
+                <div class="modal-actions">
+                   <div id="ui-loading-forum-grade-load-footer" class="ui-loading is-hidden" style="box-shadow: none;background: none;">
+                       <p>
+                       <span class="spin">
+                           <span class="icon fa fa-refresh" aria-hidden="true"></span>
+                       </span>
+                       <span class="copy">Guardando</span>
+                       </p>
+                   </div>
+                   <label style="cursor: default;color: royalblue;display: none; text-align: center;" id="eolgradediscussion_label"></label>
+                   <label style="cursor: default;color: red;display: none; text-align: center;" id="eolgradediscussion_wrong_label"></label>
+                   <div class="row" style="text-align: center;">
+                        <div class="col-md-3">
+                            <input id="save-button-forum-grade" name="sendall" class="sendall" type="button" style="width: 145px;margin-left: auto;" value="Guardar Cambios" disabled>
+                        </div>
+                        <div class="col-md-2">
+                            <a href="javascript:void(0);" onclick="$('#grade-1-eolgradediscussion-{{ location }}').hide();" class="button  action-cancel">Cerrar</a>
+                        </div>
+                        <div class="col-md-1"></div>
+                        <div class="col-md-6">
+                            <input type="checkbox" name='checkbox_users' id='checkbox_users' value="1">
+                            <label for="checkbox_users">Mostrar solo usuarios con participaciones</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% else %}
+       <div class="wrap-instructor-info" style="display: block;">
+           <h2>Calificación participación en el foro</h2>
+           {% if puntaje == '' %}
+               <label style="cursor: default;">No tiene calificaciones</label></br>
+           {% else %}
+               <label style="cursor: default;"> Calificado con: {{ puntaje }} de {{ xblock.puntajemax }}</label></br>
+           {% endif %}
+           {% if feedback != '' %}
+                <label style="cursor: default;"> Comentarios: {{ feedback }}</label> 
+           {% endif %}
+       </div>
+    {% endif %}
+</div>

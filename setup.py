@@ -33,8 +33,16 @@ setup(
     install_requires=['XBlock'],
     entry_points={
         'xblock.v1': [
-            'eoldiscussion = eoldiscussion:EolDiscussionXBlock',
+            'eoldiscussion = eoldiscussion.eoldiscussion:EolDiscussionXBlock',
+            'eolgradediscussion = eoldiscussion.eolgradediscussion:EolGradeDiscussionXBlock',
         ],
-    },
-    package_data=package_data("eoldiscussion", ["static", "public"]),
+        "lms.djangoapp": [
+            "eoldiscussion = eoldiscussion.apps:EolDiscussionConfig",
+            "eolgradediscussion = eolgradediscussion.apps:EolGradeDiscussionConfig",
+        ],
+        "cms.djangoapp": [
+            "eoldiscussion = eoldiscussion.apps:EolDiscussionConfig",
+            "eolgradediscussion = eolgradediscussion.apps:EolGradeDiscussionConfig",
+        ],
+    }
 )
