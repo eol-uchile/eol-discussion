@@ -5,7 +5,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='eoldiscussion',
-    version='2.0.0',
+    version='1.0.0',
     description='EOL Discussion Xblock',
     author="Oficina EOL UChile",
     author_email="eol-ing@uchile.cl",
@@ -16,12 +16,15 @@ setup(
     entry_points={
         'xblock.v1': [
             'eoldiscussion = eoldiscussion:EolDiscussionXBlock',
+            'eolgradediscussion = eolgradediscussion:EolGradeDiscussionXBlock',
         ],
         "lms.djangoapp": [
             "eoldiscussion = eoldiscussion.apps:EolDiscussionConfig",
+            "eolgradediscussion = eolgradediscussion.apps:EolGradeDiscussionConfig",
         ],
         "cms.djangoapp": [
             "eoldiscussion = eoldiscussion.apps:EolDiscussionConfig",
+            "eolgradediscussion = eolgradediscussion.apps:EolGradeDiscussionConfig",
         ],
     }
 )

@@ -1,0 +1,41 @@
+<div class="eolgradediscussion_loading ui-loading" id="eolgradediscussion_loading">
+  <p><span class="spin"><span class="icon fa fa-refresh" aria-hidden="true"></span></span> <span class="copy">Cargando</span></p>
+</div>
+<div class="wrapper-comp-settings is-active editor-with-buttons" id="settings-tab">
+  <div class="eolgradediscussion_error" style="padding: 20px;">
+    <span>Error: Falló en obtener los datos.<br>
+      No se pudo obterner los datos de los foros del curso, actualice la página e intente nuevamente, si el problema persiste contáctese con mesa de ayuda.</span>
+  </div>
+  <ul class="list-input settings-list eolgradediscussion_studio">
+    <li class="field comp-setting-entry is-set">
+      <div class="wrapper-comp-setting">
+        <label class="label setting-label" for="display_name">Display Name</label>
+        <input class="input setting-input" name="display_name" id="display_name" value="{{xblock.display_name}}" type="text" />
+      </div>
+    </li>
+    <li class="field comp-setting-entry is-set">
+      <div class="wrapper-comp-setting">
+        <label class="label setting-label" for="id_forum_{{location}}">Id Foro</label>
+        <select class="input setting-input" name='id_forum' id="id_forum_{{location}}" style="background:white;">
+          
+        </select>
+      </div>
+    </li>
+    <li class="field comp-setting-entry is-set">
+      <div class="wrapper-comp-setting">
+        <label class="label setting-label" for="puntajemax">Puntaje Máximo</label>
+        <input class="input setting-input" name="puntajemax" id="puntajemax" value="{{xblock.puntajemax}}" type="number" />
+      </div>
+    </li>      
+  </ul>
+  <div class="xblock-actions">
+    <ul>
+      <li class="action-item">
+        <a href="#" class="button action-primary save-button save-button-eolgradediscussion">Guardar</a>
+      </li>
+      <li class="action-item">
+        <a href="#" class="button cancel-button cancel-button-eolgradediscussion">Cancelar</a>
+      </li>        
+    </ul>
+  </div>
+</div>
