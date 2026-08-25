@@ -6,7 +6,7 @@ from setuptools import setup, find_packages
 setup(
     name='eoldiscussion',
     version='1.0.0',
-    description='EOL Discussion Xblock',
+    description='EOL Discussion Xblock & Allows you to save forum notification and send mails with threads and/or comments unread among other things',
     author="Oficina EOL UChile",
     author_email="eol-ing@uchile.cl",
     license='AGPL v3',
@@ -21,10 +21,12 @@ setup(
         "lms.djangoapp": [
             "eoldiscussion = eoldiscussion.apps:EolDiscussionConfig",
             "eolgradediscussion = eolgradediscussion.apps:EolGradeDiscussionConfig",
+            "eol_forum_notifications = eol_forum_notifications.apps:EolForumNotificationsConfig"
         ],
         "cms.djangoapp": [
             "eoldiscussion = eoldiscussion.apps:EolDiscussionConfig",
             "eolgradediscussion = eolgradediscussion.apps:EolGradeDiscussionConfig",
+            "eol_forum_notifications = eol_forum_notifications.apps:EolForumNotificationsConfig"
         ],
     }
 )
