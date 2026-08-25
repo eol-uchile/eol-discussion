@@ -1,2 +1,2 @@
 def plugin_settings(settings):
-    pass
+    settings.EOLGRADEDISCUSSION_LIMIT_THREAD = 5000
