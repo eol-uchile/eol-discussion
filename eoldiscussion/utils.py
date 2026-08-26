@@ -14,7 +14,7 @@ from openedx.core.lib.courses import course_image_url
 from xmodule.modulestore.django import modulestore
 
 # Internal project dependencies
-from eoldiscussion.models import EolForumNotificationsUser, EolForumNotificationsDiscussions
+from eoldiscussion.models import EolDiscussionXBlockNotificationUser, EolDiscussionXBlockNotification
 
 logger = logging.getLogger(__name__)
 
@@ -24,10 +24,10 @@ def get_users_notifications(how_often, discussion_id, course_id):
     """
     notifications = []
     course_key = CourseKey.from_string(course_id)
-    discussion = EolForumNotificationsDiscussions.objects.get(discussion_id=discussion_id, course_id=course_key)
+    discussion = EolDiscussionXBlockNotification.objects.get(discussion_id=discussion_id, course_id=course_key)
     if how_often == 'daily':
         if discussion.daily_threads > 0 or discussion.daily_comment > 0:
-            notifications = EolForumNotificationsUser.objects.filter(
+            notifications = EolDiscussionXBlockNotificationUser.objects.filter(
                 how_often=how_often, 
                 discussion__discussion_id=discussion_id, 
                 discussion__course_id=course_key).values(
@@ -37,7 +37,7 @@ def get_users_notifications(how_often, discussion_id, course_id):
     else:
         #weekly
         if discussion.weekly_threads > 0 or discussion.weekly_comment > 0:
-            notifications = EolForumNotificationsUser.objects.filter(
+            notifications = EolDiscussionXBlockNotificationUser.objects.filter(
                 how_often=how_often, 
                 discussion__discussion_id=discussion_id, 
                 discussion__course_id=course_key).values(
@@ -50,7 +50,7 @@ def get_courses_onlive():
     """
         get all courses onlive (not archived)
     """
-    courses = EolForumNotificationsDiscussions.objects.all().values('course_id').distinct()
+    courses = EolDiscussionXBlockNotification.objects.all().values('course_id').distinct()
     course_data = {}
     for c in courses:
         aux = get_course_by_id(c['course_id'])
@@ -58,7 +58,7 @@ def get_courses_onlive():
             course_data[str(c['course_id'])] = {
                 'course_name': aux.display_name_with_default,
                 'image': course_image_url(aux),
-                'discussions': list(EolForumNotificationsDiscussions.objects.filter(course_id=c['course_id']).values(
+                'discussions': list(EolDiscussionXBlockNotification.objects.filter(course_id=c['course_id']).values(
                     'discussion_id',
                     'block_key',
                     'daily_threads',
@@ -73,17 +73,17 @@ def get_user_data(discussion_id, user, course_key, block_key):
     """
         return user notification data
     """
-    if EolForumNotificationsDiscussions.objects.filter(discussion_id=discussion_id, course_id=course_key).exists():
+    if EolDiscussionXBlockNotification.objects.filter(discussion_id=discussion_id, course_id=course_key).exists():
         try:
-            aux = EolForumNotificationsUser.objects.get(discussion__discussion_id=discussion_id, user=user, discussion__course_id=course_key)
+            aux = EolDiscussionXBlockNotificationUser.objects.get(discussion__discussion_id=discussion_id, user=user, discussion__course_id=course_key)
             return json.dumps({
                 'how_often': aux.how_often
             })
-        except EolForumNotificationsUser.DoesNotExist:
+        except EolDiscussionXBlockNotificationUser.DoesNotExist:
             logger.info('EolForumNotification - Error to get notif model, discussion {}, user: {}'.format(discussion_id, user))
             return '{}'
     else:
-        EolForumNotificationsDiscussions.objects.create(discussion_id=discussion_id, course_id=course_key, block_key=block_key)
+        EolDiscussionXBlockNotification.objects.create(discussion_id=discussion_id, course_id=course_key, block_key=block_key)
         return '{}'
 
 def get_block_info(block_key):
@@ -112,7 +112,7 @@ def get_info_block_course(discussion_id, course_id):
     """
     try:
         course_key = CourseKey.from_string(course_id)
-        discussion = EolForumNotificationsDiscussions.objects.get(discussion_id=discussion_id, course_id=course_key)
+        discussion = EolDiscussionXBlockNotification.objects.get(discussion_id=discussion_id, course_id=course_key)
         block_info = get_block_info(discussion.block_key)
         course = get_course_by_id(course_key)
         return {

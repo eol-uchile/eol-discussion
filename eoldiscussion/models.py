@@ -6,7 +6,7 @@ from django.db import models
 from opaque_keys.edx.django.models import CourseKeyField, UsageKeyField
 
 
-class EolForumNotificationsDiscussions(models.Model):
+class EolDiscussionXBlockNotification(models.Model):
     class Meta:
         index_together = [
             ["discussion_id", "course_id"],
@@ -26,7 +26,7 @@ class EolForumNotificationsDiscussions(models.Model):
     def __str__(self):
         return '%s - %s' % (self.discussion_id, self.course_id)
 
-class EolForumNotificationsUser(models.Model):
+class EolDiscussionXBlockNotificationUser(models.Model):
     HOW_OFTEN_CHOICES = (("never", "never"), ("daily", "daily"), ("weekly", "weekly") )
     class Meta:
         index_together = [
@@ -37,5 +37,5 @@ class EolForumNotificationsUser(models.Model):
         ]
     
     user = models.ForeignKey(User, db_index=True, on_delete=models.CASCADE)
-    discussion = models.ForeignKey(EolForumNotificationsDiscussions, db_index=True, on_delete=models.CASCADE)
+    discussion = models.ForeignKey(EolDiscussionXBlockNotification, db_index=True, on_delete=models.CASCADE)
     how_often = models.TextField(choices=HOW_OFTEN_CHOICES, default='never')

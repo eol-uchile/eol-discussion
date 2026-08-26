@@ -19,7 +19,7 @@ from openedx.core.djangoapps.site_configuration import helpers as configuration_
 from opaque_keys.edx.keys import CourseKey
 
 # Internal project dependencies
-from eoldiscussion.models import EolForumNotificationsUser, EolForumNotificationsDiscussions
+from eoldiscussion.models import EolDiscussionXBlockNotificationUser, EolDiscussionXBlockNotification
 from eoldiscussion.tasks import task_send_single_email
 from eoldiscussion.utils import get_users_notifications, get_courses_onlive, get_block_info, get_info_block_course
 
@@ -47,8 +47,8 @@ def save_notification_get(request):
 
     try:
         course_id = CourseKey.from_string(request.GET.get('course_id'))
-        discussion = EolForumNotificationsDiscussions.objects.get(discussion_id=request.GET.get('discussion_id'), course_id=course_id)
-        user_notif = EolForumNotificationsUser.objects.get(
+        discussion = EolDiscussionXBlockNotification.objects.get(discussion_id=request.GET.get('discussion_id'), course_id=course_id)
+        user_notif = EolDiscussionXBlockNotificationUser.objects.get(
             user=request.user,
             discussion=discussion)
         context = {
@@ -63,7 +63,7 @@ def save_notification_get(request):
             context.update(data)
         return render(request, 'eoldiscussion/notification.html', context)
     except Exception as e:
-        logger.error('EolForumNotification - Error to get EolForumNotificationsUser, error {}, data: {}'.format(str(e), request.GET))
+        logger.error('EolForumNotification - Error to get EolDiscussionXBlockNotificationUser, error {}, data: {}'.format(str(e), request.GET))
         return HttpResponseNotFound('(Error {} ) Error con el modelo, por favor {}'.format(id_error, msg_error))
 
 
@@ -90,8 +90,8 @@ def save_notification_post(request):
     with transaction.atomic():
         try:
             course_id = CourseKey.from_string(request.POST.get('course_id'))
-            discussion = EolForumNotificationsDiscussions.objects.get(discussion_id=request.POST.get('discussion_id'), course_id=course_id)
-            EolForumNotificationsUser.objects.update_or_create(
+            discussion = EolDiscussionXBlockNotification.objects.get(discussion_id=request.POST.get('discussion_id'), course_id=course_id)
+            EolDiscussionXBlockNotificationUser.objects.update_or_create(
                 user=request.user,
                 discussion=discussion,
                 defaults={
@@ -110,7 +110,7 @@ def save_notification_post(request):
                 context.update(data)
             return render(request, 'eoldiscussion/notification.html', context)
         except Exception as e:
-            logger.error('EolForumNotification - Error to update or create EolForumNotificationsUser, error {}, data: {}'.format(str(e), request.POST))
+            logger.error('EolForumNotification - Error to update or create EolDiscussionXBlockNotificationUser, error {}, data: {}'.format(str(e), request.POST))
             return render(request, 'eoldiscussion/notification.html', {'error': '(Error {} ) Un error inesperado ha ocurrido, por favor {}'.format(id_error, msg_error)})
 
 def save_notification(request):
@@ -135,8 +135,8 @@ def save_notification(request):
     with transaction.atomic():
         try:
             course_id = CourseKey.from_string(request.POST.get('course_id'))
-            discussion = EolForumNotificationsDiscussions.objects.get(discussion_id=request.POST.get('discussion_id'), course_id=course_id)
-            EolForumNotificationsUser.objects.update_or_create(
+            discussion = EolDiscussionXBlockNotification.objects.get(discussion_id=request.POST.get('discussion_id'), course_id=course_id)
+            EolDiscussionXBlockNotificationUser.objects.update_or_create(
                 user=request.user,
                 discussion=discussion,
                 defaults={
@@ -144,7 +144,7 @@ def save_notification(request):
                     })
             return HttpResponse(status=200)
         except Exception as e:
-            logger.error('EolForumNotification - Error to update or create EolForumNotificationsUser, error {}, data: {}'.format(str(e), request.POST))
+            logger.error('EolForumNotification - Error to update or create EolDiscussionXBlockNotificationUser, error {}, data: {}'.format(str(e), request.POST))
             return HttpResponse(status=400)
 
 def send_notification(how_often):
@@ -194,7 +194,7 @@ def send_notification(how_often):
                 task_send_single_email.delay(discussion['discussion_id'], course, context)
             logger.info('EolForumNotification - emails sent, how_often: {}'.format(how_often))
             with transaction.atomic():
-                discussion_model = EolForumNotificationsDiscussions.objects.get(discussion_id=discussion['discussion_id'], course_id=CourseKey.from_string(course))
+                discussion_model = EolDiscussionXBlockNotification.objects.get(discussion_id=discussion['discussion_id'], course_id=CourseKey.from_string(course))
                 if how_often == 'daily':
                     discussion_model.daily_threads = 0
                     discussion_model.daily_comment = 0

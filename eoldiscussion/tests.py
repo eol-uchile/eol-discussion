@@ -36,7 +36,7 @@ from xmodule.modulestore.tests.factories import CourseFactory
 # Internal project dependencies
 from eoldiscussion.eoldiscussion import EolDiscussionXBlock
 from eoldiscussion.eolgradediscussion import EolGradeDiscussionXBlock
-from eoldiscussion.models import EolForumNotificationsUser, EolForumNotificationsDiscussions
+from eoldiscussion.models import EolDiscussionXBlockNotificationUser, EolDiscussionXBlockNotification
 from eoldiscussion.utils import get_user_data, get_info_block_course, get_block_info
 from eoldiscussion.views import send_notification, save_notification, save_notification_get, save_notification_post
 
@@ -467,7 +467,7 @@ class TestNotifiactionsDiscussion(UrlResetMixin, ModuleStoreTestCase):
         super(TestNotifiactionsDiscussion, self).setUp()
         self.course = CourseFactory.create(org='foo', course='baz', run='bar')
         self.block_key = UsageKey.from_string('block-v1:eol+test100+2021_1+type@eoldiscussion+block@5c13942678184cab9a5345b660292c6e')
-        self.discussion = EolForumNotificationsDiscussions.objects.create(
+        self.discussion = EolDiscussionXBlockNotification.objects.create(
             discussion_id= "1234567890",
             course_id= self.course.id,
             block_key=self.block_key
@@ -502,7 +502,7 @@ class TestNotifiactionsDiscussion(UrlResetMixin, ModuleStoreTestCase):
                 course_id=self.course.id)
             CourseStaffRole(self.course.id).add_users(self.staff_user)
 
-    def test_EolForumNotificationsDiscussions_str_function(self):
+    def test_EolDiscussionXBlockNotification_str_function(self):
         """
             Tests that the __str__ method returns the expected format:
             '<discussion_id> - <forum_path>'.
@@ -519,12 +519,12 @@ class TestNotifiactionsDiscussion(UrlResetMixin, ModuleStoreTestCase):
             'course_id': str(self.course.id),
             'user_id': str(self.student.id)
         }
-        self.assertFalse(EolForumNotificationsUser.objects.filter(user=self.student, discussion=self.discussion).exists())
+        self.assertFalse(EolDiscussionXBlockNotificationUser.objects.filter(user=self.student, discussion=self.discussion).exists())
         response = self.client.post(
             reverse('eol_discussion_notification:save'), post_data)
         self.assertEqual(response.status_code, 200)
-        self.assertTrue(EolForumNotificationsUser.objects.filter(user=self.student, discussion=self.discussion).exists())
-        notif = EolForumNotificationsUser.objects.get(user=self.student, discussion=self.discussion)
+        self.assertTrue(EolDiscussionXBlockNotificationUser.objects.filter(user=self.student, discussion=self.discussion).exists())
+        notif = EolDiscussionXBlockNotificationUser.objects.get(user=self.student, discussion=self.discussion)
         self.assertEqual(notif.how_often, post_data['period'])
 
     def test_save_notifications_anonymous(self):
@@ -538,11 +538,11 @@ class TestNotifiactionsDiscussion(UrlResetMixin, ModuleStoreTestCase):
             'user_id': str(self.student.id)
         }
         client_anonymous = Client()
-        self.assertFalse(EolForumNotificationsUser.objects.filter(user=self.student, discussion=self.discussion).exists())
+        self.assertFalse(EolDiscussionXBlockNotificationUser.objects.filter(user=self.student, discussion=self.discussion).exists())
         response = client_anonymous.post(
             reverse('eol_discussion_notification:save'), post_data)
         self.assertEqual(response.status_code, 302)
-        self.assertFalse(EolForumNotificationsUser.objects.filter(user=self.student, discussion=self.discussion).exists())
+        self.assertFalse(EolDiscussionXBlockNotificationUser.objects.filter(user=self.student, discussion=self.discussion).exists())
 
     def test_save_notifications_user_anonymous(self):
         """
@@ -573,11 +573,11 @@ class TestNotifiactionsDiscussion(UrlResetMixin, ModuleStoreTestCase):
             'course_id': str(self.course.id),
             'user_id': str(self.student.id)
         }
-        self.assertFalse(EolForumNotificationsUser.objects.filter(user=self.student, discussion=self.discussion).exists())
+        self.assertFalse(EolDiscussionXBlockNotificationUser.objects.filter(user=self.student, discussion=self.discussion).exists())
         response = self.client.get(
             reverse('eol_discussion_notification:save'), post_data)
         self.assertEqual(response.status_code, 400)
-        self.assertFalse(EolForumNotificationsUser.objects.filter(user=self.student, discussion=self.discussion).exists())
+        self.assertFalse(EolDiscussionXBlockNotificationUser.objects.filter(user=self.student, discussion=self.discussion).exists())
 
     def test_save_notifications_wrong_params(self):
         """
@@ -588,11 +588,11 @@ class TestNotifiactionsDiscussion(UrlResetMixin, ModuleStoreTestCase):
             'course_id': str(self.course.id),
             'user_id': str(self.student.id)
         }
-        self.assertFalse(EolForumNotificationsUser.objects.filter(user=self.student, discussion=self.discussion).exists())
+        self.assertFalse(EolDiscussionXBlockNotificationUser.objects.filter(user=self.student, discussion=self.discussion).exists())
         response = self.client.post(
             reverse('eol_discussion_notification:save'), post_data)
         self.assertEqual(response.status_code, 400)
-        self.assertFalse(EolForumNotificationsUser.objects.filter(user=self.student, discussion=self.discussion).exists())
+        self.assertFalse(EolDiscussionXBlockNotificationUser.objects.filter(user=self.student, discussion=self.discussion).exists())
 
     def test_save_notifications_wrong_user(self):
         """
@@ -604,11 +604,11 @@ class TestNotifiactionsDiscussion(UrlResetMixin, ModuleStoreTestCase):
             'course_id': str(self.course.id),
             'user_id': '123'
         }
-        self.assertFalse(EolForumNotificationsUser.objects.filter(user=self.student, discussion=self.discussion).exists())
+        self.assertFalse(EolDiscussionXBlockNotificationUser.objects.filter(user=self.student, discussion=self.discussion).exists())
         response = self.client.post(
             reverse('eol_discussion_notification:save'), post_data)
         self.assertEqual(response.status_code, 400)
-        self.assertFalse(EolForumNotificationsUser.objects.filter(user=self.student, discussion=self.discussion).exists())
+        self.assertFalse(EolDiscussionXBlockNotificationUser.objects.filter(user=self.student, discussion=self.discussion).exists())
 
     def test_save_notifications_wrong_course(self):
         """
@@ -620,11 +620,11 @@ class TestNotifiactionsDiscussion(UrlResetMixin, ModuleStoreTestCase):
             'course_id': 'asdasdsadas',
             'user_id': str(self.student.id)
         }
-        self.assertFalse(EolForumNotificationsUser.objects.filter(user=self.student, discussion=self.discussion).exists())
+        self.assertFalse(EolDiscussionXBlockNotificationUser.objects.filter(user=self.student, discussion=self.discussion).exists())
         response = self.client.post(
             reverse('eol_discussion_notification:save'), post_data)
         self.assertEqual(response.status_code, 400)
-        self.assertFalse(EolForumNotificationsUser.objects.filter(user=self.student, discussion=self.discussion).exists())
+        self.assertFalse(EolDiscussionXBlockNotificationUser.objects.filter(user=self.student, discussion=self.discussion).exists())
 
     def test_save_notifications_wrong_period(self):
         """
@@ -636,11 +636,11 @@ class TestNotifiactionsDiscussion(UrlResetMixin, ModuleStoreTestCase):
             'course_id': str(self.course.id),
             'user_id': str(self.student.id)
         }
-        self.assertFalse(EolForumNotificationsUser.objects.filter(user=self.student, discussion=self.discussion).exists())
+        self.assertFalse(EolDiscussionXBlockNotificationUser.objects.filter(user=self.student, discussion=self.discussion).exists())
         response = self.client.post(
             reverse('eol_discussion_notification:save'), post_data)
         self.assertEqual(response.status_code, 400)
-        self.assertFalse(EolForumNotificationsUser.objects.filter(user=self.student, discussion=self.discussion).exists())
+        self.assertFalse(EolDiscussionXBlockNotificationUser.objects.filter(user=self.student, discussion=self.discussion).exists())
 
     def test_save_notifications_wrong_no_discussion(self):
         """
@@ -652,11 +652,11 @@ class TestNotifiactionsDiscussion(UrlResetMixin, ModuleStoreTestCase):
             'course_id': str(self.course.id),
             'user_id': str(self.student.id)
         }
-        self.assertFalse(EolForumNotificationsUser.objects.filter(user=self.student, discussion=post_data['discussion_id']).exists())
+        self.assertFalse(EolDiscussionXBlockNotificationUser.objects.filter(user=self.student, discussion=post_data['discussion_id']).exists())
         response = self.client.post(
             reverse('eol_discussion_notification:save'), post_data)
         self.assertEqual(response.status_code, 400)
-        self.assertFalse(EolForumNotificationsUser.objects.filter(user=self.student, discussion=post_data['discussion_id']).exists())
+        self.assertFalse(EolDiscussionXBlockNotificationUser.objects.filter(user=self.student, discussion=post_data['discussion_id']).exists())
 
     @override_settings(PLATFORM_NAME='Test')
     @override_settings(LMS_ROOT_URL='https://test.ts')
@@ -670,7 +670,7 @@ class TestNotifiactionsDiscussion(UrlResetMixin, ModuleStoreTestCase):
         course_mock.side_effect = [namedtuple("Course", ["display_name_with_default", "end"])("this is a display name", None)]
         image_mock.return_value = '/assets/image.jpg'
         block_mock.return_value = {'display_name':'Test discussion xblock', 'parent': 'asdadssa'}
-        user_notif = EolForumNotificationsUser.objects.create(discussion=self.discussion, user=self.student, how_often="daily")
+        user_notif = EolDiscussionXBlockNotificationUser.objects.create(discussion=self.discussion, user=self.student, how_often="daily")
         self.discussion.daily_threads = 3
         self.discussion.daily_comment = 3
         self.discussion.weekly_threads = 3
@@ -681,7 +681,7 @@ class TestNotifiactionsDiscussion(UrlResetMixin, ModuleStoreTestCase):
         self.assertEqual(self.discussion.weekly_threads, 3)
         self.assertEqual(self.discussion.weekly_comment, 3)
         send_notification('daily')
-        aux = EolForumNotificationsDiscussions.objects.get(id=self.discussion.id)
+        aux = EolDiscussionXBlockNotification.objects.get(id=self.discussion.id)
         self.assertEqual(aux.daily_threads, 0)
         self.assertEqual(aux.daily_comment, 0)
         self.assertEqual(aux.weekly_threads, 3)
@@ -699,7 +699,7 @@ class TestNotifiactionsDiscussion(UrlResetMixin, ModuleStoreTestCase):
         course_mock.side_effect = [namedtuple("Course", ["display_name_with_default", "end"])("this is a display name", None)]
         image_mock.return_value = '/assets/image.jpg'
         block_mock.return_value = {'display_name':'Test discussion xblock', 'parent': 'asdadssa'}
-        user_notif = EolForumNotificationsUser.objects.create(discussion=self.discussion, user=self.student, how_often="daily")
+        user_notif = EolDiscussionXBlockNotificationUser.objects.create(discussion=self.discussion, user=self.student, how_often="daily")
         self.discussion.daily_threads = 3
         self.discussion.daily_comment = 3
         self.discussion.weekly_threads = 3
@@ -710,7 +710,7 @@ class TestNotifiactionsDiscussion(UrlResetMixin, ModuleStoreTestCase):
         self.assertEqual(self.discussion.weekly_threads, 3)
         self.assertEqual(self.discussion.weekly_comment, 3)
         send_notification('weekly')
-        aux = EolForumNotificationsDiscussions.objects.get(id=self.discussion.id)
+        aux = EolDiscussionXBlockNotification.objects.get(id=self.discussion.id)
         self.assertEqual(aux.daily_threads, 3)
         self.assertEqual(aux.daily_comment, 3)
         self.assertEqual(aux.weekly_threads, 0)
@@ -738,7 +738,7 @@ class TestNotifiactionsDiscussion(UrlResetMixin, ModuleStoreTestCase):
         self.assertEqual(self.discussion.weekly_threads, 3)
         self.assertEqual(self.discussion.weekly_comment, 3)
         send_notification('daily')
-        aux = EolForumNotificationsDiscussions.objects.get(id=self.discussion.id)
+        aux = EolDiscussionXBlockNotification.objects.get(id=self.discussion.id)
         self.assertEqual(aux.daily_threads, 0)
         self.assertEqual(aux.daily_comment, 0)
         self.assertEqual(aux.weekly_threads, 3)
@@ -796,7 +796,7 @@ class TestNotifiactionsDiscussion(UrlResetMixin, ModuleStoreTestCase):
         self.discussion.save()
         with self.assertLogs('eoldiscussion.views', level='INFO') as cm:
             send_notification('daily')
-        aux = EolForumNotificationsDiscussions.objects.get(id=self.discussion.id)
+        aux = EolDiscussionXBlockNotification.objects.get(id=self.discussion.id)
         self.assertEqual(aux.daily_threads, 0)
         self.assertFalse(any(
         'EolForumNotification - Error to get platform name and url site' in log
@@ -811,7 +811,7 @@ class TestNotifiactionsDiscussion(UrlResetMixin, ModuleStoreTestCase):
             'course_name': 'course name',
             'discussion_name': 'discussion name'
         }
-        user_notif = EolForumNotificationsUser.objects.create(discussion=self.discussion, user=self.student, how_often="daily")
+        user_notif = EolDiscussionXBlockNotificationUser.objects.create(discussion=self.discussion, user=self.student, how_often="daily")
         get_data = {
             'discussion_id': user_notif.discussion.discussion_id,
             'course_id': str(user_notif.discussion.course_id),
@@ -916,10 +916,10 @@ class TestNotifiactionsDiscussion(UrlResetMixin, ModuleStoreTestCase):
             'user_id': self.student.id,
             'period': 'never'
         }
-        self.assertFalse(EolForumNotificationsUser.objects.filter(user=self.student, discussion=self.discussion).exists())
+        self.assertFalse(EolDiscussionXBlockNotificationUser.objects.filter(user=self.student, discussion=self.discussion).exists())
         response = self.client.post(reverse('eol_discussion_notification:save_post'), post_data)
         request = response.request
-        self.assertTrue(EolForumNotificationsUser.objects.filter(user=self.student, discussion=self.discussion).exists())
+        self.assertTrue(EolDiscussionXBlockNotificationUser.objects.filter(user=self.student, discussion=self.discussion).exists())
         self.assertEqual(response.status_code, 200)
         self.assertEqual(request['PATH_INFO'], '/eol_discussion_notification/post_save/')
 
@@ -933,9 +933,9 @@ class TestNotifiactionsDiscussion(UrlResetMixin, ModuleStoreTestCase):
             'user_id': self.student.id,
             'period': 'never'
         }
-        self.assertFalse(EolForumNotificationsUser.objects.filter(user=self.student, discussion=self.discussion).exists())
+        self.assertFalse(EolDiscussionXBlockNotificationUser.objects.filter(user=self.student, discussion=self.discussion).exists())
         response = self.client.get(reverse('eol_discussion_notification:save_post'), post_data)
-        self.assertFalse(EolForumNotificationsUser.objects.filter(user=self.student, discussion=self.discussion).exists())
+        self.assertFalse(EolDiscussionXBlockNotificationUser.objects.filter(user=self.student, discussion=self.discussion).exists())
         self.assertEqual(response.status_code, 400)
 
     def test_save_notifications_post_missing_params(self):
@@ -947,9 +947,9 @@ class TestNotifiactionsDiscussion(UrlResetMixin, ModuleStoreTestCase):
             'course_id': str(self.discussion.course_id),
             'user_id': self.student.id
         }
-        self.assertFalse(EolForumNotificationsUser.objects.filter(user=self.student, discussion=self.discussion).exists())
+        self.assertFalse(EolDiscussionXBlockNotificationUser.objects.filter(user=self.student, discussion=self.discussion).exists())
         response = self.client.post(reverse('eol_discussion_notification:save_post'), post_data)
-        self.assertFalse(EolForumNotificationsUser.objects.filter(user=self.student, discussion=self.discussion).exists())
+        self.assertFalse(EolDiscussionXBlockNotificationUser.objects.filter(user=self.student, discussion=self.discussion).exists())
         self.assertEqual(response.status_code, 200)
         self.assertTrue("id=\"wrong_data\"" in response._container[0].decode())
 
@@ -964,9 +964,9 @@ class TestNotifiactionsDiscussion(UrlResetMixin, ModuleStoreTestCase):
             'period': 'never'
         }
         client = Client()
-        self.assertFalse(EolForumNotificationsUser.objects.filter(user=self.student, discussion=self.discussion).exists())
+        self.assertFalse(EolDiscussionXBlockNotificationUser.objects.filter(user=self.student, discussion=self.discussion).exists())
         response = client.post(reverse('eol_discussion_notification:save_post'), post_data)
-        self.assertFalse(EolForumNotificationsUser.objects.filter(user=self.student, discussion=self.discussion).exists())
+        self.assertFalse(EolDiscussionXBlockNotificationUser.objects.filter(user=self.student, discussion=self.discussion).exists())
         self.assertEqual(response.status_code, 302)
 
     @patch('eoldiscussion.views.render')
@@ -1004,9 +1004,9 @@ class TestNotifiactionsDiscussion(UrlResetMixin, ModuleStoreTestCase):
             'user_id': self.student2.id,
             'period': 'never'
         }
-        self.assertFalse(EolForumNotificationsUser.objects.filter(user=self.student, discussion=self.discussion).exists())
+        self.assertFalse(EolDiscussionXBlockNotificationUser.objects.filter(user=self.student, discussion=self.discussion).exists())
         response = self.client.post(reverse('eol_discussion_notification:save_post'), post_data)
-        self.assertFalse(EolForumNotificationsUser.objects.filter(user=self.student, discussion=self.discussion).exists())
+        self.assertFalse(EolDiscussionXBlockNotificationUser.objects.filter(user=self.student, discussion=self.discussion).exists())
         self.assertEqual(response.status_code, 200)
         self.assertTrue("id=\"wrong_data\"" in response._container[0].decode())
 
@@ -1020,9 +1020,9 @@ class TestNotifiactionsDiscussion(UrlResetMixin, ModuleStoreTestCase):
             'user_id': self.student.id,
             'period': 'nevasdasdsaer'
         }
-        self.assertFalse(EolForumNotificationsUser.objects.filter(user=self.student, discussion=self.discussion).exists())
+        self.assertFalse(EolDiscussionXBlockNotificationUser.objects.filter(user=self.student, discussion=self.discussion).exists())
         response = self.client.post(reverse('eol_discussion_notification:save_post'), post_data)
-        self.assertFalse(EolForumNotificationsUser.objects.filter(user=self.student, discussion=self.discussion).exists())
+        self.assertFalse(EolDiscussionXBlockNotificationUser.objects.filter(user=self.student, discussion=self.discussion).exists())
         self.assertEqual(response.status_code, 200)
         self.assertTrue("id=\"wrong_data\"" in response._container[0].decode())
 
@@ -1036,9 +1036,9 @@ class TestNotifiactionsDiscussion(UrlResetMixin, ModuleStoreTestCase):
             'user_id': self.student.id,
             'period': 'never'
         }
-        self.assertFalse(EolForumNotificationsUser.objects.filter(user=self.student, discussion=self.discussion).exists())
+        self.assertFalse(EolDiscussionXBlockNotificationUser.objects.filter(user=self.student, discussion=self.discussion).exists())
         response = self.client.post(reverse('eol_discussion_notification:save_post'), post_data)
-        self.assertFalse(EolForumNotificationsUser.objects.filter(user=self.student, discussion=self.discussion).exists())
+        self.assertFalse(EolDiscussionXBlockNotificationUser.objects.filter(user=self.student, discussion=self.discussion).exists())
         self.assertEqual(response.status_code, 200)
         self.assertIn(' Un error inesperado ha ocurrido, por favor', response.content.decode())
 
@@ -1053,7 +1053,7 @@ class TestNotifiactionsDiscussion(UrlResetMixin, ModuleStoreTestCase):
         """
         Test error when user in notification is different from request user
         """
-        user_notif = EolForumNotificationsUser.objects.create(discussion=self.discussion, user=self.student, how_often="daily")
+        user_notif = EolDiscussionXBlockNotificationUser.objects.create(discussion=self.discussion, user=self.student, how_often="daily")
         notifications=get_user_data('1234567890', self.student2, self.course.id, self.block_key)
         self.assertEqual(notifications, '{}')
 
@@ -1061,7 +1061,7 @@ class TestNotifiactionsDiscussion(UrlResetMixin, ModuleStoreTestCase):
         """
         Test get_user_data with expected path
         """
-        user_notif = EolForumNotificationsUser.objects.create(discussion=self.discussion, user=self.student, how_often="daily")
+        user_notif = EolDiscussionXBlockNotificationUser.objects.create(discussion=self.discussion, user=self.student, how_often="daily")
         response=get_user_data('1234567890', self.student, self.course.id, self.block_key)
         response_data = json.loads(response)
         self.assertEqual(response_data['how_often'], 'daily')

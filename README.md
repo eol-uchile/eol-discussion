@@ -38,8 +38,8 @@ Edit *production.py* in *lms and cms settings* and set the limit_thread, this pa
         def send_discussion_email_notification(sender, user, post, **kwargs):
             with transaction.atomic():
                 try:
-                    from eol_forum_notifications.models import EolForumNotificationsDiscussions
-                    discussion = EolForumNotificationsDiscussions.objects.get(discussion_id=post.thread.commentable_id, course_id=post.thread.course_id)
+                    from eol_forum_notifications.models import EolDiscussionXBlockNotification
+                    discussion = EolDiscussionXBlockNotification.objects.get(discussion_id=post.thread.commentable_id, course_id=post.thread.course_id)
                     discussion.daily_comment += 1
                     discussion.weekly_comment += 1
                     discussion.save()
@@ -55,8 +55,8 @@ Edit *production.py* in *lms and cms settings* and set the limit_thread, this pa
         def eol_thread_created(sender, user, post, **kwargs):
             with transaction.atomic():
                 try:
-                    from eol_forum_notifications.models import EolForumNotificationsDiscussions
-                    discussion = EolForumNotificationsDiscussions.objects.get(discussion_id=post.commentable_id, course_id=post.course_id)
+                    from eol_forum_notifications.models import EolDiscussionXBlockNotification
+                    discussion = EolDiscussionXBlockNotification.objects.get(discussion_id=post.commentable_id, course_id=post.course_id)
                     discussion.daily_threads += 1
                     discussion.weekly_threads += 1
                     discussion.save()
