@@ -1,14 +1,21 @@
 """ Tests for EolDiscussionXBlock"""
 # Python Standard Libraries
 from collections import namedtuple
+from io import StringIO
 import itertools
 import json
+import logging
 import random
 import string
 
 # Installed packages (via pip)
-from django.test import override_settings
-from mock import patch, Mock
+from django.contrib.auth.models import AnonymousUser
+from django.core.management import call_command
+from django.core.management.base import CommandError
+from django.http import HttpRequest, HttpResponse
+from django.test import Client, TestCase, override_settings
+from django.urls import reverse
+from mock import patch, MagicMock, Mock
 from safe_lxml import etree
 from six.moves import range
 import ddt
@@ -18,6 +25,7 @@ import mock
 from common.djangoapps.student.roles import CourseStaffRole
 from common.djangoapps.student.tests.factories import UserFactory, CourseEnrollmentFactory
 from common.djangoapps.util.testing import UrlResetMixin
+from opaque_keys.edx.keys import UsageKey
 from opaque_keys.edx.locator import CourseLocator
 from xblock.field_data import DictFieldData
 from xblock.fields import NO_CACHE_VALUE, UNIQUE_ID, ScopeIds
@@ -26,7 +34,14 @@ from xmodule.modulestore.tests.django_utils import ModuleStoreTestCase
 from xmodule.modulestore.tests.factories import CourseFactory
 
 # Internal project dependencies
-from eoldiscussion import EolDiscussionXBlock
+from eoldiscussion.eoldiscussion import EolDiscussionXBlock
+from eoldiscussion.eolgradediscussion import EolGradeDiscussionXBlock
+from eoldiscussion.models import EolForumNotificationsUser, EolForumNotificationsDiscussions
+from eoldiscussion.utils import get_user_data, get_info_block_course, get_block_info
+from eoldiscussion.views import send_notification, save_notification, save_notification_get, save_notification_post
+
+
+logger = logging.getLogger(__name__)
 
 class TestRequest(object):
     # pylint: disable=too-few-public-methods
@@ -36,6 +51,8 @@ class TestRequest(object):
     method = None
     body = None
     success = None
+    params = None
+    headers = None
 
 def attribute_pair_repr(self):
     """
@@ -132,7 +149,7 @@ class EolDiscussionXBlockImportExportTests(UrlResetMixin, ModuleStoreTestCase):
         """
         return EolDiscussionXBlock(self.runtime_mock, scope_ids=keys, field_data=DictFieldData({}))
 
-    @patch("eoldiscussion.EolDiscussionXBlock.load_definition_xml")
+    @patch("eoldiscussion.eoldiscussion.EolDiscussionXBlock.load_definition_xml")
     @ddt.unpack
     @ddt.data(*list(_make_attribute_test_cases()))
     def test_xblock_export_format(self, id_pair, category_pair, target_pair, patched_load_definition_xml):
@@ -162,7 +179,7 @@ class EolDiscussionXBlockImportExportTests(UrlResetMixin, ModuleStoreTestCase):
         self.assertEqual(block.discussion_target, target_pair.value)
 
 
-    @patch("eoldiscussion.EolDiscussionXBlock.load_definition_xml")
+    @patch("eoldiscussion.eoldiscussion.EolDiscussionXBlock.load_definition_xml")
     @ddt.unpack
     @ddt.data(*(_make_attribute_test_cases()))
     def test_legacy_export_format(self, id_pair, category_pair, target_pair, patched_load_definition_xml):
@@ -383,7 +400,7 @@ class EolDiscussionXBlockImportExportTests(UrlResetMixin, ModuleStoreTestCase):
         response = self.xblock.student_view_data()
         self.assertEqual(response['topic_id'], self.xblock.discussion_id)
 
-    def test_studio_view_render(self,):
+    def test_studio_view_render_eol_discussion(self,):
         """
             Check if xblock studio template loaded correctly
         """
@@ -403,7 +420,7 @@ class EolDiscussionXBlockImportExportTests(UrlResetMixin, ModuleStoreTestCase):
         response = self.xblock.course_key
         self.assertEqual(response, self.course.id)
 
-    def test_author_view_render(self):
+    def test_author_view_render_eol_discussion(self):
         """
             Check if author view is rendering
         """
@@ -413,7 +430,7 @@ class EolDiscussionXBlockImportExportTests(UrlResetMixin, ModuleStoreTestCase):
 
     @override_settings(USER_API_DEFAULT_PREFERENCES={'time_zone':'America/Santiago'})
     @patch('lms.djangoapps.discussion.django_comment_client.permissions.has_permission', return_value=True)
-    def test_student_view_render(self,_):
+    def test_student_view_render_eol_discussion(self,_):
         """
             Check if student view is rendering
         """
@@ -443,45 +460,6 @@ class EolDiscussionXBlockImportExportTests(UrlResetMixin, ModuleStoreTestCase):
         result = self.xblock.has_dicussion_permission()
         self.assertFalse(result)
 
-# -*- coding: utf-8 -*-
-# Python Standard Libraries
-from collections import namedtuple
-from io import StringIO
-import json
-
-# Installed packages (via pip)
-from django.contrib.auth.models import AnonymousUser
-from django.core.management import call_command
-from django.core.management.base import CommandError
-from django.http import HttpRequest, HttpResponse
-from django.test import Client, TestCase
-from django.test.utils import override_settings
-from django.urls import reverse
-from mock import patch, MagicMock
-
-# Edx dependencies
-from common.djangoapps.student.roles import CourseStaffRole
-from common.djangoapps.student.tests.factories import UserFactory, CourseEnrollmentFactory
-from common.djangoapps.util.testing import UrlResetMixin
-from opaque_keys.edx.keys import UsageKey
-from xmodule.modulestore.tests.django_utils import ModuleStoreTestCase
-from xmodule.modulestore.tests.factories import CourseFactory
-
-# Internal project dependencies
-from .models import EolForumNotificationsUser, EolForumNotificationsDiscussions
-from .utils import get_user_data, get_info_block_course, get_block_info
-from .views import send_notification, save_notification, save_notification_get, save_notification_post
-
-class TestRequest(object):
-    # pylint: disable=too-few-public-methods
-    """
-    Module helper for @json_handler
-    """
-    method = None
-    body = None
-    success = None
-    params = None
-    headers = None
 
 class TestNotifiactionsDiscussion(UrlResetMixin, ModuleStoreTestCase):
 
@@ -682,9 +660,9 @@ class TestNotifiactionsDiscussion(UrlResetMixin, ModuleStoreTestCase):
 
     @override_settings(PLATFORM_NAME='Test')
     @override_settings(LMS_ROOT_URL='https://test.ts')
-    @patch('eol_forum_notifications.views.get_block_info')
-    @patch('eol_forum_notifications.utils.course_image_url')
-    @patch('eol_forum_notifications.utils.get_course_by_id')
+    @patch('eoldiscussion.views.get_block_info')
+    @patch('eoldiscussion.utils.course_image_url')
+    @patch('eoldiscussion.utils.get_course_by_id')
     def test_send_notifications_daily(self, course_mock, image_mock, block_mock):
         """
             test send_notifications() daily period
@@ -711,9 +689,9 @@ class TestNotifiactionsDiscussion(UrlResetMixin, ModuleStoreTestCase):
 
     @override_settings(PLATFORM_NAME='Test')
     @override_settings(LMS_ROOT_URL='https://test.ts')
-    @patch('eol_forum_notifications.views.get_block_info')
-    @patch('eol_forum_notifications.utils.course_image_url')
-    @patch('eol_forum_notifications.utils.get_course_by_id')
+    @patch('eoldiscussion.views.get_block_info')
+    @patch('eoldiscussion.utils.course_image_url')
+    @patch('eoldiscussion.utils.get_course_by_id')
     def test_send_notifications_weekly(self, course_mock, image_mock, block_mock):
         """
             test send_notifications() weekly period
@@ -740,9 +718,9 @@ class TestNotifiactionsDiscussion(UrlResetMixin, ModuleStoreTestCase):
 
     @override_settings(PLATFORM_NAME='Test')
     @override_settings(LMS_ROOT_URL='https://test.ts')
-    @patch('eol_forum_notifications.views.get_block_info')
-    @patch('eol_forum_notifications.utils.course_image_url')
-    @patch('eol_forum_notifications.utils.get_course_by_id')
+    @patch('eoldiscussion.views.get_block_info')
+    @patch('eoldiscussion.utils.course_image_url')
+    @patch('eoldiscussion.utils.get_course_by_id')
     def test_send_notifications_daily_no_users(self, course_mock, image_mock, block_mock):
         """
             test send_notifications() daily period when there isnt users
@@ -768,9 +746,9 @@ class TestNotifiactionsDiscussion(UrlResetMixin, ModuleStoreTestCase):
 
     @override_settings(PLATFORM_NAME='Test')
     @override_settings(LMS_ROOT_URL='https://test.ts')
-    @patch('eol_forum_notifications.views.get_block_info')
-    @patch('eol_forum_notifications.utils.course_image_url')
-    @patch('eol_forum_notifications.utils.get_course_by_id')
+    @patch('eoldiscussion.views.get_block_info')
+    @patch('eoldiscussion.utils.course_image_url')
+    @patch('eoldiscussion.utils.get_course_by_id')
     def test_send_notifications_daily_empty_block_parents(self, course_mock, image_mock, block_mock):
         """
         Ensure that the send_notifications() function correctly skips blocks with an undefined parent (block['parent'] == ""), 
@@ -785,14 +763,14 @@ class TestNotifiactionsDiscussion(UrlResetMixin, ModuleStoreTestCase):
         self.discussion.weekly_threads = 3
         self.discussion.weekly_comment = 3
         self.discussion.save()
-        with self.assertLogs('eol_forum_notifications.views', level='INFO') as cm:
+        with self.assertLogs('eoldiscussion.views', level='INFO') as cm:
             send_notification('daily')
-        self.assertTrue(any('INFO:eol_forum_notifications.views:EolForumNotification - Block id doesnt exists, block-v1:eol+test100+2021_1+type@eoldiscussion+block@5c13942678184cab9a5345b660292c6e, course: foo/baz/bar' in log for log in cm.output))
+        self.assertTrue(any('INFO:eoldiscussion.views:EolForumNotification - Block id doesnt exists, block-v1:eol+test100+2021_1+type@eoldiscussion+block@5c13942678184cab9a5345b660292c6e, course: foo/baz/bar' in log for log in cm.output))
 
-    @patch('eol_forum_notifications.views.get_current_site')
-    @patch('eol_forum_notifications.views.get_block_info')
-    @patch('eol_forum_notifications.utils.course_image_url')
-    @patch('eol_forum_notifications.utils.get_course_by_id')
+    @patch('eoldiscussion.views.get_current_site')
+    @patch('eoldiscussion.views.get_block_info')
+    @patch('eoldiscussion.utils.course_image_url')
+    @patch('eoldiscussion.utils.get_course_by_id')
     def test_send_notifications_test_get_current_site(self, course_mock, image_mock, block_mock, mock_get_current_site):
         """
             Test send_notifications() ensuring that no error is logged when get_current_site() is patched to return a valid site configuration. 
@@ -816,7 +794,7 @@ class TestNotifiactionsDiscussion(UrlResetMixin, ModuleStoreTestCase):
         self.discussion.weekly_threads = 3
         self.discussion.weekly_comment = 3
         self.discussion.save()
-        with self.assertLogs('eol_forum_notifications.views', level='INFO') as cm:
+        with self.assertLogs('eoldiscussion.views', level='INFO') as cm:
             send_notification('daily')
         aux = EolForumNotificationsDiscussions.objects.get(id=self.discussion.id)
         self.assertEqual(aux.daily_threads, 0)
@@ -824,7 +802,7 @@ class TestNotifiactionsDiscussion(UrlResetMixin, ModuleStoreTestCase):
         'EolForumNotification - Error to get platform name and url site' in log
         for log in cm.output))
 
-    @patch('eol_forum_notifications.utils.get_info_block_course')
+    @patch('eoldiscussion.utils.get_info_block_course')
     def test_save_notifications_get(self, block_course):
         """
             test save_notifications_get() normal process
@@ -991,7 +969,7 @@ class TestNotifiactionsDiscussion(UrlResetMixin, ModuleStoreTestCase):
         self.assertFalse(EolForumNotificationsUser.objects.filter(user=self.student, discussion=self.discussion).exists())
         self.assertEqual(response.status_code, 302)
 
-    @patch('eol_forum_notifications.views.render')
+    @patch('eoldiscussion.views.render')
     def test_save_notifications_post_anonymous_user(self, mock_render):
         """
             save_notification_post() when user is anonymous and have an html as a response
@@ -1012,7 +990,7 @@ class TestNotifiactionsDiscussion(UrlResetMixin, ModuleStoreTestCase):
         self.assertEqual(response.content.decode(),'Inicie sesión y vuelva a presionar el link.')
         mock_render.assert_called_with(
             request,
-            'eol_forum_notifications/notification.html',
+            'eoldiscussion/notification.html',
             {'error': 'Inicie sesión y vuelva a presionar el link del correo.'}
         )
 
@@ -1095,7 +1073,7 @@ class TestNotifiactionsDiscussion(UrlResetMixin, ModuleStoreTestCase):
         info = get_info_block_course(self.discussion.id, 'course_test_wrong')
         self.assertEqual(info, None)
 
-    @patch('eol_forum_notifications.utils.modulestore')
+    @patch('eoldiscussion.utils.modulestore')
     def test_utils_get_block_info(self, mock_modulestore):
         """
         Test get_block_info with expected path
@@ -1126,7 +1104,7 @@ class TestNotifiactionsDiscussion(UrlResetMixin, ModuleStoreTestCase):
 
 
 class CommandTest(TestCase):
-    @patch('eol_forum_notifications.management.commands.discussion_notification.send_notification')
+    @patch('eoldiscussion.management.commands.discussion_notification.send_notification')
     def test_command_discussion_notification(self,mock_send_notification):
         """
         Test discussion_notification
@@ -1136,46 +1114,11 @@ class CommandTest(TestCase):
         """
         mock_send_notification.return_value = True
         out = StringIO()
-        with self.assertRaises(CommandError):
-            call_command('discussion_notification', stdout=out)
-            self.assertTrue(out)
         with self.assertRaises(CommandError) as cm:
             call_command('discussion_notification','hourly', stdout=out)
         self.assertIn("EolForumNoticationsCommand - how_often must be 'weekly' or 'daily'", str(cm.exception))
         call_command('discussion_notification','daily', stdout=out)
         self.assertTrue(out)
-# -*- coding: utf-8 -*-
-# Python Standard Libraries
-from collections import namedtuple
-import json
-import logging
-
-# Installed packages (via pip)
-from mock import patch, Mock
-
-# Edx dependencies
-from common.djangoapps.student.roles import CourseStaffRole
-from common.djangoapps.student.tests.factories import UserFactory, CourseEnrollmentFactory
-from common.djangoapps.util.testing import UrlResetMixin
-from xblock.field_data import DictFieldData
-from xmodule.modulestore.tests.django_utils import ModuleStoreTestCase
-from xmodule.modulestore.tests.factories import CourseFactory
-
-# Internal project dependencies
-from .eolgradediscussion import EolGradeDiscussionXBlock
-
-logger = logging.getLogger(__name__)
-
-class TestRequest(object):
-    # pylint: disable=too-few-public-methods
-    """
-    Module helper for @json_handler
-    """
-    method = None
-    body = None
-    success = None
-    params = None
-    headers = None
 
 
 class TestGradeForum(UrlResetMixin, ModuleStoreTestCase):

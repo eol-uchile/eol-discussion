@@ -1,14 +1,12 @@
+# Python Standard Libraries
+import logging
+
+# Installed packages (via pip)
 from django.core.management.base import BaseCommand, CommandError
 
-from opaque_keys.edx.keys import CourseKey
-from django.contrib.auth.models import User
-from django.conf import settings
-from eol_forum_notifications.views import send_notification
+# Internal project dependencies
+from eoldiscussion.views import send_notification
 
-import datetime
-from django.utils import timezone
-
-import logging
 logger = logging.getLogger(__name__)
 
 class Command(BaseCommand):
