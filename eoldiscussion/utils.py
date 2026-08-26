@@ -1,29 +1,22 @@
 #!/usr/bin/env python
 # -- coding: utf-8 --
-
-from django.conf import settings
-from django.core.exceptions import ValidationError
-from django.contrib.auth.models import User
-from django.contrib.sites.shortcuts import get_current_site
-from django.db import transaction
-from django.http import HttpResponseRedirect, HttpResponseForbidden, Http404
-from django.shortcuts import render
-from django.urls import reverse
-from django.http import HttpResponse
-import openedx.core.djangoapps.django_comment_common.comment_client as cc
-from openedx.core.djangoapps.django_comment_common.utils import ThreadContext
-from eol_forum_notifications.models import EolForumNotificationsUser, EolForumNotificationsDiscussions
-from lms.djangoapps.courseware.courses import get_course_by_id
-from openedx.core.lib.courses import course_image_url
-from opaque_keys.edx.keys import CourseKey
-from xmodule.modulestore.django import modulestore
-from django.utils.timezone import now
+# Python Standard Libraries
 import json
-import requests
 import logging
 
-logger = logging.getLogger(__name__)
+# Installed packages (via pip)
+from django.utils.timezone import now
 
+# Edx dependencies
+from lms.djangoapps.courseware.courses import get_course_by_id
+from opaque_keys.edx.keys import CourseKey
+from openedx.core.lib.courses import course_image_url
+from xmodule.modulestore.django import modulestore
+
+# Internal project dependencies
+from eoldiscussion.models import EolForumNotificationsUser, EolForumNotificationsDiscussions
+
+logger = logging.getLogger(__name__)
 
 def get_users_notifications(how_often, discussion_id, course_id):
     """
