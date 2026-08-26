@@ -36,7 +36,7 @@ class TestRequest(object):
 class TestGradeForum(UrlResetMixin, ModuleStoreTestCase):
     def make_an_xblock(cls, **kw):
         """
-        Helper method that creates a EolGradeForum XBlock
+        Helper method that creates a EolGradeDiscussion XBlock
         """
 
         course = cls.course
