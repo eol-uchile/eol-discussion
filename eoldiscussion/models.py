@@ -1,9 +1,10 @@
+# Installed packages (via pip)
 from django.contrib.auth.models import User
 from django.db import models
-import datetime
+
+# Edx dependencies
 from opaque_keys.edx.django.models import CourseKeyField, UsageKeyField
 
-# Create your models here.
 
 class EolForumNotificationsDiscussions(models.Model):
     class Meta:

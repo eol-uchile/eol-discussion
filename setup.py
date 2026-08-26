@@ -21,15 +21,17 @@ def package_data(pkg, roots):
 
     return {pkg: data}
 
+import  setuptools
 
-setup(
-    name='eoldiscussion-xblock',
-    version='0.1',
-    description='',
+setuptools.setup(
+    name='eoldiscussion',
+    version='1.0.0',
+    description='EOL Discussion Xblock & Allows you to save forum notification and send mails with threads and/or comments unread among other things',
+    author="Oficina EOL UChile",
+    author_email="eol-ing@uchile.cl",
     license='AGPL v3',
-    packages=[
-        'eoldiscussion',
-    ],
+    packages=setuptools.find_packages(),
+    include_package_data=True,
     install_requires=['XBlock'],
     entry_points={
         'xblock.v1': [
@@ -37,14 +39,10 @@ setup(
             'eolgradediscussion = eoldiscussion.eolgradediscussion:EolGradeDiscussionXBlock',
         ],
         "lms.djangoapp": [
-            "eoldiscussion = eoldiscussion.apps:EolDiscussionConfig",
-            "eolgradediscussion = eolgradediscussion.apps:EolGradeDiscussionConfig",
-            "eol_forum_notifications = eol_forum_notifications.apps:EolForumNotificationsConfig"
+            "eoldiscussion = eoldiscussion.apps:EolDiscussionConfig"
         ],
         "cms.djangoapp": [
             "eoldiscussion = eoldiscussion.apps:EolDiscussionConfig",
-            "eolgradediscussion = eolgradediscussion.apps:EolGradeDiscussionConfig",
-            "eol_forum_notifications = eol_forum_notifications.apps:EolForumNotificationsConfig"
         ],
     }
 )

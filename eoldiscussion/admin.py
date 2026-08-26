@@ -1,6 +1,8 @@
+# Installed packages (via pip)
 from django.contrib import admin
-from .models import EolForumNotificationsUser, EolForumNotificationsDiscussions
-# Register your models here.
+
+# Internal project dependencies
+from eoldiscussion.models import EolForumNotificationsUser, EolForumNotificationsDiscussions
 
 class EolForumNotificationsDiscussionsAdmin(admin.ModelAdmin):
     list_display = ('discussion_id', 'course_id', 'daily_threads', 'daily_comment', 'weekly_threads', 'weekly_comment')
