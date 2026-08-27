@@ -16,7 +16,7 @@ setuptools.setup(
     entry_points={
         'xblock.v1': [
             'eoldiscussion = eoldiscussion.eoldiscussion:EolDiscussionXBlock',
-            'eolgradediscussion = eolgradediscussion.eolgradediscussion:EolGradeDiscussionXBlock',
+            'eolgradediscussion = eoldiscussion.eolgradediscussion:EolGradeDiscussionXBlock',
         ],
         "lms.djangoapp": [
             "eoldiscussion = eoldiscussion.apps:EolDiscussionConfig"
