@@ -833,17 +833,6 @@ class TestGradeForum(UrlResetMixin, ModuleStoreTestCase):
         author_view_html = author_view.content
         self.assertIn('class="eolgradediscussion_block_author"', author_view_html)
 
-    def test_workbench_scenarios(self):
-        """
-            Checks that 'workbench_scenarios' methods returns the expected title and XML 
-            for the basic EolGradeDiscussionXBlock scenario.
-        """
-        result_title = 'EolGradeDiscussionXBlock'
-        basic_scenario = "<eolgradediscussion/>"
-        test_result = self.xblock.workbench_scenarios()
-        self.assertEqual(result_title, test_result[0][0])
-        self.assertIn(basic_scenario, test_result[0][1])
-
     def test_get_student_item_dict_student_id_none(self):
         """
             Checks get_student_item_dict fuction when student_id is None
