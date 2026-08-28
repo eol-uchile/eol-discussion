@@ -1,6 +1,7 @@
 # Python Standard Libraries
 import json
 import logging
+from urllib.parse import urljoin
 
 # Installed packages (via pip)
 from django.conf import settings as DJANGO_SETTINGS
@@ -89,12 +90,6 @@ class EolGradeDiscussionXBlock(StudioEditableXBlockMixin, XBlock):
         return frag
 
     def studio_view(self, context=None):
-        from openedx.core.djangoapps.site_configuration.models import SiteConfiguration
-        lms_base = SiteConfiguration.get_value_for_org(
-            self.location.org,
-            "LMS_BASE",
-            DJANGO_SETTINGS.LMS_BASE
-        )
         context = {'xblock': self,
                    'location': str(self.location).split('@')[-1]}
         template = self.render_template(
@@ -103,15 +98,15 @@ class EolGradeDiscussionXBlock(StudioEditableXBlockMixin, XBlock):
         frag.add_css(self.resource_string("static/css/eolgradediscussion.css"))
         frag.add_javascript(self.resource_string(
             "static/js/src/eolgradediscussion_studio.js"))
-        from openedx.core.djangoapps.theming.helpers import get_current_request
-        myrequest = get_current_request()
-        absolute_uri = myrequest.build_absolute_uri()
-        http_aux = 'https://'
-        if 'http://' in absolute_uri:
-            http_aux = 'http://'
+        lms_base = DJANGO_SETTINGS.LMS_ROOT_URL
+        url_get_discussions = urljoin(
+            lms_base,
+            f"/api/discussion/v1/course_topics/{self.course_id}",
+        )
         settings = {
             'id_forum': self.id_forum,
-            'url_get_discussions': '{}{}/api/discussion/v1/course_topics/{}'.format(http_aux, lms_base, str(self.course_id))
+            'url_get_discussions': url_get_discussions
+
             }
         frag.initialize_js('EolGradeDiscussionXBlock', json_args=settings)
         return frag
