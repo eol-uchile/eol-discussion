@@ -3,6 +3,7 @@
 from collections import namedtuple
 from io import StringIO
 import json
+from unittest import result
 
 # Installed packages (via pip)
 from django.contrib.auth.models import AnonymousUser
@@ -21,6 +22,7 @@ from common.djangoapps.util.testing import UrlResetMixin
 from opaque_keys.edx.keys import UsageKey
 from xmodule.modulestore.tests.django_utils import ModuleStoreTestCase
 from xmodule.modulestore.tests.factories import CourseFactory
+from eol_forum_notifications.models import EolForumNotificationsUser, EolForumNotificationsDiscussions
 
 # Internal project dependencies
 from eoldiscussion.models import EolDiscussionXBlockNotificationUser, EolDiscussionXBlockNotification
@@ -680,6 +682,51 @@ class TestNotifiactionsDiscussion(UrlResetMixin, ModuleStoreTestCase):
         }
         self.assertEqual(result, expected)
 
+    @patch("django.apps.apps.is_installed")
+    def test_migrate_data_eol_forum_notification_not_installed(self,mock_is_installed):
+        """
+        Test migrate_data_from_forum_notification_to_discussion_notification
+        with eol_forum_notifications not installed
+        """
+        mock_is_installed.return_value = False
+        with self.assertRaises(CommandError) as cm:
+            call_command('migrate_data_from_forum_notification_to_discussion_notification')
+        self.assertIn("One of the apps, eol_forum_notifications or eoldiscussion, isn't installed, so I can't continue with the commands.", str(cm.exception))
+
+    def test_command_migrate_data(self):
+        """
+        Test migrate_data_from_forum_notification_to_discussion_notification
+            1. Migrate  data as dry_run
+            2. Migrate data as normal process
+        """
+        discussion = EolForumNotificationsDiscussions.objects.create(discussion_id="987654321", course_id=self.course.id, block_key=self.block_key)
+        EolForumNotificationsUser.objects.create(user=self.student, discussion=discussion, how_often="daily")
+        out_1 = StringIO()
+        call_command('migrate_data_from_forum_notification_to_discussion_notification','--dry_run', stdout=out_1)
+        expected_result_1=f"""
+                                This is a dry_run
+
+                                A total of 1 EolForumNotificationsDiscussions objects were found.
+                                A total of 0 objects already exist in EolDiscussionXBlockNotification model.
+                                A total of 1 objects could be copied to the EolDiscussionXBlockNotification model.
+
+                                A total of 1 EolForumNotificationsUser objects were found.
+                                A total of 0 objects already exist in EolDiscussionXBlockNotificationUser model.
+                                A total of 1 objects could be copied to the EolDiscussionXBlockNotificationUser model.
+                            """
+        self.assertIn(expected_result_1.strip(), out_1.getvalue().strip())
+        out_2 = StringIO()
+        call_command('migrate_data_from_forum_notification_to_discussion_notification', stdout=out_2)
+        expected_result_2=f"""
+                                A total of 1 EolForumNotificationsDiscussions objects were found.
+                                A total of 0 objects already exist in EolDiscussionXBlockNotification model.
+                                A total of 1 objects have been copied to the EolDiscussionXBlockNotification model.
+
+                                A total of 1 EolForumNotificationsUser objects were found.
+                                A total of 0 objects already exist in EolDiscussionXBlockNotificationUser model.
+                                A total of 1 objects have been copied to the EolDiscussionXBlockNotificationUser model.
+                                """
+        self.assertIn(expected_result_2.strip(), out_2.getvalue().strip())
 
 class CommandTest(TestCase):
     @patch('eoldiscussion.management.commands.discussion_notification.send_notification')
@@ -698,3 +745,5 @@ class CommandTest(TestCase):
         call_command('discussion_notification','daily', stdout=out)
         self.assertTrue(out)
 
+
+    
