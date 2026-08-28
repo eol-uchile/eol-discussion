@@ -89,7 +89,7 @@ class EolGradeDiscussionXBlock(StudioEditableXBlockMixin, XBlock):
         context = {'xblock': self, 'location': str(
             self.location).split('@')[-1]}
         template = self.render_template(
-            'static/html/author_view.html', context)
+            'static/html/eolgradediscussion/author_view.html', context)
         frag = Fragment(template)
         frag.add_css(self.resource_string("static/css/eolgradediscussion.css"))
         return frag
@@ -98,11 +98,11 @@ class EolGradeDiscussionXBlock(StudioEditableXBlockMixin, XBlock):
         context = {'xblock': self,
                    'location': str(self.location).split('@')[-1]}
         template = self.render_template(
-            'static/html/studio_view.html', context)
+            'static/html/eolgradediscussion/studio_view.html', context)
         frag = Fragment(template)
         frag.add_css(self.resource_string("static/css/eolgradediscussion.css"))
         frag.add_javascript(self.resource_string(
-            "static/js/src/eolgradediscussion_studio.js"))
+            "static/js/eolgradediscussion/studio_view.js"))
         lms_base = DJANGO_SETTINGS.LMS_ROOT_URL
         url_get_discussions = urljoin(
             lms_base,
@@ -119,11 +119,11 @@ class EolGradeDiscussionXBlock(StudioEditableXBlockMixin, XBlock):
     def student_view(self, context=None):
         context = self.get_context()
         template = self.render_template(
-            'static/html/eolgradediscussion.html', context)
+            'static/html/eolgradediscussion/student_view.html', context)
         frag = Fragment(template)
         frag.add_css(self.resource_string("static/css/eolgradediscussion.css"))
         frag.add_javascript(self.resource_string(
-            "static/js/src/eolgradediscussion.js"))
+            "static/js/eolgradediscussion/student_view.js"))
         settings = {
             'puntajemax': str(self.puntajemax),
             'location': str(self.location).split('@')[-1]
