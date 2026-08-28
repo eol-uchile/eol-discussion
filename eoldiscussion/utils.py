@@ -80,7 +80,7 @@ def get_user_data(discussion_id, user, course_key, block_key):
                 'how_often': aux.how_often
             })
         except EolDiscussionXBlockNotificationUser.DoesNotExist:
-            logger.info('EolForumNotification - Error to get notif model, discussion {}, user: {}'.format(discussion_id, user))
+            logger.info('EolDiscussionNotification - Error to get notif model, discussion {}, user: {}'.format(discussion_id, user))
             return '{}'
     else:
         EolDiscussionXBlockNotification.objects.create(discussion_id=discussion_id, course_id=course_key, block_key=block_key)
@@ -100,7 +100,7 @@ def get_block_info(block_key):
                 'parent': str(block.parent)
             }
     except Exception as e:
-        logger.info('EolForumNotification - Error to get block data, block id: {}'.format(block_key))
+        logger.info('EolDiscussionNotification - Error to get block data, block id: {}'.format(block_key))
         return {
                 'display_name': default,
                 'parent': ''
@@ -120,5 +120,5 @@ def get_info_block_course(discussion_id, course_id):
             'discussion_name': block_info['display_name']
         }
     except Exception as e:
-        logger.info('EolForumNotification - Error to get block and course data, course id: {}, discussion_id: {}'.format(course_id, discussion_id))
+        logger.info('EolDiscussionNotification - Error to get block and course data, course id: {}, discussion_id: {}'.format(course_id, discussion_id))
         return None

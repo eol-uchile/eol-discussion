@@ -343,7 +343,7 @@ class TestNotifiactionsDiscussion(UrlResetMixin, ModuleStoreTestCase):
         self.discussion.save()
         with self.assertLogs('eoldiscussion.views', level='INFO') as cm:
             send_notification('daily')
-        self.assertTrue(any('INFO:eoldiscussion.views:EolForumNotification - Block id doesnt exists, block-v1:eol+test100+2021_1+type@eoldiscussion+block@5c13942678184cab9a5345b660292c6e, course: foo/baz/bar' in log for log in cm.output))
+        self.assertTrue(any('INFO:eoldiscussion.views:EolDiscussionNotification - Block id doesnt exists, block-v1:eol+test100+2021_1+type@eoldiscussion+block@5c13942678184cab9a5345b660292c6e, course: foo/baz/bar' in log for log in cm.output))
 
     @patch('eoldiscussion.views.get_current_site')
     @patch('eoldiscussion.views.get_block_info')
@@ -377,7 +377,7 @@ class TestNotifiactionsDiscussion(UrlResetMixin, ModuleStoreTestCase):
         aux = EolDiscussionXBlockNotification.objects.get(id=self.discussion.id)
         self.assertEqual(aux.daily_threads, 0)
         self.assertFalse(any(
-        'EolForumNotification - Error to get platform name and url site' in log
+        'EolDiscussionNotification - Error to get platform name and url site' in log
         for log in cm.output))
 
     @patch('eoldiscussion.utils.get_info_block_course')
