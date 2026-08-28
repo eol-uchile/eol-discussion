@@ -5,18 +5,23 @@ from urllib.parse import urljoin
 
 # Installed packages (via pip)
 from django.conf import settings as DJANGO_SETTINGS
+from django.contrib.auth.models import User
 from django.template import Context, Template
 from django.urls import reverse
 import pkg_resources
 import six
 
 # Edx dependencies
+from common.djangoapps.student.models import anonymous_id_for_user
+from lms.djangoapps.courseware.models import StudentModule
+from openedx.core.djangoapps.django_comment_common.utils import ThreadContext
+from submissions import api as submissions_api
 from xblock.core import XBlock
 from xblock.fields import Integer, Scope, String
 from xblock.fragment import Fragment
 from xblockutils.resources import ResourceLoader
 from xblockutils.studio_editable import StudioEditableXBlockMixin
-
+import openedx.core.djangoapps.django_comment_common.comment_client as cc
 
 log = logging.getLogger(__name__)
 loader = ResourceLoader(__name__)
@@ -131,8 +136,6 @@ class EolGradeDiscussionXBlock(StudioEditableXBlockMixin, XBlock):
             self.location).split('@')[-1]}
         course_key = self.course_id
         if self.show_staff_grading_interface():
-            from django.contrib.auth.models import User
-            from submissions import api as submissions_api
             enrolled_students = User.objects.filter(
                 courseenrollment__course_id=course_key,
                 courseenrollment__is_active=1
@@ -194,9 +197,6 @@ class EolGradeDiscussionXBlock(StudioEditableXBlockMixin, XBlock):
         """
             Return anonymous id
         """
-        from django.contrib.auth.models import User
-        from common.djangoapps.student.models import anonymous_id_for_user
-
         course_key = self.course_id
         return anonymous_id_for_user(
             User.objects.get(
@@ -213,7 +213,6 @@ class EolGradeDiscussionXBlock(StudioEditableXBlockMixin, XBlock):
         """
         Get student's most recent submission.
         """
-        from submissions import api as submissions_api
         submissions = submissions_api.get_submissions(
             self.get_student_item_dict(student_id)
         )
@@ -244,7 +243,6 @@ class EolGradeDiscussionXBlock(StudioEditableXBlockMixin, XBlock):
         """
         Return student's current score.
         """
-        from submissions import api as submissions_api
         anonymous_user_id = self.get_anonymous_id(student_id)
         score = submissions_api.get_score(
             self.get_student_item_dict(anonymous_user_id)
@@ -258,8 +256,6 @@ class EolGradeDiscussionXBlock(StudioEditableXBlockMixin, XBlock):
         """
             Get all thread with the specified discussion ID.
         """
-        import openedx.core.djangoapps.django_comment_common.comment_client as cc
-        from openedx.core.djangoapps.django_comment_common.utils import ThreadContext
         query_params = {
             'page': 1,
             'per_page': DJANGO_SETTINGS.EOLGRADEDISCUSSION_LIMIT_THREAD,
@@ -289,7 +285,6 @@ class EolGradeDiscussionXBlock(StudioEditableXBlockMixin, XBlock):
             }
         Finds the discussion thread with the specified ID.
         """
-        import openedx.core.djangoapps.django_comment_common.comment_client as cc
         try:
             thread = cc.Thread.find(thread_id).retrieve(
                 with_responses=True,
@@ -320,7 +315,6 @@ class EolGradeDiscussionXBlock(StudioEditableXBlockMixin, XBlock):
         """
         Return feedback by student_id
         """
-        from lms.djangoapps.courseware.models import StudentModule
         try:
             student_module = StudentModule.objects.get(
                 student_id=student_id,
@@ -338,7 +332,6 @@ class EolGradeDiscussionXBlock(StudioEditableXBlockMixin, XBlock):
         """
         Return all feedback
         """
-        from lms.djangoapps.courseware.models import StudentModule
         try:
             student_modules = StudentModule.objects.filter(
                 course_id=self.course_id,
@@ -361,7 +354,6 @@ class EolGradeDiscussionXBlock(StudioEditableXBlockMixin, XBlock):
             StudentModule: A StudentModule object
         """
         # pylint: disable=no-member
-        from lms.djangoapps.courseware.models import StudentModule
         student_module, created = StudentModule.objects.get_or_create(
             course_id=self.course_id,
             module_state_key=self.location,
@@ -396,9 +388,7 @@ class EolGradeDiscussionXBlock(StudioEditableXBlockMixin, XBlock):
                 student_module.save()
                 if user_data['score'] != '':
                     score = int(user_data['score'])
-                    from common.djangoapps.student.models import anonymous_id_for_user
-                    from django.contrib.auth.models import User
-                    from submissions import api as submissions_api
+                    
                     course_key = self.course_id
                     user_score = User.objects.get(id=user_data['user_id'])
                     anonymous_user_id = anonymous_id_for_user(
@@ -449,8 +439,6 @@ class EolGradeDiscussionXBlock(StudioEditableXBlockMixin, XBlock):
         if not self.show_staff_grading_interface():
             log.info('EolGradeForum - Usuario sin Permisos - user_id: {}'.format(self.scope_ids.user_id))
             return { 'result': 'user is not course staff'}
-        from django.contrib.auth.models import User
-        from submissions import api as submissions_api
         course_key = self.course_id
         if self.id_forum == '':
             log.info('EolGradeForum - Componente no configurado - id_forum == ""')
