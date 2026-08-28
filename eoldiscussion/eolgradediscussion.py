@@ -268,7 +268,7 @@ class EolGradeDiscussionXBlock(StudioEditableXBlockMixin, XBlock):
             paginated_results = cc.Thread.search(query_params)
         except cc.utils.CommentClientRequestError:
             log.info(
-                'EolGradeForum - Error en obtener las publicaciones id_forum: {}'.format(discussion_id))
+                'EolGradeDiscussion - Error en obtener las publicaciones id_forum: {}'.format(discussion_id))
             return None
         return {
             'collection': paginated_results.collection,
@@ -293,7 +293,7 @@ class EolGradeDiscussionXBlock(StudioEditableXBlockMixin, XBlock):
                 response_limit=resp_limit)
         except cc.utils.CommentClientRequestError:
             log.info(
-                'EolGradeForum - Error en obtener la publicacion thread_id: {}'.format(thread_id))
+                'EolGradeDiscussion - Error en obtener la publicacion thread_id: {}'.format(thread_id))
             return None
 
         return thread
@@ -437,17 +437,17 @@ class EolGradeDiscussionXBlock(StudioEditableXBlockMixin, XBlock):
             Get all threads with comments
         """
         if not self.show_staff_grading_interface():
-            log.info('EolGradeForum - Usuario sin Permisos - user_id: {}'.format(self.scope_ids.user_id))
+            log.info('EolGradeDiscussion - Usuario sin Permisos - user_id: {}'.format(self.scope_ids.user_id))
             return { 'result': 'user is not course staff'}
         course_key = self.course_id
         if self.id_forum == '':
-            log.info('EolGradeForum - Componente no configurado - id_forum == ""')
+            log.info('EolGradeDiscussion - Componente no configurado - id_forum == ""')
             return {'result': 'no id_forum'}
         hilos = self.get_all_thread(self.id_forum)
         if hilos is None:
             return {'result': 'error'}
         if len(hilos['collection']) == 0:
-            log.info('EolGradeForum - Foro sin publicaciones')
+            log.info('EolGradeDiscussion - Foro sin publicaciones')
             return {'result': 'no data'}
         content_forum, student_data = self.reduce_data_forum(
             hilos['collection'])
