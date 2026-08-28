@@ -89,7 +89,7 @@ class EolGradeDiscussionXBlock(StudioEditableXBlockMixin, XBlock):
         context = {'xblock': self, 'location': str(
             self.location).split('@')[-1]}
         template = self.render_template(
-            'static/html/author_view.html', context)
+            'static/html/eolgradediscussion/author_view.html', context)
         frag = Fragment(template)
         frag.add_css(self.resource_string("static/css/eolgradediscussion.css"))
         return frag
@@ -98,11 +98,11 @@ class EolGradeDiscussionXBlock(StudioEditableXBlockMixin, XBlock):
         context = {'xblock': self,
                    'location': str(self.location).split('@')[-1]}
         template = self.render_template(
-            'static/html/studio_view.html', context)
+            'static/html/eolgradediscussion/studio_view.html', context)
         frag = Fragment(template)
         frag.add_css(self.resource_string("static/css/eolgradediscussion.css"))
         frag.add_javascript(self.resource_string(
-            "static/js/src/eolgradediscussion_studio.js"))
+            "static/js/eolgradediscussion/studio_view.js"))
         lms_base = DJANGO_SETTINGS.LMS_ROOT_URL
         url_get_discussions = urljoin(
             lms_base,
@@ -119,11 +119,11 @@ class EolGradeDiscussionXBlock(StudioEditableXBlockMixin, XBlock):
     def student_view(self, context=None):
         context = self.get_context()
         template = self.render_template(
-            'static/html/eolgradediscussion.html', context)
+            'static/html/eolgradediscussion/student_view.html', context)
         frag = Fragment(template)
         frag.add_css(self.resource_string("static/css/eolgradediscussion.css"))
         frag.add_javascript(self.resource_string(
-            "static/js/src/eolgradediscussion.js"))
+            "static/js/eolgradediscussion/student_view.js"))
         settings = {
             'puntajemax': str(self.puntajemax),
             'location': str(self.location).split('@')[-1]
@@ -164,7 +164,7 @@ class EolGradeDiscussionXBlock(StudioEditableXBlockMixin, XBlock):
             aux_pun = self.get_score(self.scope_ids.user_id)
             if aux_pun is not None and aux_pun >= 0:
                 score = aux_pun
-            state = self.get_feedback(self.scope_ids.user_id, course_key, self.block_id)
+            state = self.get_feedback(self.scope_ids.user_id)
             if 'feedback' in state:
                 feedback = state['feedback']
             context['puntaje'] = score
@@ -311,7 +311,7 @@ class EolGradeDiscussionXBlock(StudioEditableXBlockMixin, XBlock):
                     break
         return score
 
-    def get_feedback(self, student_id, course_key, block_key):
+    def get_feedback(self, student_id):
         """
         Return feedback by student_id
         """
@@ -328,7 +328,7 @@ class EolGradeDiscussionXBlock(StudioEditableXBlockMixin, XBlock):
             return json.loads(student_module.state)
         return {}
 
-    def get_all_student_module(self, course_key, block_key):
+    def get_all_student_module(self):
         """
         Return all feedback
         """
@@ -466,7 +466,7 @@ class EolGradeDiscussionXBlock(StudioEditableXBlockMixin, XBlock):
 
         lista_alumnos = []
         calificado = 0
-        states = self.get_all_student_module(course_key, self.block_id)
+        states = self.get_all_student_module()
         for a in enrolled_students:
             student_forum = {}
             if str(a['id']) in student_data:
@@ -606,20 +606,3 @@ class EolGradeDiscussionXBlock(StudioEditableXBlockMixin, XBlock):
         template_str = self.resource_string(template_path)
         template = Template(template_str)
         return template.render(Context(context))
-
-        # workbench while developing your XBlock.
-    @staticmethod
-    def workbench_scenarios():
-        """A canned scenario for display in the workbench."""
-        return [
-            ("EolGradeDiscussionXBlock",
-             """<eolgradediscussion/>
-             """),
-            ("Multiple EolGradeDiscussionXBlock",
-             """<vertical_demo>
-                <eolgradediscussion/>
-                <eolgradediscussion/>
-                <eolgradediscussion/>
-                </vertical_demo>
-             """),
-        ]
