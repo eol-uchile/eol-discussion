@@ -61,7 +61,7 @@ def save_notification_get(request):
         data = get_info_block_course(request.GET.get('discussion_id'),request.GET.get('course_id'))
         if data:
             context.update(data)
-        return render(request, 'eoldiscussion/notification.html', context)
+        return render(request, 'eoldiscussionnotification/notification.html', context)
     except Exception as e:
         logger.error('EolDiscussionNotification - Error to get EolDiscussionXBlockNotificationUser, error {}, data: {}'.format(str(e), request.GET))
         return HttpResponseNotFound('(Error {} ) Error con el modelo, por favor {}'.format(id_error, msg_error))
@@ -77,16 +77,16 @@ def save_notification_post(request):
         return HttpResponse(status=400)
     if 'period' not in request.POST or 'discussion_id' not in request.POST or 'course_id' not in request.POST or 'user_id' not in request.POST:
         logger.error('EolDiscussionNotification - Missing Data: {}'.format(request.POST))
-        return render(request, 'eoldiscussion/notification.html', {'error': '(Error {} ) Error con los parametros, por favor {}'.format(id_error, msg_error)})
+        return render(request, 'eoldiscussionnotification/notification.html', {'error': '(Error {} ) Error con los parametros, por favor {}'.format(id_error, msg_error)})
     if request.user.is_anonymous:
         logger.error('EolDiscussionNotification - User is anonymous, data: {}'.format(request.POST))
-        return render(request, 'eoldiscussion/notification.html', {'error':'Inicie sesión y vuelva a presionar el link del correo.'})
+        return render(request, 'eoldiscussionnotification/notification.html', {'error':'Inicie sesión y vuelva a presionar el link del correo.'})
     if request.POST.get('user_id') != str(request.user.id):
         logger.error('EolDiscussionNotification - User Ids are differents, user id post: {}, user id resquest: {}'.format(request.POST.get('user_id'), request.user.id))
-        return render(request, 'eoldiscussion/notification.html', {'error':'(Error {} ) Error con los parametros usuarios, por favor {}'.format(id_error, msg_error)})
+        return render(request, 'eoldiscussionnotification/notification.html', {'error':'(Error {} ) Error con los parametros usuarios, por favor {}'.format(id_error, msg_error)})
     if request.POST.get('period') not in ['never', 'daily', 'weekly']:
         logger.error('EolDiscussionNotification - Period not in (never, weekly, daily), Data: {}'.format(request.POST))
-        return render(request, 'eoldiscussion/notification.html', {'error': '(Error {} ) Error con el parametro periodo, por favor {}'.format(id_error, msg_error)})
+        return render(request, 'eoldiscussionnotification/notification.html', {'error': '(Error {} ) Error con el parametro periodo, por favor {}'.format(id_error, msg_error)})
     with transaction.atomic():
         try:
             course_id = CourseKey.from_string(request.POST.get('course_id'))
@@ -108,10 +108,10 @@ def save_notification_post(request):
             data = get_info_block_course(request.POST.get('discussion_id'),request.POST.get('course_id'))
             if data:
                 context.update(data)
-            return render(request, 'eoldiscussion/notification.html', context)
+            return render(request, 'eoldiscussionnotification/notification.html', context)
         except Exception as e:
             logger.error('EolDiscussionNotification - Error to update or create EolDiscussionXBlockNotificationUser, error {}, data: {}'.format(str(e), request.POST))
-            return render(request, 'eoldiscussion/notification.html', {'error': '(Error {} ) Un error inesperado ha ocurrido, por favor {}'.format(id_error, msg_error)})
+            return render(request, 'eoldiscussionnotification/notification.html', {'error': '(Error {} ) Un error inesperado ha ocurrido, por favor {}'.format(id_error, msg_error)})
 
 def save_notification(request):
     """

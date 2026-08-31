@@ -190,7 +190,7 @@ class EolDiscussionXBlock(DiscussionXBlock):
         context['url_eol_notification_save'] = reverse('eol_discussion_notification:save')
         context['notification_data'] = notification_data
 
-        fragment.add_content(self.render_mako_template('static/html/_discussion_inline.html', context))
+        fragment.add_content(self.render_mako_template('templates/eoldiscussion/_discussion_inline.html', context))
         fragment.initialize_js('EolDiscussionInlineBlock')
 
         return fragment
@@ -215,7 +215,7 @@ class EolDiscussionXBlock(DiscussionXBlock):
             field_info = self._make_field_info(field_name, field)
             if field_info is not None:
                 context["fields"][field_name] = field_info
-        fragment.content = loader.render_django_template('static/html/studio_edit.html', context)
+        fragment.content = loader.render_django_template('templates/eoldiscussion/studio_edit.html', context)
         fragment.add_css(self.resource_string("static/css/eoldiscussion_studio.css"))
         fragment.add_javascript(loader.load_unicode('static/js/studio_edit.js'))
         settings = {
