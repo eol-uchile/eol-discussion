@@ -89,7 +89,7 @@ class EolGradeDiscussionXBlock(StudioEditableXBlockMixin, XBlock):
         context = {'xblock': self, 'location': str(
             self.location).split('@')[-1]}
         template = self.render_template(
-            'static/html/eolgradediscussion/author_view.html', context)
+            'templates/eolgradediscussion/author_view.html', context)
         frag = Fragment(template)
         frag.add_css(self.resource_string("static/css/eolgradediscussion.css"))
         return frag
@@ -98,7 +98,7 @@ class EolGradeDiscussionXBlock(StudioEditableXBlockMixin, XBlock):
         context = {'xblock': self,
                    'location': str(self.location).split('@')[-1]}
         template = self.render_template(
-            'static/html/eolgradediscussion/studio_view.html', context)
+            'templates/eolgradediscussion/studio_view.html', context)
         frag = Fragment(template)
         frag.add_css(self.resource_string("static/css/eolgradediscussion.css"))
         frag.add_javascript(self.resource_string(
@@ -119,7 +119,7 @@ class EolGradeDiscussionXBlock(StudioEditableXBlockMixin, XBlock):
     def student_view(self, context=None):
         context = self.get_context()
         template = self.render_template(
-            'static/html/eolgradediscussion/student_view.html', context)
+            'templates/eolgradediscussion/student_view.html', context)
         frag = Fragment(template)
         frag.add_css(self.resource_string("static/css/eolgradediscussion.css"))
         frag.add_javascript(self.resource_string(
