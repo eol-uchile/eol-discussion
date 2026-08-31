@@ -31,5 +31,8 @@ class EolDiscussionConfig(AppConfig):
             },
         }
     }
+    def ready(self):
+        # Import signals to register signal handlers
+        from . import signals
     
     
