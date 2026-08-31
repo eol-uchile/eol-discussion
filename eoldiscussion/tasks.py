@@ -23,7 +23,7 @@ EMAIL_MAX_RETRIES = 5
 def task_send_single_email(discussion_id, course_id, context):
     subject = 'Nueva actividad en el foro de {}'.format(context['platform_name'])
     emails = [context['email']]
-    html_message = render_to_string('eoldiscussion/email.html', context)
+    html_message = render_to_string('eoldiscussionnotification/email.html', context)
     plain_message = strip_tags(html_message)
     from_email = configuration_helpers.get_value(
         'email_from_address',
