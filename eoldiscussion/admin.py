@@ -9,9 +9,9 @@ class EolDiscussionXBlockNotificationAdmin(admin.ModelAdmin):
     search_fields = ['discussion_id', 'course_id', 'daily_threads', 'daily_comment', 'weekly_threads', 'weekly_comment']
 
 class EolDiscussionXBlockNotificationUserAdmin(admin.ModelAdmin):
-    raw_id_fields = ('user', 'discussion')
-    list_display = ('user', 'discussion', 'how_often')
-    search_fields = ['user__username', 'discussion__course_id', 'how_often']
+    raw_id_fields = ('user', 'discussion_notification')
+    list_display = ('user', 'discussion_notification', 'how_often')
+    search_fields = ['user__username', 'discussion_notification__course_id', 'how_often']
 
 admin.site.register(EolDiscussionXBlockNotification, EolDiscussionXBlockNotificationAdmin)
 admin.site.register(EolDiscussionXBlockNotificationUser, EolDiscussionXBlockNotificationUserAdmin)
