@@ -47,15 +47,15 @@ def save_notification_get(request):
 
     try:
         course_id = CourseKey.from_string(request.GET.get('course_id'))
-        discussion = EolDiscussionXBlockNotification.objects.get(discussion_id=request.GET.get('discussion_id'), course_id=course_id)
-        user_notif = EolDiscussionXBlockNotificationUser.objects.get(
+        discussion_notification = EolDiscussionXBlockNotification.objects.get(discussion_id=request.GET.get('discussion_id'), course_id=course_id)
+        user_notification = EolDiscussionXBlockNotificationUser.objects.get(
             user=request.user,
-            discussion=discussion)
+            discussion_notification=discussion_notification)
         context = {
             'discussion_id': request.GET.get('discussion_id'),
             'course_id':request.GET.get('course_id'),
             'user_id':request.GET.get('user_id'),
-            'period': user_notif.how_often,
+            'period': user_notification.how_often,
             'save_btn': True
         }
         data = get_info_block_course(request.GET.get('discussion_id'),request.GET.get('course_id'))
@@ -90,10 +90,10 @@ def save_notification_post(request):
     with transaction.atomic():
         try:
             course_id = CourseKey.from_string(request.POST.get('course_id'))
-            discussion = EolDiscussionXBlockNotification.objects.get(discussion_id=request.POST.get('discussion_id'), course_id=course_id)
+            discussion_notification = EolDiscussionXBlockNotification.objects.get(discussion_id=request.POST.get('discussion_id'), course_id=course_id)
             EolDiscussionXBlockNotificationUser.objects.update_or_create(
                 user=request.user,
-                discussion=discussion,
+                discussion_notification=discussion_notification,
                 defaults={
                     'how_often': request.POST.get('period')
                     })
@@ -135,10 +135,10 @@ def save_notification(request):
     with transaction.atomic():
         try:
             course_id = CourseKey.from_string(request.POST.get('course_id'))
-            discussion = EolDiscussionXBlockNotification.objects.get(discussion_id=request.POST.get('discussion_id'), course_id=course_id)
+            discussion_notification = EolDiscussionXBlockNotification.objects.get(discussion_id=request.POST.get('discussion_id'), course_id=course_id)
             EolDiscussionXBlockNotificationUser.objects.update_or_create(
                 user=request.user,
-                discussion=discussion,
+                discussion_notification=discussion_notification,
                 defaults={
                     'how_often': request.POST.get('period')
                     })

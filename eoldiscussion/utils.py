@@ -29,8 +29,8 @@ def get_users_notifications(how_often, discussion_id, course_id):
         if discussion.daily_threads > 0 or discussion.daily_comment > 0:
             notifications = EolDiscussionXBlockNotificationUser.objects.filter(
                 how_often=how_often, 
-                discussion__discussion_id=discussion_id, 
-                discussion__course_id=course_key).values(
+                discussion_notification__discussion_id=discussion_id, 
+                discussion_notification__course_id=course_key).values(
                     'user__id',
                     'user__email'
                 )
@@ -39,8 +39,8 @@ def get_users_notifications(how_often, discussion_id, course_id):
         if discussion.weekly_threads > 0 or discussion.weekly_comment > 0:
             notifications = EolDiscussionXBlockNotificationUser.objects.filter(
                 how_often=how_often, 
-                discussion__discussion_id=discussion_id, 
-                discussion__course_id=course_key).values(
+                discussion_notification__discussion_id=discussion_id, 
+                discussion_notification__course_id=course_key).values(
                     'user__id',
                     'user__email'
                 )
@@ -75,7 +75,7 @@ def get_user_data(discussion_id, user, course_key, block_key):
     """
     if EolDiscussionXBlockNotification.objects.filter(discussion_id=discussion_id, course_id=course_key).exists():
         try:
-            aux = EolDiscussionXBlockNotificationUser.objects.get(discussion__discussion_id=discussion_id, user=user, discussion__course_id=course_key)
+            aux = EolDiscussionXBlockNotificationUser.objects.get(discussion_notification__discussion_id=discussion_id, user=user, discussion_notification__course_id=course_key)
             return json.dumps({
                 'how_often': aux.how_often
             })

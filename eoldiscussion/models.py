@@ -30,12 +30,12 @@ class EolDiscussionXBlockNotificationUser(models.Model):
     HOW_OFTEN_CHOICES = (("never", "never"), ("daily", "daily"), ("weekly", "weekly") )
     class Meta:
         index_together = [
-            ["discussion", "user"],
+            ["discussion_notification", "user"],
         ]
         unique_together = [
-            ["discussion", "user"],
+            ["discussion_notification", "user"],
         ]
     
     user = models.ForeignKey(User, db_index=True, on_delete=models.CASCADE)
-    discussion = models.ForeignKey(EolDiscussionXBlockNotification, db_index=True, on_delete=models.CASCADE)
+    discussion_notification = models.ForeignKey(EolDiscussionXBlockNotification, db_index=True, on_delete=models.CASCADE)
     how_often = models.TextField(choices=HOW_OFTEN_CHOICES, default='never')
