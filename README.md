@@ -30,43 +30,6 @@ Edit *production.py* in *lms and cms settings* and set the limit_thread, this pa
     > docker-compose exec lms python manage.py lms --settings=prod.production discussion_notification weekly
 
 
-# Install
-
-- Edit the following file and add following code _/openedx/edx-platform/lms/djangoapps/discussion/signals/handlers.py_
-
-        @receiver(signals.comment_created)
-        def send_discussion_email_notification(sender, user, post, **kwargs):
-            with transaction.atomic():
-                try:
-                    from eol_forum_notifications.models import EolDiscussionXBlockNotification
-                    discussion = EolDiscussionXBlockNotification.objects.get(discussion_id=post.thread.commentable_id, course_id=post.thread.course_id)
-                    discussion.daily_comment += 1
-                    discussion.weekly_comment += 1
-                    discussion.save()
-                except Exception as e:
-                    log.info("EolForumNotifications - Error to increment comment count. discussion_id: {}, course: {}, error: {}".format(
-                        post.thread.commentable_id,
-                        post.thread.course_id,
-                        str(e)))
-           
-                return
-
-        @receiver(signals.thread_created)
-        def eol_thread_created(sender, user, post, **kwargs):
-            with transaction.atomic():
-                try:
-                    from eol_forum_notifications.models import EolDiscussionXBlockNotification
-                    discussion = EolDiscussionXBlockNotification.objects.get(discussion_id=post.commentable_id, course_id=post.course_id)
-                    discussion.daily_threads += 1
-                    discussion.weekly_threads += 1
-                    discussion.save()
-                except Exception as e:
-                    log.info("EolForumNotifications - Error to increment comment count. discussion_id: {}, course: {}, error: {}".format(
-                        post.commentable_id,
-                        post.course_id,
-                        str(e)))
-            return
-
 ## TESTS
 **Prepare tests:**
 
@@ -75,5 +38,5 @@ Edit *production.py* in *lms and cms settings* and set the limit_thread, this pa
 **Run tests:**
 - In a terminal at the root of the project
     ```
-    act -W .github/workflows/pythonapp.yml
+    act -W .github/workflows/pythonapp.yml --bind --eventpath pull_request.json -s GITHUB_TOKEN=tu_token pull_request
     ```
