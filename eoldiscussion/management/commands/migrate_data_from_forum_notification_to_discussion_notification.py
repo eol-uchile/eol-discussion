@@ -8,9 +8,6 @@ from django.core.management.base import BaseCommand
 from django.db import transaction
 from eol_forum_notifications.models import EolForumNotificationsDiscussions, EolForumNotificationsUser
 
-# Edx dependencies
-from opaque_keys.edx.django.models import CourseKey
-
 # Internal project dependencies
 from eoldiscussion.models import EolDiscussionXBlockNotification, EolDiscussionXBlockNotificationUser
 
@@ -148,3 +145,4 @@ class Command(BaseCommand):
                 raise Exception(f"Error while copying data: {e}")
             if  dry_run:
                 transaction.set_rollback(True)
+
