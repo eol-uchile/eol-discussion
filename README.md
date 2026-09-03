@@ -18,6 +18,7 @@ docker-compose exec cms pip install -e /openedx/requirements/eoldiscussion && do
 Edit *production.py* in *lms and cms settings* and set the limit_thread, this parameter configures the maximum number of publications that are obtained from a discussion.
 
     EOLGRADEFORUM_LIMIT_THREADS = 5000
+    EOL_FORUMS_NOTIFICATIONS_ENABLE = True
     CORS_ALLOW_CREDENTIALS = True
     CORS_ORIGIN_WHITELIST = ['studio.domain.com']
     CORS_ALLOW_HEADERS = corsheaders_default_headers + (
