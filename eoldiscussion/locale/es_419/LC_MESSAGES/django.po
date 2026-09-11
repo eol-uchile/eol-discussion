@@ -1,0 +1,246 @@
+# Spanish (Latin America) translations for EOL.
+# Copyright (C) 2026 EOL
+# This file is distributed under the same license as the EOL project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: EOL 1.0.0\n"
+"Report-Msgid-Bugs-To: eol-ing@uchile.cl\n"
+"POT-Creation-Date: 2026-07-14 19:10+0000\n"
+"PO-Revision-Date: 2026-01-30 18:44+0000\n"
+"Last-Translator: EOL <eol-ing@uchile.cl>\n"
+"Language: es_419\n"
+"Language-Team: es_419 <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+#: eoldiscussion/__init__.py:49
+msgid "Character limit"
+msgstr "Límite de caracteres"
+
+#: eoldiscussion/__init__.py:50
+msgid "Integer representing the character limit between 1 and 2,000."
+msgstr "Entero que representa el límite de caracteres entre 1 y 2.000."
+
+#: eoldiscussion/__init__.py:56
+msgid "Schedule forum"
+msgstr "Programar foro"
+
+#: eoldiscussion/__init__.py:59
+msgid "The forum will only be visible during the configured dates."
+msgstr "El foro será visible solamente durante las fechas configuradas."
+
+#: eoldiscussion/__init__.py:62
+msgid "Start date"
+msgstr "Fecha de inicio"
+
+#: eoldiscussion/__init__.py:64
+msgid "Indicate the start date of the forum"
+msgstr "Indica la fecha de inicio del foro"
+
+#: eoldiscussion/__init__.py:68
+msgid "End date"
+msgstr "Fecha de cierre"
+
+#: eoldiscussion/__init__.py:70
+msgid "Indicate the end date of the forum"
+msgstr "Indica la fecha de cierre del foro"
+
+#: eoldiscussion/__init__.py:143
+#, python-brace-format
+msgid ""
+"You are not signed in. To view the discussion content, {sign_in_link} or "
+"{register_link}, and enroll in this course."
+msgstr ""
+
+#: eoldiscussion/__init__.py:146
+msgid "sign in"
+msgstr ""
+
+#: eoldiscussion/__init__.py:150
+msgid "register"
+msgstr ""
+
+#: eoldiscussion/__init__.py:157
+msgid "Discussion"
+msgstr ""
+
+#: eoldiscussion/__init__.py:251
+msgid "Error with parameters."
+msgstr "Error con los parámetros."
+
+#: eoldiscussion/__init__.py:256
+msgid "The character limit must be an integer."
+msgstr "El límite de caracteres debe ser un entero."
+
+#: eoldiscussion/__init__.py:260
+msgid "The dates for the forum have yet to be set."
+msgstr "Falta definir las fechas del foro."
+
+#: eoldiscussion/__init__.py:267
+msgid "The closing date must be later than the forum start date."
+msgstr "La fecha de cierre debe ser mayor a la fecha de inicio del foro."
+
+#: eoldiscussion/__init__.py:270
+msgid "Error with date formats in the forum."
+msgstr "Error con los formatos en las fechas del foro."
+
+#: eoldiscussion/static/html/_discussion_inline.html:40
+msgid "Topic:"
+msgstr ""
+
+#: eoldiscussion/static/html/_discussion_inline.html:51
+msgid "The forum ends on"
+msgstr "El foro termina el"
+
+#: eoldiscussion/static/html/_discussion_inline.html:55
+msgid "The forum begins on"
+msgstr "El foro inicia el"
+
+#: eoldiscussion/static/html/_discussion_inline.html:59
+#: eoldiscussion/static/html/_discussion_inline.html:65
+msgid "The forum has ended."
+msgstr "El foro ha finalizado."
+
+#: eoldiscussion/static/html/_discussion_inline.html:71
+#: eoldiscussion/static/html/_discussion_inline.html:81
+msgid "Notifications"
+msgstr ""
+
+#: eoldiscussion/static/html/_discussion_inline.html:85
+msgid "How often to receive messages"
+msgstr "Cada cuánto recibir mensajes"
+
+#: eoldiscussion/static/html/_discussion_inline.html:88
+msgid "Daily"
+msgstr "Diario"
+
+#: eoldiscussion/static/html/_discussion_inline.html:95
+msgid "Weekly"
+msgstr "Semanal"
+
+#: eoldiscussion/static/html/_discussion_inline.html:102
+msgid "Never"
+msgstr "Nunca"
+
+#: eoldiscussion/static/html/_discussion_inline.html:111
+msgid "Saved correctly"
+msgstr "Guardado correctamente"
+
+#: eoldiscussion/static/html/_discussion_inline.html:114
+msgid ""
+"An unexpected error has occurred. Please refresh the page and try again. "
+"If the error persists, contact support."
+msgstr ""
+"Un error inesperado ha ocurrido, actualice la página he intente "
+"nuevamente. Si el error persiste contáctate con mesa de ayuda."
+
+#: eoldiscussion/static/html/_discussion_inline.html:122
+#: eoldiscussion/static/html/studio_edit.html:64
+msgid "Save"
+msgstr ""
+
+#: eoldiscussion/static/html/_discussion_inline_studio.html:8
+msgid "To view live discussions, click Preview or View Live in Unit Settings."
+msgstr ""
+
+#: eoldiscussion/static/html/_discussion_inline_studio.html:9
+#, python-brace-format
+msgid "Discussion ID: {discussion_id}"
+msgstr ""
+
+#: eoldiscussion/static/html/_filter_dropdown.html:53
+msgid "Discussion topics list"
+msgstr ""
+
+#: eoldiscussion/static/html/_filter_dropdown.html:55
+#: eoldiscussion/static/html/_filter_dropdown.html:56
+msgid "Filter Topics"
+msgstr ""
+
+#: eoldiscussion/static/html/_filter_dropdown.html:57
+msgid "Filter topics"
+msgstr ""
+
+#: eoldiscussion/static/html/_filter_dropdown.html:63
+msgid "All Discussions"
+msgstr ""
+
+#: eoldiscussion/static/html/_filter_dropdown.html:67
+msgid "Posts I'm Following"
+msgstr ""
+
+#: eoldiscussion/static/html/_thread_list_template.html:8
+msgid "Filter:"
+msgstr ""
+
+#: eoldiscussion/static/html/_thread_list_template.html:11
+msgid "Show all posts"
+msgstr ""
+
+#: eoldiscussion/static/html/_thread_list_template.html:13
+msgid "Unread posts"
+msgstr ""
+
+#: eoldiscussion/static/html/_thread_list_template.html:16
+msgid "Unanswered posts"
+msgstr ""
+
+#: eoldiscussion/static/html/_thread_list_template.html:20
+msgid "Flagged"
+msgstr ""
+
+#: eoldiscussion/static/html/_thread_list_template.html:26
+msgid "Group:"
+msgstr ""
+
+#: eoldiscussion/static/html/_thread_list_template.html:28
+msgid "in all groups"
+msgstr ""
+
+#: eoldiscussion/static/html/_thread_list_template.html:37
+msgid "Sort:"
+msgstr ""
+
+#: eoldiscussion/static/html/_thread_list_template.html:40
+msgid "By recent activity"
+msgstr "Por actividad reciente"
+
+#: eoldiscussion/static/html/_thread_list_template.html:42
+msgid "By greater activity"
+msgstr "Por mayor actividad"
+
+#: eoldiscussion/static/html/_thread_list_template.html:44
+msgid "By majority vote"
+msgstr "Por mayor número de votos"
+
+#: eoldiscussion/static/html/_user_profile.html:8
+#, python-format
+msgid "%s discussion started"
+msgid_plural "%s discussions started"
+msgstr[0] ""
+msgstr[1] ""
+
+#: eoldiscussion/static/html/_user_profile.html:9
+#, python-format
+msgid "%s comment"
+msgid_plural "%s comments"
+msgstr[0] ""
+msgstr[1] ""
+
+#: eoldiscussion/static/html/studio_edit.html:37
+msgid "Disabled"
+msgstr "Deshabilitado"
+
+#: eoldiscussion/static/html/studio_edit.html:40
+msgid "Enabled"
+msgstr "Habilitado"
+
+#: eoldiscussion/static/html/studio_edit.html:67
+msgid "Cancel"
+msgstr ""
+

@@ -1,0 +1,100 @@
+<div bgcolor="#f5f5f5" lang="es_419" dir="ltr" style="
+    margin: 0;
+    padding: 0;
+    min-width: 100%;
+">
+    <!-- CONTENT -->
+    <table class="content" role="presentation" align="center" cellpadding="0" cellspacing="0" border="0" bgcolor="#f5f5f5" width="100%" style="
+        font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        font-size: 1em;
+        line-height: 1.5;
+        max-width: 600px;
+        padding: 0 20px 0 20px;
+    ">
+        <tr>
+            <!-- HEADER -->
+            <td class="header" style="
+                padding: 20px;
+            ">
+                <table role="presentation" width="100%" align="left" border="0" cellpadding="0" cellspacing="0">
+                    <tr>
+                        <td width="70">
+                            <a href="https://{{url_site}}/">
+                                <img src="https://eol.uchile.cl/static/eol-uchile-2020/images/email/eol_200.png" height="30" alt="Go to {{platform_name}} Home Page"/>
+                            </a>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td style="display: block;margin-top: 15px;color:#7eb0d5;font-weight: bold;margin-bottom: 10px;">
+                Nueva actividad en el foro {{discussion_name}} del curso {{course_name}}
+            </td>
+            <!-- MAIN -->
+            <td class="main" bgcolor="#ffffff" style="
+                display: flex;
+                padding: 18px 20px;
+                box-shadow: 0 1px 5px rgba(0,0,0,0.25);
+            ">
+                <table width="100%" align="left" border="0" cellpadding="0" cellspacing="0" role="presentation">
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div style="width: 100%;text-align: center;margin-top: 5px;">
+                                    <img src="{{url_site}}{{image}}" width="450" />
+                                </div>
+                            </td>
+                        </tr>
+                        <tr style="margin-top: 5px;display: block;padding-left: 34px;padding-right: 34px;">
+                            <td>
+                                <p style="color: #838383;">
+                                    {% if how_often == "daily" %}
+                                        {% if daily_threads > 0 and daily_comment > 0 %}
+                                            Hoy se han realizado {{daily_threads}} publicaciones y {{daily_comment}} comentarios en el foro.
+                                        {% elif daily_threads > 0 %}
+                                            Hoy se han realizado {{daily_threads}} publicaciones en el foro.
+                                        {% else %}
+                                            Hoy se han realizado {{daily_comment}} comentarios en el foro.
+                                        {% endif %}
+                                    {% else %}
+                                        {% if weekly_threads > 0 and weekly_comment > 0 %}
+                                            Esta semana se han realizado {{weekly_threads}} publicaciones y {{weekly_comment}} comentarios en el foro.
+                                        {% elif weekly_threads > 0 %}
+                                            Esta semana se han realizado {{weekly_threads}} publicaciones en el foro.
+                                        {% else %}
+                                            Esta semana se han realizado {{weekly_comment}} comentarios en el foro.
+                                        {% endif %}
+                                    {% endif %}
+                                </p>
+                                <p>
+                                    <a href="{{url_site}}/courses/{{course_id}}/jump_to/{{parent}}" style="color:#ffffff;text-decoration:none;border-radius:4px;background-color:#7eb0d5;border-top:7px solid #7eb0d5;border-bottom:7px solid #7eb0d5;border-right:60px solid #7eb0d5;border-left:60px solid #7eb0d5;display:inline-block" target="_blank" >
+                                        <font color="#ffffff"><b>Ver discusión</b></font>
+                                    </a>
+                                </p>
+                                <p style="color: #838383;">
+                                    Para realizar cambios en las notificaciones revisa el siguiente <a href="{{notif_url}}" style="color: #7eb0d5;"><b>link</b></a>
+                                </p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+
+        <tr>
+            <!-- FOOTER -->
+            <td class="footer" style="padding: 20px;">
+                <table role="presentation" width="100%" align="left" border="0" cellpadding="0" cellspacing="0">
+                    <tr>
+                        <!-- COPYRIGHT -->
+                        <td>
+                            &copy; 2023 {{platform_name}}, Todos los derechos reservados.<br/>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+
+</div>

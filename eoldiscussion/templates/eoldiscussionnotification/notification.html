@@ -1,0 +1,183 @@
+## mako
+
+<%page expression_filter="h"/>
+<%! from django.utils.translation import ugettext as _ %>
+<%inherit file="../main.html" />
+<%block name="pagetitle">${_("Configuración de notificaciones")}</%block>
+<main id="main" aria-label="Content" tabindex="-1" class="static_pages">
+<style>
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 26px;
+}
+
+.switch input { 
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 20px;
+  width: 20px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #2196F3;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(30px);
+  -ms-transform: translateX(30px);
+  transform: translateX(30px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 26px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+ul{
+    text-align: justify;
+    list-style-type: none;
+    padding: 0;
+}
+li{
+    height: 40px;
+}
+.eol-notification-list{
+    width: 220px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-top: 15px;
+}
+.eol-notification-data{
+    text-align: justify;
+    margin-left: auto;
+    margin-right: auto;
+    width: fit-content;
+    padding-bottom: 15px;
+}
+</style>
+<script type="text/javascript">
+    $(function ($) {
+        $('input[class="eol-checkbox-period"]').bind('click',function() {
+            if($(this).prop('checked') === false) {
+            $(this).prop('checked', true);
+            }
+            $('input[class="eol-checkbox-period"]').not(this).prop("checked", false);
+        });
+    });
+</script>
+
+<h1>Configuración de notificaciones</h1>
+    <div style="text-align: center">
+        <form method="POST" action="/eol_discussion_notification/post_save/" >
+           <input type="hidden" name="csrfmiddlewaretoken" value="${csrf_token}"/>
+            % if context.get('save', False) is True:
+                <p id="action_send" style="color:rgb(56, 181, 197); margin-bottom: 15px;">
+                    <b>Guardado correctamente.</b>
+                </p>
+            % endif
+            % if context.get('error', UNDEFINED) is not UNDEFINED:
+                <p id="wrong_data" style="color:firebrick; margin-bottom: 15px;">
+                    <b>${error}</b>                    
+                </p>
+            % endif
+            <div class="eol-notification-period">
+                <h3>Cada cuanto recibir mensaje:</h3>
+                <ul class="eol-notification-list">
+                    <li>
+                        <span>Diario</span>
+                        <label class="switch" style="float: right;">
+                            % if context.get('period', '') == 'daily':
+                                <input name="period" type="checkbox" class="eol-checkbox-period" value="daily" checked>
+                            % else:
+                                <input name="period" type="checkbox" class="eol-checkbox-period" value="daily">
+                            % endif
+                            <span class="slider round"></span>
+                        </label>
+                    </li>
+                    <li>
+                        <span>Semanal</span>
+                        <label class="switch" style="float: right;">
+                            % if context.get('period', '') == 'weekly':
+                                <input name="period" type="checkbox" class="eol-checkbox-period" value="weekly" checked>
+                            % else:
+                                <input name="period" type="checkbox" class="eol-checkbox-period" value="weekly">
+                            % endif
+                            <span class="slider round"></span>
+                        </label>
+                    </li>
+                    <li>
+                        <span>Nunca</span>
+                        <label class="switch" style="float: right;">
+                            % if context.get('period', '') == 'never':
+                                <input name="period" type="checkbox" class="eol-checkbox-period" value="never" checked>
+                            % else:
+                                <input name="period" type="checkbox" class="eol-checkbox-period" value="never">
+                            % endif
+                            <span class="slider round"></span>
+                        </label>
+                    </li>
+                </ul>
+            </div>
+            % if context.get('course_name', UNDEFINED) is not UNDEFINED:
+                <div class="eol-notification-data" style="text-align: justify;">
+                    Id del curso: ${course_id}<br>
+                    Curso: ${course_name} <br>
+                    Nombre del foro: ${discussion_name}
+                </div>
+            % endif
+            % if context.get('discussion_id', UNDEFINED) is not UNDEFINED:
+                <input name="discussion_id" type="text" value="${discussion_id}" hidden>
+            % else:
+                <input name="discussion_id" type="text" value="" hidden>
+            % endif
+            % if context.get('user_id', UNDEFINED) is not UNDEFINED:
+                <input name="user_id" type="text" value="${user_id}" hidden>
+            % else:
+                <input name="user_id" type="text" value="" hidden>
+            % endif
+            % if context.get('course_id', UNDEFINED) is not UNDEFINED:
+                <input name="course_id" type="text" value="${course_id}" hidden>
+            % else:
+                <input name="course_id" type="text" value="" hidden>
+            % endif
+            % if context.get('save_btn', False) is False:
+                <input type="submit" style="text-shadow: none; border-color:white; background-color: #0075b4; background-image: none; display:block; margin: auto" value="Guardar" disabled>
+            % else:
+                <input type="submit" onClick="this.form.submit(); this.disabled=true; this.value='Guardando…'; " style="text-shadow: none; border-color:white; background-color: #0075b4; background-image: none; display:block; margin: auto" value="Guardar">
+            % endif
+            
+        </form>
+    </div>
+</main>
