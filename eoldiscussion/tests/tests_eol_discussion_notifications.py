@@ -13,7 +13,7 @@ from django.http import HttpRequest, HttpResponse
 from django.test import Client, TestCase
 from django.test.utils import override_settings
 from django.urls import reverse
-from mock import patch, MagicMock
+from mock import patch, MagicMock, Mock
 
 # Edx dependencies
 from common.djangoapps.student.roles import CourseStaffRole
@@ -28,6 +28,7 @@ from eol_forum_notifications.models import EolForumNotificationsUser, EolForumNo
 from eoldiscussion.models import EolDiscussionXBlockNotificationUser, EolDiscussionXBlockNotification
 from eoldiscussion.utils import get_user_data, get_info_block_course, get_block_info
 from eoldiscussion.views import send_notification, save_notification, save_notification_get, save_notification_post
+from eoldiscussion.signals import eol_comment_created_notification_update, eol_thread_created_notification_update
 
 class TestRequest(object):
     # pylint: disable=too-few-public-methods
@@ -694,6 +695,120 @@ class TestNotifiactionsDiscussion(UrlResetMixin, ModuleStoreTestCase):
         self.assertIn("One of the apps, eol_forum_notifications or eoldiscussion, isn't installed, so I can't continue with the commands.", str(cm.exception))
 
 
+    def test_increments_comment_counters(self):
+        """
+        Test eol_comment_created_notification_update signal when a comment is created, 
+        ensuring that the daily and weekly comment counters are incremented correctly.
+        """
+        discussion = EolDiscussionXBlockNotification.objects.create(
+            discussion_id=123,
+            course_id="course-v1:test+course+1",
+            daily_comment=2,
+            weekly_comment=5,
+        )
+
+        post = Mock()
+        post.thread.commentable_id = 123
+        post.thread.course_id = "course-v1:test+course+1"
+
+        eol_comment_created_notification_update(
+            sender=None,
+            user=Mock(),
+            post=post,
+        )
+
+        discussion.refresh_from_db()
+
+        self.assertEqual(discussion.daily_comment, 3)
+        self.assertEqual(discussion.weekly_comment, 6)
+
+    @patch("eoldiscussion.signals.EolDiscussionXBlockNotification.objects.get")
+    def test_eol_comment_created_notification_update_exception( self, mock_get):
+        """
+        Test eol_comment_created_notification_update signal when an exception occurs while trying to increment the comment counters, 
+        ensuring that the error is logged correctly.
+        """
+        error_message = "Test exception"
+        mock_get.side_effect = Exception(error_message)
+
+        post = Mock()
+        post.thread.commentable_id = 123
+        post.thread.course_id = "course-v1:test+course+1"
+
+        with self.assertLogs('eoldiscussion.signals', level='INFO') as cm:
+            eol_comment_created_notification_update(
+                sender=None,
+                user=Mock(),
+                post=post,
+            )
+        
+        self.assertEqual(len(cm.output), 1)
+        self.assertEqual(
+            cm.output[0],
+            "INFO:eoldiscussion.signals:"
+            "EolForumNotifications - Error to increment comment count. "
+            "discussion_id: 123, "
+            "course: course-v1:test+course+1, "
+            "error: Test exception",
+        )
+
+    def test_increments_thread_counters(self):
+        """
+        Test eol_thread_created_notification_update signal when a thread is created, 
+        ensuring that the daily and weekly thread counters are incremented correctly.
+        """
+        discussion = EolDiscussionXBlockNotification.objects.create(
+            discussion_id=123,
+            course_id="course-v1:test+course+1",
+            daily_threads=2,
+            weekly_threads=5,
+        )
+
+        post = Mock()
+        post.commentable_id = 123
+        post.course_id = "course-v1:test+course+1"
+
+        eol_thread_created_notification_update(
+            sender=None,
+            user=Mock(),
+            post=post,
+        )
+
+        discussion.refresh_from_db()
+
+        self.assertEqual(discussion.daily_threads, 3)
+        self.assertEqual(discussion.weekly_threads, 6)
+
+    @patch("eoldiscussion.signals.EolDiscussionXBlockNotification.objects.get")
+    def test_eol_thread_created_notification_update_exception(self, mock_get):
+        """
+        Test eol_thread_created_notification_update signal when an exception occurs while trying to increment the thread counters, 
+        ensuring that the error is logged correctly.
+        """
+        error_message = "Test exception"
+        mock_get.side_effect = Exception(error_message)
+
+        post = Mock()
+        post.commentable_id = 123
+        post.course_id = "course-v1:test+course+1"
+
+        with self.assertLogs('eoldiscussion.signals', level='INFO') as cm:
+            eol_thread_created_notification_update(
+                sender=None,
+                user=Mock(),
+                post=post,
+            )
+        
+        self.assertEqual(len(cm.output), 1)
+        self.assertEqual(
+            cm.output[0],
+            "INFO:eoldiscussion.signals:"
+            "EolForumNotifications - Error to increment thread count. "
+            "discussion_id: 123, "
+            "course: course-v1:test+course+1, "
+            "error: Test exception",
+        )
+
 class CommandTest(TestCase):
     @patch('eoldiscussion.management.commands.discussion_notification.send_notification')
     def test_command_discussion_notification(self,mock_send_notification):
@@ -710,6 +825,3 @@ class CommandTest(TestCase):
         self.assertIn("EolForumNoticationsCommand - how_often must be 'weekly' or 'daily'", str(cm.exception))
         call_command('discussion_notification','daily', stdout=out)
         self.assertTrue(out)
-
-
-    
