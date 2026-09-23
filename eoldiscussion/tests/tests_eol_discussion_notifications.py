@@ -694,6 +694,40 @@ class TestNotifiactionsDiscussion(UrlResetMixin, ModuleStoreTestCase):
             call_command('migrate_data_from_forum_notification_to_discussion_notification')
         self.assertIn("One of the apps, eol_forum_notifications or eoldiscussion, isn't installed, so I can't continue with the commands.", str(cm.exception))
 
+    def test_command_migrate_data(self):
+        """
+        Test migrate_data_from_forum_notification_to_discussion_notification
+            1. Migrate  data as dry_run
+            2. Migrate data as normal process
+        """
+        discussion = EolForumNotificationsDiscussions.objects.create(discussion_id="987654321", course_id=self.course.id, block_key=self.block_key)
+        EolForumNotificationsUser.objects.create(user=self.student, discussion=discussion, how_often="daily")
+        out_1 = StringIO()
+        call_command('migrate_data_from_forum_notification_to_discussion_notification','--dry_run', stdout=out_1)
+        expected_result_1=f"""
+                                This is a dry_run
+
+                                A total of 1 EolForumNotificationsDiscussions objects were found.
+                                A total of 0 objects already exist in EolDiscussionXBlockNotification model.
+                                A total of 1 objects could be copied to the EolDiscussionXBlockNotification model.
+
+                                A total of 1 EolForumNotificationsUser objects were found.
+                                A total of 0 objects already exist in EolDiscussionXBlockNotificationUser model.
+                                A total of 1 objects could be copied to the EolDiscussionXBlockNotificationUser model.
+                            """
+        self.assertIn(expected_result_1.strip(), out_1.getvalue().strip())
+        out_2 = StringIO()
+        call_command('migrate_data_from_forum_notification_to_discussion_notification', stdout=out_2)
+        expected_result_2=f"""
+                                A total of 1 EolForumNotificationsDiscussions objects were found.
+                                A total of 0 objects already exist in EolDiscussionXBlockNotification model.
+                                A total of 1 objects have been copied to the EolDiscussionXBlockNotification model.
+
+                                A total of 1 EolForumNotificationsUser objects were found.
+                                A total of 0 objects already exist in EolDiscussionXBlockNotificationUser model.
+                                A total of 1 objects have been copied to the EolDiscussionXBlockNotificationUser model.
+                                """
+        self.assertIn(expected_result_2.strip(), out_2.getvalue().strip())
 
     def test_increments_comment_counters(self):
         """
