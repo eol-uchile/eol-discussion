@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: EOL 1.0.0\n"
 "Report-Msgid-Bugs-To: eol-ing@uchile.cl\n"
-"POT-Creation-Date: 2026-07-14 19:10+0000\n"
+"POT-Creation-Date: 2026-09-28 14:56+0000\n"
 "PO-Revision-Date: 2026-01-30 18:44+0000\n"
 "Last-Translator: EOL <eol-ing@uchile.cl>\n"
 "Language: es_419\n"
@@ -18,402 +18,6 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.18.0\n"
 
-#: eoldiscussion/static/html/templates2.underscore:15
-msgid "Reply"
-msgstr "Responder"
-
-#: eoldiscussion/static/html/templates2.underscore:22
-msgid "Add a response:"
-msgstr "Agregar una respuesta:"
-
-#: eoldiscussion/static/html/templates2.underscore:26
-#: eoldiscussion/static/html/templates2.underscore:161
-#: eoldiscussion/static/html/templates2.underscore:191
-#: eoldiscussion/static/html/templates2.underscore:278
-#: eoldiscussion/static/html/templates2.underscore:334
-#: eoldiscussion/static/html/templates2.underscore:509
-msgid "Remaining characters"
-msgstr "Caracteres restantes"
-
-#: eoldiscussion/static/html/templates2.underscore:36
-#: eoldiscussion/static/html/templates2.underscore:201
-#: eoldiscussion/static/html/templates2.underscore:540
-msgid "Submit"
-msgstr "Enviar"
-
-#: eoldiscussion/static/html/templates2.underscore:45
-#: eoldiscussion/static/html/templates2.underscore:685
-msgid "This thread is closed."
-msgstr "Este hilo está cerrado."
-
-#: eoldiscussion/static/html/templates2.underscore:84
-#, python-format
-msgid "discussion posted %(time_ago)s by %(author)s"
-msgstr "comentario publicado hace %(time_ago)s por %(author)s"
-
-#: eoldiscussion/static/html/templates2.underscore:86
-#, python-format
-msgid "question posted %(time_ago)s by %(author)s"
-msgstr "pregunta publicada hace %(time_ago)s por %(author)s"
-
-#: eoldiscussion/static/html/templates2.underscore:94
-msgid "Pinned"
-msgstr "Destacado"
-
-#: eoldiscussion/static/html/templates2.underscore:97
-#: eoldiscussion/static/html/templates2.underscore:251
-#: eoldiscussion/static/html/templates2.underscore:324
-msgid "Reported"
-msgstr "Reportado"
-
-#: eoldiscussion/static/html/templates2.underscore:100
-msgid "Closed"
-msgstr ""
-
-#: eoldiscussion/static/html/templates2.underscore:123
-#, python-format
-msgid "Related to: %(courseware_title_linked)s"
-msgstr "Relacionado con: %(courseware_title_linked)s"
-
-#: eoldiscussion/static/html/templates2.underscore:133
-#, python-format
-msgid "This post is visible only to %(group_name)s."
-msgstr "Esta publicación solo es visible para %(group_name)s."
-
-#: eoldiscussion/static/html/templates2.underscore:139
-msgid "This post is visible to everyone."
-msgstr "Esta publicación es visible para todo el mundo."
-
-#: eoldiscussion/static/html/templates2.underscore:146
-msgid "Editing post"
-msgstr "Editando post"
-
-#: eoldiscussion/static/html/templates2.underscore:151
-#: eoldiscussion/static/html/templates2.underscore:496
-msgid "Title"
-msgstr ""
-
-#: eoldiscussion/static/html/templates2.underscore:153
-#: eoldiscussion/static/html/templates2.underscore:498
-msgid "Add a clear and descriptive title to encourage participation. (Required)"
-msgstr ""
-"Añade un título claro y descriptivo para fomentar la participación. "
-"(Obligatorio)"
-
-#: eoldiscussion/static/html/templates2.underscore:159
-msgid "Edit your post below."
-msgstr "Edita tu publicación a continuación."
-
-#: eoldiscussion/static/html/templates2.underscore:171
-msgid "Update post"
-msgstr "Actualizar publicación"
-
-#: eoldiscussion/static/html/templates2.underscore:172
-#: eoldiscussion/static/html/templates2.underscore:288
-#: eoldiscussion/static/html/templates2.underscore:344
-#: eoldiscussion/static/html/templates2.underscore:466
-#: eoldiscussion/static/html/templates2.underscore:541
-msgid "Cancel"
-msgstr ""
-
-#: eoldiscussion/static/html/templates2.underscore:178
-#, python-format
-msgid "Show Comment (%(num_comments)s)"
-msgid_plural "Show Comments (%(num_comments)s)"
-msgstr[0] "Mostrar comentario (%(num_comments)s)"
-msgstr[1] "Mostrar comentarios (%(num_comments)s)"
-
-#: eoldiscussion/static/html/templates2.underscore:188
-#: eoldiscussion/static/html/templates2.underscore:190
-msgid "Add a comment"
-msgstr "Agregar un comentario"
-
-#: eoldiscussion/static/html/templates2.underscore:222
-#, python-format
-msgid "marked as answer %(time_ago)s by %(user)s"
-msgstr ""
-
-#: eoldiscussion/static/html/templates2.underscore:226
-#, python-format
-msgid "marked as answer %(time_ago)s"
-msgstr ""
-
-#: eoldiscussion/static/html/templates2.underscore:232
-#, python-format
-msgid "endorsed %(time_ago)s by %(user)s"
-msgstr "(usuario) lo ha recomendado hace (tiempo)"
-
-#: eoldiscussion/static/html/templates2.underscore:236
-#, python-format
-msgid "endorsed %(time_ago)s"
-msgstr "recomendado hace (tiempo)"
-
-#: eoldiscussion/static/html/templates2.underscore:275
-msgid "Editing response"
-msgstr "Editar respuesta"
-
-#: eoldiscussion/static/html/templates2.underscore:287
-msgid "Update response"
-msgstr "Actualizar respuesta"
-
-#: eoldiscussion/static/html/templates2.underscore:317
-#, python-format
-msgid "posted %(time_ago)s by %(author)s"
-msgstr "publicado hace %(time_ago)s por %(author)s"
-
-#: eoldiscussion/static/html/templates2.underscore:331
-msgid "Editing comment"
-msgstr "Editar un comentario"
-
-#: eoldiscussion/static/html/templates2.underscore:343
-msgid "Update comment"
-msgstr "Actualizar un comentario"
-
-#: eoldiscussion/static/html/templates2.underscore:386
-#: eoldiscussion/static/html/templates2.underscore:605
-#: eoldiscussion/static/html/templates2.underscore:680
-#: eoldiscussion/static/js/discussion.js:3634
-msgid "anonymous"
-msgstr "anónimo"
-
-#: eoldiscussion/static/html/templates2.underscore:398
-msgid "Staff"
-msgstr "Personal de apoyo"
-
-#: eoldiscussion/static/html/templates2.underscore:400
-msgid "Community TA"
-msgstr ""
-
-#: eoldiscussion/static/html/templates2.underscore:403
-msgid "Student"
-msgstr ""
-
-#: eoldiscussion/static/html/templates2.underscore:413
-#: eoldiscussion/static/html/templates2.underscore:414
-msgid "Creation"
-msgstr ""
-
-#: eoldiscussion/static/html/templates2.underscore:416
-#: eoldiscussion/static/html/templates2.underscore:417
-msgid "Last activity"
-msgstr "Última actividad"
-
-#: eoldiscussion/static/html/templates2.underscore:434
-#, python-format
-msgid ""
-"%(comments_count)s %(span_sr_open)s comments (%(unread_comments_count)s "
-"unread comments)%(span_close)s"
-msgstr ""
-"%(comments_count)s comentarios %(span_sr_open)s "
-"(%(unread_comments_count)s comentarios sin leer) %(span_close)s"
-
-#: eoldiscussion/static/html/templates2.underscore:437
-#, python-format
-msgid "%(comments_count)s %(span_sr_open)s comments %(span_close)s"
-msgstr "%(comments_count)s comentarios %(span_sr_open)s comentarios %(span_close)s"
-
-#: eoldiscussion/static/html/templates2.underscore:454
-#: eoldiscussion/static/html/templates2.underscore:876
-#: eoldiscussion/static/html/templates2.underscore:878
-#: eoldiscussion/static/html/templates2.underscore:926
-msgid "Close"
-msgstr "Cerrar"
-
-#: eoldiscussion/static/html/templates2.underscore:462
-#: eoldiscussion/static/html/templates2.underscore:612
-msgid "Create post"
-msgstr "Crear publicación"
-
-#: eoldiscussion/static/html/templates2.underscore:477
-msgid "Visible to"
-msgstr "Visible para"
-
-#: eoldiscussion/static/html/templates2.underscore:480
-msgid ""
-"Discussion admins, moderators, and TAs can make their posts visible to "
-"all students or specify a single group."
-msgstr ""
-"Los administradores, moderadores y profesores asistentes del foro pueden "
-"hacer que sus publicaciones sean visibles para todos los alumnos o para "
-"un grupo concreto."
-
-#: eoldiscussion/static/html/templates2.underscore:484
-msgid "All Groups"
-msgstr "Todos los grupos"
-
-#: eoldiscussion/static/html/templates2.underscore:507
-#: eoldiscussion/static/js/discussion.js:179
-msgid "Your question or idea (required)"
-msgstr "Tu pregunta o idea (requerido)"
-
-#: eoldiscussion/static/html/templates2.underscore:523
-msgid "follow this post"
-msgstr "seguir esta publicación"
-
-#: eoldiscussion/static/html/templates2.underscore:529
-msgid "post anonymously"
-msgstr "publicar anónimamente"
-
-#: eoldiscussion/static/html/templates2.underscore:535
-msgid "post anonymously to classmates"
-msgstr "publicar anónimamente para compañeros de clase"
-
-#: eoldiscussion/static/html/templates2.underscore:559
-msgid "Error posting your message."
-msgstr "Error al publicar tu mensaje"
-
-#: eoldiscussion/static/html/templates2.underscore:572
-#, python-format
-msgid "This post will be visible only to %(group_name)s."
-msgstr "Esta publicación será visible solo para %(group_name)s."
-
-#: eoldiscussion/static/html/templates2.underscore:578
-msgid "This post will be visible to everyone."
-msgstr "Esta publicación será visible para todo el mundo."
-
-#: eoldiscussion/static/html/templates2.underscore:584
-msgid "Topic area"
-msgstr "Área temática"
-
-#: eoldiscussion/static/html/templates2.underscore:587
-msgid "Add your post to a relevant topic to help others find it. (Required)"
-msgstr ""
-"Añade tu publicación a un tema relevante para que los demás puedan "
-"encontrarla. (Obligatorio)"
-
-#: eoldiscussion/static/html/templates2.underscore:600
-msgid "(Community TA)"
-msgstr "(Profesor asistente de la comunidad)"
-
-#: eoldiscussion/static/html/templates2.underscore:602
-msgid "(Staff)"
-msgstr "(Equipo)"
-
-#: eoldiscussion/static/html/templates2.underscore:628
-msgid "All Posts"
-msgstr "Todas las publicaciones"
-
-#: eoldiscussion/static/html/templates2.underscore:629
-msgid "Return to all posts"
-msgstr "Volver a todas las publicaciones"
-
-#: eoldiscussion/static/html/templates2.underscore:642
-msgid "Previous"
-msgstr ""
-
-#: eoldiscussion/static/html/templates2.underscore:648
-#: eoldiscussion/static/html/templates2.underscore:660
-#: eoldiscussion/static/js/discussion.js:1381
-#: eoldiscussion/static/js/discussion.js:1394
-msgid "…"
-msgstr ""
-
-#: eoldiscussion/static/html/templates2.underscore:666
-msgid "Next"
-msgstr ""
-
-#: eoldiscussion/static/html/templates2.underscore:692
-msgid "View discussion"
-msgstr ""
-
-#: eoldiscussion/static/html/templates2.underscore:753
-#: eoldiscussion/static/html/templates2.underscore:942
-msgid "Load more"
-msgstr ""
-
-#: eoldiscussion/static/html/templates2.underscore:763
-msgid "Post type"
-msgstr "Tipo de publicación"
-
-#: eoldiscussion/static/html/templates2.underscore:767
-msgid ""
-"Questions raise issues that need answers. Discussions share ideas and "
-"start conversations. (Required)"
-msgstr ""
-"Las preguntas plantean cuestiones que necesitan respuesta. Los debates "
-"permiten compartir ideas e iniciar conversaciones. (Obligatorio)"
-
-#: eoldiscussion/static/html/templates2.underscore:775
-msgid "Question"
-msgstr ""
-
-#: eoldiscussion/static/html/templates2.underscore:783
-msgid "Discussion"
-msgstr ""
-
-#: eoldiscussion/static/html/templates2.underscore:792
-#: eoldiscussion/static/html/templates2.underscore:794
-msgid "Endorse"
-msgstr "Respaldar"
-
-#: eoldiscussion/static/html/templates2.underscore:795
-msgid "Unendorse"
-msgstr "Retirar respaldo"
-
-#: eoldiscussion/static/html/templates2.underscore:804
-#: eoldiscussion/static/html/templates2.underscore:806
-msgid "Mark as Answer"
-msgstr "Marcar como respuesta"
-
-#: eoldiscussion/static/html/templates2.underscore:807
-msgid "Unmark as Answer"
-msgstr "Dejar de marcar como respuesta"
-
-#: eoldiscussion/static/html/templates2.underscore:816
-#: eoldiscussion/static/html/templates2.underscore:818
-msgid "Follow"
-msgstr "Seguir"
-
-#: eoldiscussion/static/html/templates2.underscore:819
-msgid "Unfollow"
-msgstr "Dejar de seguir"
-
-#: eoldiscussion/static/html/templates2.underscore:832
-msgid "Vote for this post,"
-msgstr "Votar por esta publicación,"
-
-#: eoldiscussion/static/html/templates2.underscore:848
-msgid "Report abuse"
-msgstr "Reportar abuso"
-
-#: eoldiscussion/static/html/templates2.underscore:850
-msgid "Report"
-msgstr "Reportar"
-
-#: eoldiscussion/static/html/templates2.underscore:851
-msgid "Unreport"
-msgstr "Anular reporte"
-
-#: eoldiscussion/static/html/templates2.underscore:862
-#: eoldiscussion/static/html/templates2.underscore:864
-msgid "Pin"
-msgstr "Fijar"
-
-#: eoldiscussion/static/html/templates2.underscore:865
-msgid "Unpin"
-msgstr "Desfijar"
-
-#: eoldiscussion/static/html/templates2.underscore:879
-msgid "Open"
-msgstr "Abrir"
-
-#: eoldiscussion/static/html/templates2.underscore:890
-msgid "Edit"
-msgstr "Editar"
-
-#: eoldiscussion/static/html/templates2.underscore:898
-msgid "Delete"
-msgstr "Eliminar"
-
-#: eoldiscussion/static/html/templates2.underscore:909
-#: eoldiscussion/static/html/templates2.underscore:910
-msgid "More"
-msgstr "Más"
-
-#: eoldiscussion/static/html/templates2.underscore:935
-msgid "OK"
-msgstr ""
-
 #: eoldiscussion/static/js/discussion.js:169
 msgid "HTML preview of post"
 msgstr "Vista previa en HTML de la publicación"
@@ -421,6 +25,11 @@ msgstr "Vista previa en HTML de la publicación"
 #: eoldiscussion/static/js/discussion.js:170
 msgid "Preview"
 msgstr ""
+
+#: eoldiscussion/static/js/discussion.js:179
+#: eoldiscussion/templates/eoldiscussion/templates2.underscore:507
+msgid "Your question or idea (required)"
+msgstr "Tu pregunta o idea (requerido)"
 
 #: eoldiscussion/static/js/discussion.js:1127
 msgid "Loading content"
@@ -442,6 +51,13 @@ msgid "Your request could not be processed. Refresh the page and try again."
 msgstr ""
 "No se ha podido procesar tu solicitud. Actualiza la página e inténtalo de"
 " nuevo."
+
+#: eoldiscussion/static/js/discussion.js:1381
+#: eoldiscussion/static/js/discussion.js:1394
+#: eoldiscussion/templates/eoldiscussion/templates2.underscore:648
+#: eoldiscussion/templates/eoldiscussion/templates2.underscore:660
+msgid "…"
+msgstr ""
 
 #: eoldiscussion/static/js/discussion.js:1398
 msgid "Some images in this post have been omitted"
@@ -686,6 +302,13 @@ msgstr "¿Estás seguro de que quieres eliminar esta publicación?"
 msgid "Your post will be discarded."
 msgstr "Tu publicación será descartada."
 
+#: eoldiscussion/static/js/discussion.js:3634
+#: eoldiscussion/templates/eoldiscussion/templates2.underscore:386
+#: eoldiscussion/templates/eoldiscussion/templates2.underscore:605
+#: eoldiscussion/templates/eoldiscussion/templates2.underscore:680
+msgid "anonymous"
+msgstr "anónimo"
+
 #: eoldiscussion/static/js/discussion.js:3748
 msgid "Are you sure you want to delete this comment?"
 msgstr "¿Estás seguro de que quieres eliminar este comentario?"
@@ -718,4 +341,381 @@ msgstr ""
 #: eoldiscussion/static/js/studio_edit.js:99
 msgid "Unable to update settings"
 msgstr "No se pueden actualizar los ajustes"
+
+#: eoldiscussion/templates/eoldiscussion/templates2.underscore:15
+msgid "Reply"
+msgstr "Responder"
+
+#: eoldiscussion/templates/eoldiscussion/templates2.underscore:22
+msgid "Add a response:"
+msgstr "Agregar una respuesta:"
+
+#: eoldiscussion/templates/eoldiscussion/templates2.underscore:26
+#: eoldiscussion/templates/eoldiscussion/templates2.underscore:161
+#: eoldiscussion/templates/eoldiscussion/templates2.underscore:191
+#: eoldiscussion/templates/eoldiscussion/templates2.underscore:278
+#: eoldiscussion/templates/eoldiscussion/templates2.underscore:334
+#: eoldiscussion/templates/eoldiscussion/templates2.underscore:509
+msgid "Remaining characters"
+msgstr "Caracteres restantes"
+
+#: eoldiscussion/templates/eoldiscussion/templates2.underscore:36
+#: eoldiscussion/templates/eoldiscussion/templates2.underscore:201
+#: eoldiscussion/templates/eoldiscussion/templates2.underscore:540
+msgid "Submit"
+msgstr "Enviar"
+
+#: eoldiscussion/templates/eoldiscussion/templates2.underscore:45
+#: eoldiscussion/templates/eoldiscussion/templates2.underscore:685
+msgid "This thread is closed."
+msgstr "Este hilo está cerrado."
+
+#: eoldiscussion/templates/eoldiscussion/templates2.underscore:84
+#, python-format
+msgid "discussion posted %(time_ago)s by %(author)s"
+msgstr "comentario publicado hace %(time_ago)s por %(author)s"
+
+#: eoldiscussion/templates/eoldiscussion/templates2.underscore:86
+#, python-format
+msgid "question posted %(time_ago)s by %(author)s"
+msgstr "pregunta publicada hace %(time_ago)s por %(author)s"
+
+#: eoldiscussion/templates/eoldiscussion/templates2.underscore:94
+msgid "Pinned"
+msgstr "Destacado"
+
+#: eoldiscussion/templates/eoldiscussion/templates2.underscore:97
+#: eoldiscussion/templates/eoldiscussion/templates2.underscore:251
+#: eoldiscussion/templates/eoldiscussion/templates2.underscore:324
+msgid "Reported"
+msgstr "Reportado"
+
+#: eoldiscussion/templates/eoldiscussion/templates2.underscore:100
+msgid "Closed"
+msgstr ""
+
+#: eoldiscussion/templates/eoldiscussion/templates2.underscore:123
+#, python-format
+msgid "Related to: %(courseware_title_linked)s"
+msgstr "Relacionado con: %(courseware_title_linked)s"
+
+#: eoldiscussion/templates/eoldiscussion/templates2.underscore:133
+#, python-format
+msgid "This post is visible only to %(group_name)s."
+msgstr "Esta publicación solo es visible para %(group_name)s."
+
+#: eoldiscussion/templates/eoldiscussion/templates2.underscore:139
+msgid "This post is visible to everyone."
+msgstr "Esta publicación es visible para todo el mundo."
+
+#: eoldiscussion/templates/eoldiscussion/templates2.underscore:146
+msgid "Editing post"
+msgstr "Editando post"
+
+#: eoldiscussion/templates/eoldiscussion/templates2.underscore:151
+#: eoldiscussion/templates/eoldiscussion/templates2.underscore:496
+msgid "Title"
+msgstr ""
+
+#: eoldiscussion/templates/eoldiscussion/templates2.underscore:153
+#: eoldiscussion/templates/eoldiscussion/templates2.underscore:498
+msgid "Add a clear and descriptive title to encourage participation. (Required)"
+msgstr ""
+"Añade un título claro y descriptivo para fomentar la participación. "
+"(Obligatorio)"
+
+#: eoldiscussion/templates/eoldiscussion/templates2.underscore:159
+msgid "Edit your post below."
+msgstr "Edita tu publicación a continuación."
+
+#: eoldiscussion/templates/eoldiscussion/templates2.underscore:171
+msgid "Update post"
+msgstr "Actualizar publicación"
+
+#: eoldiscussion/templates/eoldiscussion/templates2.underscore:172
+#: eoldiscussion/templates/eoldiscussion/templates2.underscore:288
+#: eoldiscussion/templates/eoldiscussion/templates2.underscore:344
+#: eoldiscussion/templates/eoldiscussion/templates2.underscore:466
+#: eoldiscussion/templates/eoldiscussion/templates2.underscore:541
+msgid "Cancel"
+msgstr ""
+
+#: eoldiscussion/templates/eoldiscussion/templates2.underscore:178
+#, python-format
+msgid "Show Comment (%(num_comments)s)"
+msgid_plural "Show Comments (%(num_comments)s)"
+msgstr[0] "Mostrar comentario (%(num_comments)s)"
+msgstr[1] "Mostrar comentarios (%(num_comments)s)"
+
+#: eoldiscussion/templates/eoldiscussion/templates2.underscore:188
+#: eoldiscussion/templates/eoldiscussion/templates2.underscore:190
+msgid "Add a comment"
+msgstr "Agregar un comentario"
+
+#: eoldiscussion/templates/eoldiscussion/templates2.underscore:222
+#, python-format
+msgid "marked as answer %(time_ago)s by %(user)s"
+msgstr ""
+
+#: eoldiscussion/templates/eoldiscussion/templates2.underscore:226
+#, python-format
+msgid "marked as answer %(time_ago)s"
+msgstr ""
+
+#: eoldiscussion/templates/eoldiscussion/templates2.underscore:232
+#, python-format
+msgid "endorsed %(time_ago)s by %(user)s"
+msgstr "(usuario) lo ha recomendado hace (tiempo)"
+
+#: eoldiscussion/templates/eoldiscussion/templates2.underscore:236
+#, python-format
+msgid "endorsed %(time_ago)s"
+msgstr "recomendado hace (tiempo)"
+
+#: eoldiscussion/templates/eoldiscussion/templates2.underscore:275
+msgid "Editing response"
+msgstr "Editar respuesta"
+
+#: eoldiscussion/templates/eoldiscussion/templates2.underscore:287
+msgid "Update response"
+msgstr "Actualizar respuesta"
+
+#: eoldiscussion/templates/eoldiscussion/templates2.underscore:317
+#, python-format
+msgid "posted %(time_ago)s by %(author)s"
+msgstr "publicado hace %(time_ago)s por %(author)s"
+
+#: eoldiscussion/templates/eoldiscussion/templates2.underscore:331
+msgid "Editing comment"
+msgstr "Editar un comentario"
+
+#: eoldiscussion/templates/eoldiscussion/templates2.underscore:343
+msgid "Update comment"
+msgstr "Actualizar un comentario"
+
+#: eoldiscussion/templates/eoldiscussion/templates2.underscore:398
+msgid "Staff"
+msgstr "Personal de apoyo"
+
+#: eoldiscussion/templates/eoldiscussion/templates2.underscore:400
+msgid "Community TA"
+msgstr ""
+
+#: eoldiscussion/templates/eoldiscussion/templates2.underscore:403
+msgid "Student"
+msgstr ""
+
+#: eoldiscussion/templates/eoldiscussion/templates2.underscore:413
+#: eoldiscussion/templates/eoldiscussion/templates2.underscore:414
+msgid "Creation"
+msgstr ""
+
+#: eoldiscussion/templates/eoldiscussion/templates2.underscore:416
+#: eoldiscussion/templates/eoldiscussion/templates2.underscore:417
+msgid "Last activity"
+msgstr "Última actividad"
+
+#: eoldiscussion/templates/eoldiscussion/templates2.underscore:434
+#, python-format
+msgid ""
+"%(comments_count)s %(span_sr_open)s comments (%(unread_comments_count)s "
+"unread comments)%(span_close)s"
+msgstr ""
+"%(comments_count)s comentarios %(span_sr_open)s "
+"(%(unread_comments_count)s comentarios sin leer) %(span_close)s"
+
+#: eoldiscussion/templates/eoldiscussion/templates2.underscore:437
+#, python-format
+msgid "%(comments_count)s %(span_sr_open)s comments %(span_close)s"
+msgstr "%(comments_count)s comentarios %(span_sr_open)s comentarios %(span_close)s"
+
+#: eoldiscussion/templates/eoldiscussion/templates2.underscore:454
+#: eoldiscussion/templates/eoldiscussion/templates2.underscore:876
+#: eoldiscussion/templates/eoldiscussion/templates2.underscore:878
+#: eoldiscussion/templates/eoldiscussion/templates2.underscore:926
+msgid "Close"
+msgstr "Cerrar"
+
+#: eoldiscussion/templates/eoldiscussion/templates2.underscore:462
+#: eoldiscussion/templates/eoldiscussion/templates2.underscore:612
+msgid "Create post"
+msgstr "Crear publicación"
+
+#: eoldiscussion/templates/eoldiscussion/templates2.underscore:477
+msgid "Visible to"
+msgstr "Visible para"
+
+#: eoldiscussion/templates/eoldiscussion/templates2.underscore:480
+msgid ""
+"Discussion admins, moderators, and TAs can make their posts visible to "
+"all students or specify a single group."
+msgstr ""
+"Los administradores, moderadores y profesores asistentes del foro pueden "
+"hacer que sus publicaciones sean visibles para todos los alumnos o para "
+"un grupo concreto."
+
+#: eoldiscussion/templates/eoldiscussion/templates2.underscore:484
+msgid "All Groups"
+msgstr "Todos los grupos"
+
+#: eoldiscussion/templates/eoldiscussion/templates2.underscore:523
+msgid "follow this post"
+msgstr "seguir esta publicación"
+
+#: eoldiscussion/templates/eoldiscussion/templates2.underscore:529
+msgid "post anonymously"
+msgstr "publicar anónimamente"
+
+#: eoldiscussion/templates/eoldiscussion/templates2.underscore:535
+msgid "post anonymously to classmates"
+msgstr "publicar anónimamente para compañeros de clase"
+
+#: eoldiscussion/templates/eoldiscussion/templates2.underscore:559
+msgid "Error posting your message."
+msgstr "Error al publicar tu mensaje"
+
+#: eoldiscussion/templates/eoldiscussion/templates2.underscore:572
+#, python-format
+msgid "This post will be visible only to %(group_name)s."
+msgstr "Esta publicación será visible solo para %(group_name)s."
+
+#: eoldiscussion/templates/eoldiscussion/templates2.underscore:578
+msgid "This post will be visible to everyone."
+msgstr "Esta publicación será visible para todo el mundo."
+
+#: eoldiscussion/templates/eoldiscussion/templates2.underscore:584
+msgid "Topic area"
+msgstr "Área temática"
+
+#: eoldiscussion/templates/eoldiscussion/templates2.underscore:587
+msgid "Add your post to a relevant topic to help others find it. (Required)"
+msgstr ""
+"Añade tu publicación a un tema relevante para que los demás puedan "
+"encontrarla. (Obligatorio)"
+
+#: eoldiscussion/templates/eoldiscussion/templates2.underscore:600
+msgid "(Community TA)"
+msgstr "(Profesor asistente de la comunidad)"
+
+#: eoldiscussion/templates/eoldiscussion/templates2.underscore:602
+msgid "(Staff)"
+msgstr "(Equipo)"
+
+#: eoldiscussion/templates/eoldiscussion/templates2.underscore:628
+msgid "All Posts"
+msgstr "Todas las publicaciones"
+
+#: eoldiscussion/templates/eoldiscussion/templates2.underscore:629
+msgid "Return to all posts"
+msgstr "Volver a todas las publicaciones"
+
+#: eoldiscussion/templates/eoldiscussion/templates2.underscore:642
+msgid "Previous"
+msgstr "Anterio"
+
+#: eoldiscussion/templates/eoldiscussion/templates2.underscore:666
+msgid "Next"
+msgstr "Siguiente"
+
+#: eoldiscussion/templates/eoldiscussion/templates2.underscore:692
+msgid "View discussion"
+msgstr "Ver discusión"
+
+#: eoldiscussion/templates/eoldiscussion/templates2.underscore:753
+#: eoldiscussion/templates/eoldiscussion/templates2.underscore:942
+msgid "Load more"
+msgstr "Cargar más"
+
+#: eoldiscussion/templates/eoldiscussion/templates2.underscore:763
+msgid "Post type"
+msgstr "Tipo de publicación"
+
+#: eoldiscussion/templates/eoldiscussion/templates2.underscore:767
+msgid ""
+"Questions raise issues that need answers. Discussions share ideas and "
+"start conversations. (Required)"
+msgstr ""
+"Las preguntas plantean cuestiones que necesitan respuesta. Los debates "
+"permiten compartir ideas e iniciar conversaciones. (Obligatorio)"
+
+#: eoldiscussion/templates/eoldiscussion/templates2.underscore:775
+msgid "Question"
+msgstr "Pregunta"
+
+#: eoldiscussion/templates/eoldiscussion/templates2.underscore:783
+msgid "Discussion"
+msgstr "Discusión"
+
+#: eoldiscussion/templates/eoldiscussion/templates2.underscore:792
+#: eoldiscussion/templates/eoldiscussion/templates2.underscore:794
+msgid "Endorse"
+msgstr "Respaldar"
+
+#: eoldiscussion/templates/eoldiscussion/templates2.underscore:795
+msgid "Unendorse"
+msgstr "Retirar respaldo"
+
+#: eoldiscussion/templates/eoldiscussion/templates2.underscore:804
+#: eoldiscussion/templates/eoldiscussion/templates2.underscore:806
+msgid "Mark as Answer"
+msgstr "Marcar como respuesta"
+
+#: eoldiscussion/templates/eoldiscussion/templates2.underscore:807
+msgid "Unmark as Answer"
+msgstr "Dejar de marcar como respuesta"
+
+#: eoldiscussion/templates/eoldiscussion/templates2.underscore:816
+#: eoldiscussion/templates/eoldiscussion/templates2.underscore:818
+msgid "Follow"
+msgstr "Seguir"
+
+#: eoldiscussion/templates/eoldiscussion/templates2.underscore:819
+msgid "Unfollow"
+msgstr "Dejar de seguir"
+
+#: eoldiscussion/templates/eoldiscussion/templates2.underscore:832
+msgid "Vote for this post,"
+msgstr "Votar por esta publicación,"
+
+#: eoldiscussion/templates/eoldiscussion/templates2.underscore:848
+msgid "Report abuse"
+msgstr "Reportar abuso"
+
+#: eoldiscussion/templates/eoldiscussion/templates2.underscore:850
+msgid "Report"
+msgstr "Reportar"
+
+#: eoldiscussion/templates/eoldiscussion/templates2.underscore:851
+msgid "Unreport"
+msgstr "Anular reporte"
+
+#: eoldiscussion/templates/eoldiscussion/templates2.underscore:862
+#: eoldiscussion/templates/eoldiscussion/templates2.underscore:864
+msgid "Pin"
+msgstr "Fijar"
+
+#: eoldiscussion/templates/eoldiscussion/templates2.underscore:865
+msgid "Unpin"
+msgstr "Desfijar"
+
+#: eoldiscussion/templates/eoldiscussion/templates2.underscore:879
+msgid "Open"
+msgstr "Abrir"
+
+#: eoldiscussion/templates/eoldiscussion/templates2.underscore:890
+msgid "Edit"
+msgstr "Editar"
+
+#: eoldiscussion/templates/eoldiscussion/templates2.underscore:898
+msgid "Delete"
+msgstr "Eliminar"
+
+#: eoldiscussion/templates/eoldiscussion/templates2.underscore:909
+#: eoldiscussion/templates/eoldiscussion/templates2.underscore:910
+msgid "More"
+msgstr "Más"
+
+#: eoldiscussion/templates/eoldiscussion/templates2.underscore:935
+msgid "OK"
+msgstr ""
 
